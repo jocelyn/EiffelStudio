@@ -9,19 +9,16 @@ note
 class
 	VIEWER_CONTENT
 
-inherit
-	B_345_TREE
-		rename
-			first_data as first_line,
-			last_data as last_line
-		redefine
-			first_line
-		end
-
 create
-	make, make_from_file
+	make,
+	make_from_file
 
 feature -- Initialization
+
+	make
+		do
+			create content_structure.make
+		end
 
 	make_from_file (fn: STRING)
 		do
@@ -29,9 +26,38 @@ feature -- Initialization
 			--| FIXME: Not yet implemented.
 		end
 
+feature -- Access: tree structure
+
+	content_structure: LINKED_LIST [attached like first_line]
+
 feature -- Access
 
+	count: INTEGER
+		do
+			Result := content_structure.count
+		end
+
+	item (i: INTEGER): like first_line
+		do
+			Result := content_structure.i_th (i)
+		end
+
 	first_line: detachable VIEWER_LINE
+
+	last_line: detachable like first_line
+		do
+			Result := content_structure.last
+		end
+
+--	line (i: INTEGER_32): like first_line
+--		do
+--			Result := content_structure.item (i)
+--		end
+
+	number_of_lines: INTEGER
+		do
+			Result := content_structure.count
+		end
 
 	first_displayed_line: detachable like current_line
 
@@ -185,25 +211,25 @@ feature -- Element Change
 		require
 			a_line_not_void: a_line /= Void
 		do
-			prepend_data (a_line)
+			content_structure.put_front (a_line)
 		end
 
 	append_line, extend (a_line: like first_displayed_line)
 		require
 			a_line_not_void: a_line /= Void
 		do
-			append_data (a_line)
+			content_structure.extend (a_line)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

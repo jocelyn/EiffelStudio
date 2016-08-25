@@ -10,7 +10,10 @@ class
 	VIEWER_LINE
 
 inherit
-	TREE_ITEM
+	LIST_CONTENT_LINE
+--	TREE_CONTENT_LINE
+
+	DEBUG_OUTPUT
 
 create
 	make_empty_line,
@@ -23,7 +26,7 @@ feature -- Initialisation
 	make_empty_line
 			-- Create an empty line.
 		obsolete
-			"Use `make' instead."
+			"Use `make' instead. [nov/2013]"
 		do
 			make_unix_style
 		end
@@ -60,6 +63,11 @@ feature -- Initialisation
 
 feature -- Access
 
+	debug_output: READABLE_STRING_GENERAL
+		do
+			Result := wide_image
+		end
+
 	real_first_token: detachable EDITOR_TOKEN
 			-- First token in the line (takes into account MARGIN_TOKENs)
 
@@ -70,7 +78,9 @@ feature -- Access
 				Result := real_first_token
 				start
 			until
-				after or else Result = Void or else not Result.is_margin_token
+				after
+				or else Result = Void
+				or else not Result.is_margin_token
 			loop
 				Result := Result.next
 			end
@@ -79,7 +89,7 @@ feature -- Access
 	number_token: detachable EDITOR_TOKEN_LINE_NUMBER
 			-- Token containing the line number information for the line.
 		do
-			if attached {EDITOR_TOKEN_LINE_NUMBER}real_first_token as l_line_number then
+			if attached {EDITOR_TOKEN_LINE_NUMBER} real_first_token as l_line_number then
 				Result := l_line_number
 			end
 		end
@@ -424,10 +434,10 @@ feature -- Status Report
 					next_local_char := local_char + local_token.length
 
 					if (local_char <= end_char) and then (next_local_char >= start_char) then
-						-- This token is part of the selection
-						token_start_char := local_char.max(start_char) - local_char + 1
-						token_end_char := next_local_char.min(end_char) - local_char  + 1
-						l_string_32.append(local_token.wide_image.substring(token_start_char, token_end_char))
+							-- This token is part of the selection
+						token_start_char := local_char.max (start_char) - local_char + 1
+						token_end_char := next_local_char.min (end_char) - local_char  + 1
+						l_string_32.append (local_token.wide_image.substring (token_start_char, token_end_char))
 					else
 						-- This token is not part of the selection, we ignore it.
 					end
@@ -466,7 +476,7 @@ feature -- Obsolete
 	image: STRING
 			-- string representation of the line.
 		obsolete
-			"Use `wide_image' instead."
+			"Use `wide_image' instead. [July/2008]"
 		do
 			Result := wide_image.as_string_8
 		ensure
@@ -477,7 +487,7 @@ feature -- Obsolete
 			-- Create a string containing the same indentation as `ref_line'.
 			-- New instance created at each call.
 		obsolete
-			"Use `wide_indentation' instead."
+			"Use `wide_indentation' instead. [July/2008]"
 		do
 			Result := wide_indentation.as_string_8
 		ensure
@@ -489,7 +499,7 @@ feature -- Obsolete
 			-- the line and ending at the cursor position (not
 			-- included)
 		obsolete
-			"Use `wide_image_from_start_to_cursor' instead."
+			"Use `wide_image_from_start_to_cursor' instead. [July/2008]"
 		require
 			text_cursor.line = Current
 		do
@@ -502,7 +512,7 @@ feature -- Obsolete
 			-- Substring of the line starting at the cursor
 			-- position (included) and ending at the end of the line
 		obsolete
-			"Use `wide_image_from_cursor_to_end' instead."
+			"Use `wide_image_from_cursor_to_end' instead. [July/2008]"
 		require
 			text_cursor.line = Current
 		do
@@ -515,7 +525,7 @@ feature -- Obsolete
 			-- Substring of the line starting at `start_char' and
 			-- ending at `end_char' - included
 		obsolete
-			"Use `wide_substring_image_by_character' instead."
+			"Use `wide_substring_image_by_character' instead. [July/2008]"
 		do
 			Result := substring_image_by_character (start_char, end_char).as_string_8
 		ensure
@@ -531,7 +541,7 @@ invariant
 	eol_token_set: eol_token /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

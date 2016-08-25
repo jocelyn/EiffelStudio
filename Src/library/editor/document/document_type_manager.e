@@ -20,12 +20,18 @@ feature -- Element Change
 
 feature -- Query
 
+	class_from_type (a_type: READABLE_STRING_GENERAL): detachable DOCUMENT_CLASS
+			-- Document class from the type `a_type' if any.
+		do
+			Result := registered_document_types.item (a_type.as_lower.as_string_32)
+		end
+
 	known_document_type (a_type: READABLE_STRING_GENERAL): BOOLEAN
 	        -- Is `a_type' a known document type?
 	   	do
 			Result := registered_document_types.has (a_type.as_lower.as_string_32)
-			if not Result then
-				debug ("editor")
+			debug ("editor")
+				if not Result then
 					print ("unknown document type")
 				end
 			end
@@ -38,7 +44,7 @@ feature -- Query
 		local
 			l_result: detachable DOCUMENT_CLASS
 		do
-			l_result := registered_document_types.item (a_type.as_lower.as_string_32)
+			l_result := class_from_type (a_type)
 			check l_result /= Void end -- Implied by precondition
 			Result := l_result
 		ensure
@@ -97,7 +103,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

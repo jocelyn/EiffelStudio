@@ -288,7 +288,7 @@ feature -- Linkable functions
 	previous: detachable EDITOR_TOKEN
 			-- Previous token in the line. Void if none
 
-	next:detachable EDITOR_TOKEN
+	next: detachable EDITOR_TOKEN
 			-- Next token in the line. Void if none.
 
 	set_next_token (next_token: detachable EDITOR_TOKEN)
@@ -660,7 +660,7 @@ invariant
 	previous = Void implies position = 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

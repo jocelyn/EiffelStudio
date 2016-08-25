@@ -21,8 +21,10 @@ inherit
 		end
 
 create
-	make_from_absolute_pos, make_from_relative_pos,
-	make_from_character_pos, make_from_integer
+	make_from_absolute_pos,
+	make_from_relative_pos,
+	make_from_character_pos,
+	make_from_integer
 
 feature -- Initialization
 
@@ -101,9 +103,7 @@ feature -- Initialization
 			make_from_relative_pos (cline, t, pos, a_text)
 		end
 
-feature -- Access
-
-		--| Relative position
+feature -- Access: Relative position
 
 	token: EDITOR_TOKEN
 			-- Token where Current is
@@ -114,7 +114,7 @@ feature -- Access
 	line: VIEWER_LINE
 			-- Line where Current is
 
-		--| Absolute position
+feature -- Access: Absolute position
 
 	x_in_pixels: INTEGER
 			-- Theoric horizontal position of Current, in pixels
@@ -123,7 +123,7 @@ feature -- Access
 	y_in_lines: INTEGER
 			-- Line number of Current in the whole text
 
-		--| Character-based position
+feature -- Access: Character-based position
 
 	x_in_characters: INTEGER
 			-- Horizontal position of Current, in characters.
@@ -141,7 +141,7 @@ feature -- Access
 			end
 		end
 
-		--| Other functions
+feature -- Access: Other functions
 
 	item: CHARACTER
 			-- Character current points on
@@ -547,14 +547,14 @@ invariant
 	whole_text_not_void				: whole_text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

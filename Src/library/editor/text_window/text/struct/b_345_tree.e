@@ -7,10 +7,7 @@ note
 	revision: "$Revision$"
 
 class
-	B_345_TREE
-
-inherit
-	ANY
+	B_345_TREE [G -> TREE_ITEM]
 
 create
 	make
@@ -29,9 +26,9 @@ feature -- Access
 			Result := root_node.keys_plus_one - 1
 		end
 
-	first_data: detachable TREE_ITEM
+	first_data: detachable G
 
-	last_data: detachable like first_data
+	last_data: like first_data
 
 	item (i: INTEGER): like first_data
 		require
@@ -52,7 +49,7 @@ feature -- Element Change
 			last_data := tl
 		end
 
-	prepend_data (tl: attached like first_data)
+	prepend_data (tl: G)
 			-- add tl at the beginning of the tree.
 		require
 			tl_not_linked: tl.next = Void and then tl.previous = Void
@@ -83,7 +80,7 @@ feature -- Element Change
 			tl_has_tree: tl.tree /= Void
 		end
 
-	append_data (tl: attached like first_data)
+	append_data (tl: G)
 			-- add tl at the end of the tree.
 		require
 			tl_not_linked: tl.next = Void and then tl.previous = Void
@@ -128,14 +125,14 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	root_node: TREE_NODE [like first_data];
+	root_node: TREE_NODE [attached like first_data];
 
 invariant
 	first_data_valid: attached first_data as l_first_data implies l_first_data.is_valid
 	last_data_valid: attached last_data as l_last_data implies l_last_data.is_valid
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

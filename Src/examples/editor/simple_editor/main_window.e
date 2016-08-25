@@ -241,6 +241,7 @@ feature {NONE} -- Implementation
 			-- Setup the editor
 		local
 			l_doc: DOCUMENT_CLASS
+			args: ARGUMENTS_32
 		do
 			editor_data.show_line_numbers_preference.set_value (True)
 			editor.add_edition_observer (Current)
@@ -249,6 +250,11 @@ feature {NONE} -- Implementation
 				-- Init document classes
 			l_doc := eiffel_class
 			l_doc := java_class
+
+			create args
+			if args.argument_count = 1 then
+				editor.load_file_path (create {PATH}.make_from_string (args.argument_array[1]))
+			end
 		end
 
 feature {NONE} -- Implementation / Constants

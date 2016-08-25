@@ -80,9 +80,7 @@ feature {NONE} -- Initialization
 			initializing := False
 		end
 
-feature -- Access
-
---| Relative position
+feature -- Access: Relative position
 
 	token: EDITOR_TOKEN
 			-- Token where `Current' is.
@@ -93,10 +91,12 @@ feature -- Access
 	line: EDITOR_LINE
 			-- Line where `Current' is.
 
---| Absolute position
+feature -- Access: Absolute position
 
 	y_in_lines: INTEGER
 			-- Line number of `Current' in the whole text.
+
+feature -- Access: Character-based position
 
 	x_in_visible_characters: INTEGER
 			-- Position of `Current' in line in characters as
@@ -155,7 +155,7 @@ feature -- Access
 			end
 		end
 
---| Other functions
+feature -- Access: Other functions
 
 	item: CHARACTER
 			-- Character current points on
@@ -810,7 +810,7 @@ invariant
 	text_not_void					: text /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -177,13 +177,17 @@ feature {NONE} -- Initialization
 			create l_toolbar
 
 			create left_scroll_button
-			left_scroll_button.set_pixmap (l_icons.header_left_scroll_pixmap)
+			if l_icons /= Void then
+				left_scroll_button.set_pixmap (l_icons.header_left_scroll_pixmap)
+			end
 			left_scroll_button.select_actions.force_extend (agent scroll_left)
 			left_scroll_button.disable_sensitive
 			l_toolbar.extend (left_scroll_button)
 
 			create right_scroll_button
-			right_scroll_button.set_pixmap (l_icons.header_right_scroll_pixmap)
+			if l_icons /= Void then
+				right_scroll_button.set_pixmap (l_icons.header_right_scroll_pixmap)
+			end
 			right_scroll_button.select_actions.force_extend (agent scroll_right)
 			right_scroll_button.disable_sensitive
 			l_toolbar.extend (right_scroll_button)
@@ -536,7 +540,7 @@ invariant
 	has_panel: panel /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

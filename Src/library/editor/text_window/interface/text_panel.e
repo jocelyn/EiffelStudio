@@ -192,7 +192,7 @@ feature -- Access
 	text: STRING
 			-- Image of the text being displayed.
 		obsolete
-			"Use `wide_text' instead, or wide characters are truncated."
+			"Use `wide_text' instead, or wide characters are truncated. [July/2008]"
 		do
 			Result := wide_text.as_string_8
 		end
@@ -213,7 +213,7 @@ feature -- Access
 	file_name: detachable FILE_NAME
 			-- Name of the currently opened file, if any.
 		obsolete
-			"Use `file_path' instead as content could be truncated for Unicode paths."
+			"Use `file_path' instead as content could be truncated for Unicode paths. [Dec/2012]"
 		do
 			if attached file_path as l_path then
 				create Result.make_from_string (l_path.name.as_string_8)
@@ -230,8 +230,7 @@ feature -- Access
 			-- Date of current file when it was loaded.
 
 	margin: detachable MARGIN_WIDGET note option: stable attribute end
-			-- Margin.
-
+			-- Margin.s
 	first_line_displayed: INTEGER
 			-- First line currently displayed on the screen.
 
@@ -251,9 +250,8 @@ feature -- Access
 			-- Returns user encoding if `user_encoding' is set by `set_encoding'.
 			-- Otherwise returns encodinge valuated when text was loaded.
 		do
-			if attached user_encoding as l_enc then
-				Result := l_enc
-			else
+			Result := user_encoding
+			if Result = Void then
 				Result := detected_encoding
 			end
 		end
@@ -283,7 +281,7 @@ feature -- Status Setting
 			icons_set: icons = a_icons
 		end
 
-	set_text (a_text: like text_displayed; a_filename: STRING)
+	set_text (a_text: like text_displayed; a_filename: READABLE_STRING_GENERAL)
 			-- Set `text_displayed' to `text'.  If text is associated to a file store then
 			-- `a_filename' should be that file.
 		require
@@ -358,9 +356,7 @@ feature -- Status Setting
 		end
 
 	on_focus
-			-- Editor received focus
-		local
-
+			-- Editor received focus.
 		do
 			editor_drawing_area.focus_in_actions.block
 
@@ -535,7 +531,7 @@ feature -- Query
 	line_numbers_enabled: BOOLEAN
 			-- Is it permitted to show line numbers in Current?
 		do
-			Result := margin /= Void and then margin.line_numbers_enabled
+			Result := attached margin as m and then m.line_numbers_enabled
 		end
 
 	is_offset_valid: BOOLEAN
@@ -708,10 +704,10 @@ feature -- Basic Operations
 			set_first_line_displayed (first_line_displayed, True)
 		end
 
-	load_file (a_filename: STRING_32)
+	load_file (a_filename: READABLE_STRING_GENERAL)
 			-- Load contents of `a_filename'.
 		obsolete
-			"Use `load_file_path' instead."
+			"Use `load_file_path' instead. [nov/2012]"
 		require
 			a_filename_not_void: a_filename /= Void
 		do
@@ -733,8 +729,8 @@ feature -- Basic Operations
 				-- Check the document type of the file to load.
 			s := a_filename.name
 			l_doc_type := s.substring (s.last_index_of ('.', s.count) + 1, s.count)
-			if l_doc_type /= Void and then known_document_type (l_doc_type) then
-				set_current_document_class (get_class_from_type (l_doc_type))
+			if l_doc_type /= Void and then attached class_from_type (l_doc_type) as l_doc_class then
+				set_current_document_class (l_doc_class)
 			else
 				set_current_document_class (default_document_class)
 			end
@@ -836,15 +832,15 @@ feature -- Basic Operations
 				if changed or not editor_preferences.automatic_update then
 						-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
 					create dialog.make_with_text ("This file has been modified by another editor.")
-					create button_labels.make (1, 2)
-					create actions.make (1, 2)
-					button_labels.put ("Reload", 1)
-					actions.put (agent reload, 1)
-					button_labels.put ("Continue anyway", 2)
-					actions.put (agent continue_editing, 2)
+					button_labels := <<"Reload", "Continue anyway">>
+					button_labels.rebase (1)
+
+					actions := << agent reload, agent continue_editing>>
+					actions.rebase (1)
+
 					dialog.set_buttons_and_actions (button_labels, actions)
-					dialog.set_default_push_button (dialog.button (button_labels @ 1))
-					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
+					dialog.set_default_push_button (dialog.button (button_labels [1]))
+					dialog.set_default_cancel_button (dialog.button (button_labels [2]))
 					dialog.set_title ("External edition")
 					if attached reference_window as l_window then
 						dialog.show_modal_to_window (l_window)
@@ -1741,7 +1737,7 @@ feature -- Memory management
 			not_initialized: not is_initialized
 		end
 
-feature -- Implementation
+feature -- Implementation: status
 
 	buffered_line: EV_PIXMAP
 			-- Buffer large enough to hold line information.
@@ -1772,6 +1768,8 @@ feature -- Implementation
 		end
 
 	on_paint: BOOLEAN
+			-- Inside `on_repaint' execution?
+			-- i.e is repainting the text area?
 
 	internal_focus_requested: BOOLEAN
 		-- Should give focus after text has been fully loaded?
@@ -1823,6 +1821,11 @@ feature -- Implementation
 			end
 		end
 
+	internal_userset_data: detachable like userset_data
+			-- Buffered userset data
+
+feature -- Implementation: update		
+
 	continue_editing
 			-- Continue editing document
 			-- Note: Called from the reload request prompt
@@ -1835,9 +1838,6 @@ feature -- Implementation
 			date_of_file_when_loaded := file_date_ticks
 			size_of_file_when_loaded := file_size
 		end
-
-	internal_userset_data: detachable like userset_data
-			-- Buffered userset data
 
 	update_line_and_token_info
 			-- Update all tokens for correct width.
@@ -1853,8 +1853,9 @@ feature -- Implementation
 	 				l_text.after
 	 			loop
 	 				l_line := l_text.current_line
-	 				check l_line /= Void end -- Implied by not `after'
-					if l_line.userset_data /= userset_data then
+	 				if l_line = Void then
+		 				check has_line_after: False end -- Implied by not `after'
+	 				elseif l_line.userset_data /= userset_data then
 						l_line.set_userset_data (userset_data)
 						l_line.update_token_information
 					end
@@ -1955,7 +1956,7 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

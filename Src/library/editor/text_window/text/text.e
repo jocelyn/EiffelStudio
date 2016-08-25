@@ -13,22 +13,6 @@ class
 	TEXT
 
 inherit
-	B_345_TREE
-		rename
-			first_data as first_line,
-			last_data as last_line,
-			item as line,
-			count as number_of_lines,
-			prepend_data as prepend_line,
-			append_data as append_line
-		export
-			{NONE} append_line, prepend_line, set_first_data,
-			set_last_data, wipe_out, make
-		redefine
-			make,
-			first_line
-		end
-
 	TEXT_OBSERVER_MANAGER
 		redefine
 			make, recycle
@@ -52,14 +36,24 @@ feature {NONE}-- Initialization
 			-- create an empty text
 		do
 			Precursor {TEXT_OBSERVER_MANAGER}
-			Precursor {B_345_TREE}
+			create content_structure.make
 			set_tabulation_size (editor_preferences.tabulation_spaces)
 			finish_reading_string_agent := agent finish_reading_string
 			create current_string.make_empty
 			current_pos := 1
 		end
 
+feature -- Access: tree structure
+
+	content_structure: LIST_CONTENT_LINES [attached like first_line]
+--	content_structure: TREE_CONTENT_LINES [attached like first_line]
+
 feature -- Content Change
+
+	wipe_out
+		do
+			content_structure.wipe_out
+		end
 
 	load_string (a_string: STRING)
 			-- Scan `a_string' and fill the object with resulting
@@ -109,6 +103,24 @@ feature -- Reinitialization
 feature -- Access
 
 	first_line: detachable EDITOR_LINE
+		do
+			Result := content_structure.first_line
+		end
+
+	last_line: detachable like first_line
+		do
+			Result := content_structure.last_line
+		end
+
+	line (i: INTEGER_32): like first_line
+		do
+			Result := content_structure.item (i)
+		end
+
+	number_of_lines: INTEGER
+		do
+			Result := content_structure.count
+		end
 
 	current_line: detachable like line
 		-- current line
@@ -163,6 +175,20 @@ feature -- Access
 			-- Text in UTF-8 loaded by `load_string'
 		do
 			Result := current_string
+		end
+
+feature -- Element change
+
+	prepend_line (a_line: attached like first_line)
+			-- add `a_line' at the beginning of the text.
+		do
+			content_structure.prepend_line (a_line)
+		end
+
+	append_line (a_line: attached like first_line)
+			-- add `a_line' at the end of the tree.	
+		do
+			content_structure.append_line (a_line)
 		end
 
 feature -- Status Setting
@@ -285,12 +311,13 @@ feature -- Element Change
 			-- move `current_line' to the next line
 		require
 			not_after: not after
-		local
-			l_line: like current_line
 		do
-			l_line := current_line
-			check l_line /= Void end -- Implied by not `after'
-			current_line := l_line.next
+			if attached current_line as l_line then
+				current_line := l_line.next
+			else
+				check has_line_after: False end -- Implied by not `after'				
+					-- FIXME: should `current_line' be set to Void?
+			end
 		end
 
 	start
@@ -311,16 +338,16 @@ feature -- Element Change
 			not_after: not after
 		end
 
-	update_line (a_line: INTEGER)
+	update_line (a_line_index: INTEGER)
 			-- Update line tokens
 		require
-			line_index_valid: a_line > 0 and a_line <= number_of_lines
-		local
-			l_line: like line
+			line_index_valid: a_line_index > 0 and a_line_index <= number_of_lines
 		do
-			l_line := line (a_line)
-			check l_line /= Void end -- Implid by precondition
-			l_line.update_token_information
+			if attached line (a_line_index) as l_line then
+				l_line.update_token_information
+			else
+				check line_index_valid: False end -- Implid by precondition `line_index_valid'.
+			end
 		end
 
 feature -- Status report
@@ -621,7 +648,7 @@ invariant
 	positive_current_pos: current_pos > 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
