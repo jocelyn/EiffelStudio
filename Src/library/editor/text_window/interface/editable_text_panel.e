@@ -191,21 +191,19 @@ feature -- Indirect observer / manager pattern.
 	add_edition_observer (txt_observer: TEXT_OBSERVER)
 			-- Add observer of `text_displayed' for global content changes.
 		do
-			if text_displayed /= Void then
-				text_displayed.add_edition_observer (txt_observer)
-			end
+			text_displayed.add_edition_observer (txt_observer)
 		end
 
 	add_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Add observer of `history'.
 		do
-			text_displayed.attached_history.add_observer (history_observer)
+			text_displayed.history.add_observer (history_observer)
 		end
 
 	remove_history_observer (history_observer: UNDO_REDO_OBSERVER)
 			-- Remove observer of `history'.
 		do
-			text_displayed.attached_history.remove_observer (history_observer)
+			text_displayed.history.remove_observer (history_observer)
 		end
 
 feature -- Private Status
@@ -743,15 +741,13 @@ feature -- Edition Operations on text
 			wm: STRING_32
 		do
 			wm := "Current text is not editable"
-			if text_displayed /= Void then
-				if is_read_only then
-					if attached not_editable_warning_wide_message as l_msg and then not l_msg.is_empty then
-						wm := l_msg
-					end
-					show_warning_message (wm)
-				else
-					show_warning_message (wm)
+			if is_read_only then
+				if attached not_editable_warning_wide_message as l_msg and then not l_msg.is_empty then
+					wm := l_msg
 				end
+				show_warning_message (wm)
+			else
+				show_warning_message (wm)
 			end
 		end
 
