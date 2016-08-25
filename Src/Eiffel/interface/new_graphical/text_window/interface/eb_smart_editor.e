@@ -469,8 +469,8 @@ feature {NONE} -- Process Vision2 Events
 	handle_character (c: CHARACTER_32)
  			-- Process the push on a character key.
 		local
-			t: EDITOR_TOKEN_KEYWORD
-			token: EDITOR_TOKEN
+			tok: detachable EDITOR_TOKEN
+			token: detachable EDITOR_TOKEN
 			look_for_keyword: BOOLEAN
 			insert: CHARACTER_32
 			syntax_completed: BOOLEAN
@@ -487,8 +487,10 @@ feature {NONE} -- Process Vision2 Events
 						cur.go_left_char
 						token := cur.token
 						if token /= Void then
-							t ?= token.previous
-							if t /= Void and then keyword_image(t).is_equal (previous_token_image) then
+							if
+								attached {EDITOR_TOKEN_KEYWORD} token.previous as l_keyword_token and then
+								keyword_image (l_keyword_token).is_equal (previous_token_image)
+							then
 								text_displayed.back_delete_char
 								text_displayed.complete_syntax (previous_token_image, True, False)
 								syntax_completed := text_displayed.syntax_completed
@@ -501,18 +503,18 @@ feature {NONE} -- Process Vision2 Events
 						if text_displayed.cursor.line.eol_token = token then
 								-- case: keyword|space|eol
 							if token.previous /= Void and then token.previous.length = 1 then
-								t ?= token.previous.previous
+								tok := token.previous.previous
 							end
 						elseif token /= Void then
 								-- case: keyword|space|space|...
 							if text_displayed.cursor.pos_in_token = 2 then
-								t ?= token.previous
+								tok := token.previous
 							end
 						end
-						if t /= Void then
+						if attached {EDITOR_TOKEN_KEYWORD} tok as l_keyword_token then
 							text_displayed.back_delete_char
 							look_for_keyword := False
-							text_displayed.complete_syntax (keyword_image (t), False, False)
+							text_displayed.complete_syntax (keyword_image (l_keyword_token), False, False)
 							syntax_completed := text_displayed.syntax_completed
 							look_for_keyword := False
 						end
@@ -530,11 +532,16 @@ feature {NONE} -- Process Vision2 Events
 				end
 				if look_for_keyword then
 					if text_displayed.cursor.token /= Void then
-						t ?= text_displayed.cursor.token.previous
+						tok := text_displayed.cursor.token.previous
 					end
-					latest_typed_word_is_keyword := (t /= Void) and then text_displayed.cursor.pos_in_token = 1
-					if latest_typed_word_is_keyword then
-						previous_token_image := keyword_image (t)
+					if
+						attached {EDITOR_TOKEN_KEYWORD} tok as l_keyword_token and then
+						text_displayed.cursor.pos_in_token = 1
+					then
+						latest_typed_word_is_keyword := True
+						previous_token_image := keyword_image (l_keyword_token)
+					else
+						latest_typed_word_is_keyword := False
 					end
 				end
 			else
@@ -1903,8 +1910,8 @@ feature {NONE} -- Code completable implementation
 			txt: like text_displayed
 			l_local_pos, l_start_pos, p: INTEGER
 			l_code_texts: TUPLE [locals: STRING_32; code: STRING_32; linked_token: ARRAY [READABLE_STRING_GENERAL]]
-			l_smart_text: SMART_TEXT
-			l_region: ARRAYED_LIST [TUPLE [start_pos,end_pos: INTEGER]]
+--			l_smart_text: SMART_TEXT
+--			l_region: ARRAYED_LIST [TUPLE [start_pos,end_pos: INTEGER]]
 		do
 				-- local varianles and code from template
 			l_code_texts := a_template.code_texts
@@ -1934,7 +1941,7 @@ feature {NONE} -- Code completable implementation
 
 			l_edit_pos := l_pos
 				-- Insert template body
-			txt.insert_string ("%T%T%T") -- identation for the first line.
+			txt.insert_string ("%T%T%T") -- indentation for the first line.
 			txt.insert_string (l_template)
 			l_pos := l_pos + l_template.count
 			if {PLATFORM}.is_windows then
