@@ -949,6 +949,7 @@ feature {NONE} -- click information update
 							attached {EDITOR_TOKEN_FEATURE_START} l_begin_line_token as l_feat_tok
 						then
 							tfs := l_feat_tok.twin
+
 							tfs.set_next_token (Void)
 							tok.previous.set_next_token (tfs)
 							tfs.set_previous_token (tok.previous)
