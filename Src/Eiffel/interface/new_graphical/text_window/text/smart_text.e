@@ -90,7 +90,6 @@ feature -- Edit linking mode
 			-- Disable any active linked editing session.
 		do
 			if attached linked_editing as m then
-				print ("disable_linked_editing!%N")
 				m.clean
 				linked_editing := Void
 			end

@@ -112,7 +112,7 @@ feature -- Feature click tool
 
 feature -- Pick and drop
 
-	stone_at (cursr: like cursor): STONE
+	stone_at (cursr: like cursor): detachable STONE
 		require
 			cursor_exists: cursr /= Void
 		do
@@ -120,8 +120,12 @@ feature -- Pick and drop
 				if feature_click_enabled and then feature_click_tool.is_ready then
 					Result := feature_click_tool.stone_at_position (cursr)
 				end
-				if Result = Void and then cursr.token /= Void and then cursr.token.pebble /= Void then
-					Result ?= cursr.token.pebble.twin
+				if
+					Result = Void and then
+				 	attached cursr.token as tok and then
+				 	attached {like stone_at} tok.pebble as l_pebble_stone
+				 then
+					Result := l_pebble_stone.twin
 				end
 			end
 		end
@@ -235,25 +239,24 @@ feature -- Load Text handling
 				until
 					tok = Void
 				loop
-					tok.set_pos_in_text (p)
-					p := p + tok.length
-					tok := tok.next
-					if attached {EDITOR_TOKEN_EOL} tok then
-						l_line := l_line.next
-						p := p + tok.length + 1 -- 1 for the NL $N
-						if l_line = Void then
-							tok := Void
-						else
-							tok := l_line.first_token
-						end
-					elseif tok = Void then
-						l_line := l_line.next
-						p := p + 1 -- 1 for the NL $N
-						if l_line /= Void then
-							tok := l_line.first_token
-						end
-					elseif attached {EDITOR_TOKEN_MARGIN} tok then
+					if attached {EDITOR_TOKEN_MARGIN} tok then
 						tok := tok.next
+					else
+						tok.set_pos_in_text (p)
+						p := p + tok.length
+						if attached {EDITOR_TOKEN_EOL} tok then
+							l_line := l_line.next
+							if is_windows_eol_style then
+								p := p + 1  -- 1 for the CR  %R
+							end
+							if l_line = Void then
+								tok := Void
+							else
+								tok := l_line.first_token
+							end
+						else
+							tok := tok.next
+						end
 					end
 				end
 			end

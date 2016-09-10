@@ -43,24 +43,8 @@ feature -- Execution
 			-- resulting into a size difference of `a_size_diff'.
 		require
 			valid_pos_in_text: a_pos_in_text > 0
-		do
+		deferred
 		end
-
---	on_insertion (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
---			-- On char, string insertion event,
---			-- resulting into a size difference of `a_size_diff'.
---		require
---			a_size_diff > 0
---		do
---		end
-
---	on_deletion (a_cursor: EDITOR_CURSOR; a_size_diff: INTEGER)
---			-- On char, string (or selection) deleted event,
---			-- resulting into a size difference of `a_size_diff'.
---		require
---			a_size_diff < 0
---		do
---		end
 
 note
 	copyright: "Copyright (c) 1984-2016, Eiffel Software"

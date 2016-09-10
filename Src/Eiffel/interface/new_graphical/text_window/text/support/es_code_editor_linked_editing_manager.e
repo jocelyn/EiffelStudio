@@ -55,6 +55,43 @@ feature -- Access
 
 feature -- Operation
 
+	lightened_color (a_color: EV_COLOR; a_prop: REAL_32): EV_COLOR
+		do
+			create Result.make_with_rgb (
+					(a_color.red + (1 - a_color.red) * a_prop).min (1),
+					(a_color.green + (1 - a_color.green) * a_prop).min (1),
+					(a_color.blue + (1 - a_color.blue) * a_prop).min (1)
+				)
+		end
+
+	swapped_color (a_color: EV_COLOR): EV_COLOR
+		do
+			create Result.make_with_rgb (
+					(1 - a_color.red),
+					(1 - a_color.green),
+					(1 - a_color.blue)
+				)
+		end
+
+	darkened_color (a_color: EV_COLOR; a_prop: REAL_32): EV_COLOR
+		do
+			create Result.make_with_rgb (
+					(a_color.red - (1 - a_color.red) * a_prop).max (0),
+					(a_color.green - (1 - a_color.green) * a_prop).max (0),
+					(a_color.blue - (1 - a_color.blue) * a_prop).max (0)
+				)
+		end
+
+	linked_token_background_color: EV_COLOR
+		do
+			Result := lightened_color (preferences.editor_data.selection_background_color, 0.75)
+		end
+
+	linked_token_text_color: EV_COLOR
+		do
+			Result := darkened_color (preferences.editor_data.selection_text_color, 0.75)
+		end
+
 	prepare (a_editor: EDITABLE_TEXT_PANEL; a_pos_in_text: INTEGER; a_regions: LIST [TUPLE [start_pos,end_pos: INTEGER]]; a_token_texts: detachable ITERABLE [READABLE_STRING_GENERAL])
 			-- Activate linked edit at position `a_pos_in_text' if set, otherwise at cursor.
 			-- And if `a_regions' is not empty, limit the impact token in those regions.
@@ -72,23 +109,25 @@ feature -- Operation
 					a_token_texts as ic
 				loop
 					create l_linking.make (text, a_editor, a_pos_in_text, a_regions, ic.item)
-					l_linking.set_background_color (preferences.editor_data.linked_token_background_color)
 					lst.force (l_linking)
-					l_linking.associated_manager := Current
-
---					if l_linking.is_active then
-						l_linking.prepare
---					end
+					prepare_linking (l_linking)
 				end
 			else
 				create l_linking.make (text, a_editor, a_pos_in_text, a_regions, Void)
-				l_linking.set_background_color (preferences.editor_data.linked_token_background_color)
 				lst.force (l_linking)
-				l_linking.associated_manager := Current
---				if l_linking.is_active then
-					l_linking.prepare
---				end
+				prepare_linking (l_linking)
 			end
+		end
+
+	prepare_linking (a_linking: ES_CODE_EDITOR_LINKED_EDITING)
+			-- Setup and prepare `a_linking'.
+		require
+			a_linking_attached: a_linking /= Void
+		do
+			a_linking.set_background_color (linked_token_background_color)
+			a_linking.set_text_color (linked_token_text_color)
+			a_linking.associated_manager := Current
+			a_linking.prepare
 		end
 
 	clean
@@ -138,11 +177,11 @@ feature {ES_CODE_EDITOR_LINKED_EDITING} -- Callbacks
 			across
 				items as ic
 			loop
-				if ic.item /= a_editing then
+--				if ic.item /= a_editing then
 					ic.item.on_editing (a_pos_in_text, a_diff)
-				end
+--				end
 			end
-			a_editing.on_editing (a_pos_in_text, 0)
+--			a_editing.on_editing (a_pos_in_text, 0)
 		end
 
 ;note

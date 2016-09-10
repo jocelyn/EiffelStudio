@@ -1900,12 +1900,14 @@ feature {NONE} -- Code completable implementation
 			l_code_texts: TUPLE [locals: STRING_32; code: STRING_32; linked_token: ARRAY [READABLE_STRING_GENERAL]]
 			l_regions: ARRAYED_LIST [TUPLE [start_pos,end_pos: INTEGER]]
 			l_nb_cr: INTEGER
+			txt_is_windows_eol_style: BOOLEAN
 		do
 
 				-- local varianles and code from template
 			l_code_texts := a_template.code_texts
 
 			txt := text_displayed
+			txt_is_windows_eol_style := txt.is_windows_eol_style -- and False
 
 				-- Body
 			l_pos := txt.cursor.pos_in_characters
@@ -1926,7 +1928,7 @@ feature {NONE} -- Code completable implementation
 			else
 				txt.insert_string ("%N")
 				l_pos := l_pos + 1
-				if {PLATFORM}.is_windows then
+				if txt_is_windows_eol_style then
 					l_pos := l_pos + 1 -- Inserted CR  %R
 				end
 			end
@@ -1934,14 +1936,13 @@ feature {NONE} -- Code completable implementation
 			create l_regions.make (2)
 
 				-- Insert template body
-			txt.insert_string ("%T%T%T") -- indentation for the first line. FIXME: compute it from existing code.
+--			txt.insert_string ("%T%T%T") -- indentation for the first line. FIXME: compute it from existing code.
 			txt.insert_string (l_template)
-			if {PLATFORM}.is_windows then
+			if txt_is_windows_eol_style then
 				l_nb_cr := l_template.occurrences ('%N') -- For the missing %R.
 			else
 				l_nb_cr := 0
 			end
---			l_pos := l_pos + l_template.count + l_nb_cr
 			l_regions.force ([l_pos, l_pos + 3 + l_template.count + l_nb_cr]) -- code region
 
 				-- Locals
@@ -1951,7 +1952,7 @@ feature {NONE} -- Code completable implementation
 				if txt.found_feature then
 					l_locals := l_code_texts.locals
 
-					if {PLATFORM}.is_windows then
+					if txt_is_windows_eol_style then
 						l_nb_cr := l_locals.occurrences ('%N') -- For the missing %R.
 					else
 						l_nb_cr := 0
@@ -1985,23 +1986,31 @@ feature {NONE} -- Code completable implementation
 					if l_start_pos > 0 then
 						if l_local_pos > 0 and l_local_pos < l_start_pos then
 								-- FIXME: insert at the end of locals...
-							txt.cursor.go_to_position (l_local_pos + 5 + 2)  -- "local."
+							p := l_local_pos + 5 + 1   -- "local + NL"
+							if txt_is_windows_eol_style then
+								p := p + 1 -- + "CR"
+							end
+							txt.cursor.go_to_position (p)  -- "local + NL"
 							txt.insert_string (l_locals)
 							l_pos := l_pos + l_locals.count + l_nb_cr
-							l_regions.force ([l_local_pos + 5 + 2, l_local_pos + 5 + 2 + l_locals.count + l_nb_cr]) -- code region
+							l_regions.force ([p, p + l_locals.count + l_nb_cr]) -- code region
 						else
 								-- no "local" found!
 							txt.cursor.go_to_position (l_start_pos)
-							txt.insert_string ("%N%T%Tlocal%N") -- 3 + 5 + 1 = 9 characters.
-							l_local_pos := l_start_pos + 3
+							txt.insert_string ("%N%T%Tlocal%N") -- NL + TAB + TAB + "local" + NL = 1+1+1+5+1 = 9 characters.
+							l_local_pos := l_start_pos + 3 -- 3 = NL + TAB + TAB
 							txt.insert_string (l_locals)
 							txt.insert_string ("%N%T%T")
-							if {PLATFORM}.is_windows then
-								l_nb_cr := l_nb_cr + 3 -- See inserted '%N' during the operation.
+							if txt_is_windows_eol_style then
+								l_nb_cr := l_nb_cr + 3 -- See 3 inserted '%N' during the operation.
 							end
-							l_pos := l_pos + 9 + l_locals.count + 3
+							l_pos := l_pos + 9 + l_locals.count + 3 + l_nb_cr
 
-							l_regions.force ([l_start_pos + 3 + 5 + 1, l_start_pos + 3 + 5 + 1 + l_locals.count + 3 + l_nb_cr]) -- locals region
+							p := l_start_pos + 3 + 5 + 1
+							if txt_is_windows_eol_style then
+								p := p + 1
+							end
+							l_regions.force ([p, p + l_locals.count + 3 + l_nb_cr]) -- locals region (maybe there is an extra +1 due to CR in `p` and tuple end pos).
 						end
 					end
 				end

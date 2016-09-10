@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 				s.append (toks.item.wide_image)
 				background_color := toks.item.background_color
 			end
-			text := s
+			initial_text := s
 
 			line := a_line
 			tokens := a_tokens
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	text: READABLE_STRING_32 assign set_text
+	initial_text: READABLE_STRING_32
 			-- Text in [start_pos:end_pos].
 
 	line: EDITOR_LINE assign set_line
@@ -58,6 +58,51 @@ feature -- Access
 	end_pos: INTEGER assign set_end_pos
 			-- End position of current token region.
 
+feature -- Query			
+
+	token_index_for_pos_in_text (a_pos_in_text: INTEGER): INTEGER
+			-- Index of token including `a_pos_in_text' within `tokens' container.
+		local
+			i: INTEGER
+			tok: detachable EDITOR_TOKEN
+		do
+			i := 0
+			across
+				tokens as ic
+			until
+				tok /= Void
+			loop
+				i := i + 1
+				tok := ic.item
+				if a_pos_in_text < tok.pos_in_text or tok.pos_in_text + tok.length < a_pos_in_text then
+					tok := Void
+				end
+			end
+			if tok /= Void then
+				Result := i
+			end
+		ensure
+			Result > 0 implies token_i_th (Result) /= Void
+		end
+
+	token_i_th (a_index: INTEGER): detachable EDITOR_TOKEN
+			-- Token at index `a_index' from container `tokens'.
+		local
+			i: INTEGER
+		do
+			i := 0
+			across
+				tokens as ic
+			until
+				Result /= Void
+			loop
+				i := i + 1
+				if i = a_index then
+					Result := ic.item
+				end
+			end
+		end
+
 feature -- Comparison
 
 	is_less alias "<" (other: like Current): BOOLEAN
@@ -67,11 +112,6 @@ feature -- Comparison
 		end
 
 feature -- Element change
-
-	set_text (a_text: READABLE_STRING_32)
-		do
-			text := a_text
-		end
 
 	set_line (a_line: EDITOR_LINE)
 		do
