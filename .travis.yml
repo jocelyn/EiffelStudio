@@ -19,5 +19,6 @@ git:
   
 script: 
     - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l Src/Eiffel
+    - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l Src/tools
 group: stable
 os: linux
