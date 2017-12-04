@@ -4127,6 +4127,9 @@ feature {NONE} -- Visitor
 		local
 			l_typed_pointer: TYPED_POINTER_A
 		do
+			if current_feature.is_instance_free then
+				error_handler.insert_error (create {VSTB}.make_current (current_feature, context.current_class, context.written_class, l_as.current_keyword))
+			end
 			create l_typed_pointer.make_typed (context.current_class_type)
 			set_type (l_typed_pointer, l_as)
 			instantiator.dispatch (l_typed_pointer, context.current_class)
@@ -5641,7 +5644,7 @@ feature {NONE} -- Visitor
 		do
 			reset_byte_node
 			l_error_level := error_level
-			if not is_inherited and then attached l_as.indexes as i and then i.is_instance_free then
+			if current_feature.is_instance_free then
 				if current_feature.is_attribute then
 					error_handler.insert_error (create {VFFD9X}.make (current_feature, context.current_class, l_as.feature_name))
 				elseif current_feature.is_object_relative_once then

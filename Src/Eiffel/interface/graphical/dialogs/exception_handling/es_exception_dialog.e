@@ -51,13 +51,13 @@ feature {NONE} -- Initialize
 			set_sub_title ("Internal EiffelStudio Exception")
 
 				-- Set dialog button text and actions
-			set_button_text (ignore_button, "Ignore")
+			set_button_text (ignore_button, interface_names.b_ignore)
 			set_button_action (ignore_button, agent on_ignore)
 
-			set_button_text (restart_now_button, "Restart Now")
+			set_button_text (restart_now_button, interface_names.b_restart_now)
 			set_button_action (restart_now_button, agent on_restart_now)
 
-			set_button_text (quit_button, "Quit")
+			set_button_text (quit_button, interface_names.b_quit)
 			set_button_action (quit_button, agent on_quit)
 
 				-- Allow dialog to be resized so user is able to see the full trace.
@@ -352,6 +352,7 @@ feature {NONE} -- Action handlers
 					l_description.append (locale_formatter.formatted_translation (lb_status_bar_text, [l_message]))
 					l_description.append_character ('%N')
 				end
+
 				last_description := l_description
 			end
 			create l_dialog.make (support_login, l_description)
@@ -398,7 +399,7 @@ invariant
 	support_login_attached: is_interface_usable implies support_login /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

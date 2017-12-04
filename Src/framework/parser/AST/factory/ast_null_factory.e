@@ -723,12 +723,12 @@ feature -- Access
 		do
 		end
 
-	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
+	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; c: BOOLEAN; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
 			-- New ENSURE AST node
 		do
 		end
 
-	new_ensure_then_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as, l_as: detachable KEYWORD_AS): detachable ENSURE_THEN_AS
+	new_ensure_then_as (a: detachable EIFFEL_LIST [TAGGED_AS]; c: BOOLEAN; k_as, l_as: detachable KEYWORD_AS): detachable ENSURE_THEN_AS
 			-- New ENSURE THEN AST node
 		do
 		end
@@ -1044,7 +1044,7 @@ feature -- Access
 		do
 		end
 
-	new_tagged_as (t: detachable ID_AS; e: detachable EXPR_AS; s_as: detachable SYMBOL_AS): detachable TAGGED_AS
+	new_tagged_as (t: detachable ID_AS; e: detachable EXPR_AS; c: detachable KEYWORD_AS; s_as: detachable SYMBOL_AS): detachable TAGGED_AS
 			-- New TAGGED AST node
 		do
 		end
@@ -1177,7 +1177,7 @@ feature -- Access
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

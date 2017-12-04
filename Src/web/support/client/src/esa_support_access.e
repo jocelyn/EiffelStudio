@@ -34,6 +34,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	last_error: detachable READABLE_STRING_32
+			-- last error detail, if any.
+
 	client: HTTP_CLIENT_SESSION
 			-- Http client session.
 
@@ -58,6 +61,10 @@ feature -- Access
 				l_http_response.append ("Status: " + g_response.status.out + "%N")
 				l_http_response.append (g_response.raw_header)
 				l_status := g_response.status
+				if attached g_response.error_message as l_message then
+					l_http_response.append (" ")
+					l_http_response.append (l_message)
+				end
 				if attached g_response.body as l_body then
 					l_http_response.append ("%N%N")
 					l_http_response.append (l_body)
@@ -119,45 +126,16 @@ feature -- Status report
 			support_accessible: Result implies client.is_available
 		end
 
-feature {NONE} -- Implementation
-
-	shared_ejson: SHARED_EJSON
-			-- Json configuration
-		once
-			fixme ("Refactor code: update class to remove the use of obsolete code.")
-			create Result
-		end
-
-	initialize_json_converters
-			-- json converters initialization.
-		once
-			fixme ("Refactor code: update class to remove the use of obsolete code.")
-			if attached shared_ejson.json as j then
-				j.add_converter (create {CJ_COLLECTION_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_DATA_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_ERROR_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_ITEM_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_QUERY_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_TEMPLATE_JSON_CONVERTER}.make)
-				j.add_converter (create {CJ_LINK_JSON_CONVERTER}.make)
-				if j.converter_for (create {ARRAYED_LIST [detachable ANY]}.make (0)) = Void then
-					j.add_converter (create {CJ_ARRAYED_LIST_JSON_CONVERTER}.make)
-				end
-			end
-		end
-
 feature -- Access
 
 	cj_collection (j: JSON_VALUE): detachable CJ_COLLECTION
 			-- collection json represenation.
 		local
-			conv: CJ_COLLECTION_JSON_CONVERTER
+			factory: CJ_COLLECTION_FACTORY
 		do
-			fixme ("Refactor code: update class to remove the use of obsolete code.")
 			if attached {JSON_OBJECT} j as jo then
-				initialize_json_converters
-				create conv.make
-				Result := conv.from_json (jo)
+				create factory
+				Result := factory.to_collection (jo)
 			end
 		end
 
@@ -173,11 +151,10 @@ feature -- Access
 
 	cj_template_to_json (tpl: CJ_TEMPLATE): detachable JSON_VALUE
 		local
-			conv: CJ_TEMPLATE_JSON_CONVERTER
+			factory: CJ_COLLECTION_FACTORY
 		do
-			initialize_json_converters
-			create conv.make
-			Result := conv.to_json (tpl)
+			create factory
+			Result := factory.template_to_json (tpl)
 		end
 
 feature {NONE} -- Constants
@@ -204,7 +181,11 @@ feature {NONE} -- Retrieve URL
 
 			l_resp := get (config.service_root, ctx)
 			if l_resp.status /= 200 then
-				(create {EXCEPTIONS}).raise ("Connection error: HTTP Status " + l_resp.status.out)
+				if attached l_resp.http_response as l_message then
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP " + l_message)
+				else
+					(create {EXCEPTIONS}).raise ("Connection error: HTTP Status" + l_resp.status.out)
+				end
 			else
 				if attached l_resp.collection as l_col and then attached l_col.links as l_links then
 					across

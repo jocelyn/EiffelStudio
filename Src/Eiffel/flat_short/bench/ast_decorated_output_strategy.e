@@ -1317,17 +1317,13 @@ feature {NONE} -- Implementation
 				end
 				l_text_formatter_decorator.put_origin_comment
 				l_text_formatter_decorator.exdent
-				if current_feature.is_transient or current_feature.is_stable or current_feature.is_instance_free then
-						-- Transient/stable/instance-free features always have a body thus we can handle the transient/stable/instance-free
+				if current_feature.is_transient or current_feature.is_stable then
+						-- Transient/stable features always have a body thus we can handle the transient/stable/instance-free
 						-- property here by adding a `note' clause just after the comments.
 					l_text_formatter_decorator.process_keyword_text (ti_note_keyword, Void)
 					l_text_formatter_decorator.indent
 					l_text_formatter_decorator.put_new_line
 					l_text_formatter_decorator.add_string ("option:")
-					if current_feature.is_instance_free then
-						l_text_formatter_decorator.add_string (" instance_free")
-						is_next_option := True
-					end
 					if current_feature.is_stable then
 						if is_next_option then
 							l_text_formatter_decorator.add_char (',')
@@ -4635,7 +4631,11 @@ feature {NONE} -- Implementation: helpers
 			end
 			l_text_formatter_decorator.new_expression
 			l_text_formatter_decorator.indent
-			l_as.expr.process (Current)
+			if attached l_as.expr as e then
+				e.process (Current)
+			elseif l_as.is_class then
+				l_text_formatter_decorator.process_keyword_text (ti_class_keyword, Void)
+			end
 			l_text_formatter_decorator.exdent
 			l_text_formatter_decorator.commit
 		end

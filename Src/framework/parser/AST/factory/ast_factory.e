@@ -992,10 +992,11 @@ feature -- Access
 	set_expanded_class_type (a_type: detachable TYPE_AS; is_expanded: BOOLEAN; s_as: detachable KEYWORD_AS)
 			-- Set expanded status of `a_type' if it is an instance of CLASS_TYPE_AS.
 		do
-			if is_expanded then
-				if attached {CLASS_TYPE_AS} a_type as l_class_type then
-					l_class_type.set_is_expanded (True, s_as)
-				end
+			if
+				is_expanded and then
+				attached {CLASS_TYPE_AS} a_type as l_class_type
+			then
+				l_class_type.set_is_expanded (True, s_as)
 			end
 		end
 
@@ -1351,16 +1352,16 @@ feature -- Access
 			end
 		end
 
-	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
+	new_ensure_as (a: detachable EIFFEL_LIST [TAGGED_AS]; c: BOOLEAN; k_as: detachable KEYWORD_AS): detachable ENSURE_AS
 			-- New ENSURE AST node
 		do
-			create Result.make (a, k_as)
+			create Result.make (a, c, k_as)
 		end
 
-	new_ensure_then_as (a: detachable EIFFEL_LIST [TAGGED_AS]; k_as, l_as: detachable KEYWORD_AS): detachable ENSURE_THEN_AS
+	new_ensure_then_as (a: detachable EIFFEL_LIST [TAGGED_AS]; c: BOOLEAN; k_as, l_as: detachable KEYWORD_AS): detachable ENSURE_THEN_AS
 			-- New ENSURE THEN AST node
 		do
-			create Result.make (a, k_as, l_as)
+			create Result.make (a, c, k_as, l_as)
 		end
 
 	new_export_item_as (c: detachable CLIENT_AS; f: detachable FEATURE_SET_AS): detachable EXPORT_ITEM_AS
@@ -1876,10 +1877,12 @@ feature -- Access
 			end
 		end
 
-	new_tagged_as (t: detachable ID_AS; e: detachable EXPR_AS; s_as: detachable SYMBOL_AS): detachable TAGGED_AS
+	new_tagged_as (t: detachable ID_AS; e: detachable EXPR_AS; c: detachable KEYWORD_AS; s_as: detachable SYMBOL_AS): detachable TAGGED_AS
 			-- New TAGGED AST node
 		do
-			if t /= Void or e /= Void then
+			if attached c then
+				create Result.make_class (t, c, s_as)
+			elseif t /= Void or e /= Void then
 				create Result.initialize (t, e, s_as)
 			end
 		end
@@ -2103,7 +2106,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

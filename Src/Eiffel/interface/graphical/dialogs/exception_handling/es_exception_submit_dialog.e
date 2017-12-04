@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 			l_hbox.extend (remember_me_check)
 			l_hbox.disable_item_expand (remember_me_check)
 
-			if not session_manager.is_service_available then
+			if session_manager.service = Void then
 					-- Remembering the user's details uses the session manager service, so if it's unavailble then
 					-- we there is no point showing the check mark
 				remember_me_check.hide
@@ -351,8 +351,8 @@ feature {NONE} -- Implementation: access
 			is_user_remembered: is_user_remembered
 		do
 			if
-				session_manager.is_service_available and then
-				attached {STRING_GENERAL} session_data.value (username_session_id) as s
+				attached session_manager.service as l_session_service and then
+				attached {STRING_GENERAL} session_data (l_session_service).value (username_session_id) as s
 			then
 				Result := s
 			else
@@ -370,8 +370,8 @@ feature {NONE} -- Implementation: access
 			is_user_remembered: is_user_remembered
 		do
 			if
-				session_manager.is_service_available and then
-				attached {STRING_GENERAL} session_data.value (password_session_id) as s
+				attached session_manager.service as l_session_service and then
+				attached {STRING_GENERAL} session_data (l_session_service).value (password_session_id) as s
 			then
 				Result := s
 			else
@@ -402,8 +402,8 @@ feature {NONE} -- Status report
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized or is_initializing
 		do
-			if session_manager.is_service_available then
-				if attached {BOOLEAN_REF} session_data.value_or_default (remembered_session_id, False) as l_ref then
+			if attached session_manager.service as l_session_service then
+				if attached {BOOLEAN_REF} session_data (l_session_service).value_or_default (remembered_session_id, False) as l_ref then
 					Result := l_ref.item
 				end
 			end
@@ -465,7 +465,13 @@ feature {NONE} -- Action handlers
 						shrink_timer.actions.extend (agent on_shrink_interval_expired_for_collapse)
 					else
 						if support_login.is_bad_request then
-							l_error_info := "Unable to login due to network problem. Please try again later."
+							if attached support_login.last_error as ll_error then
+								l_error_info := "Unable to login due to network problem. Please try again later."
+								l_error_info.append ("%N")
+								l_error_info.append (ll_error)
+							else
+								l_error_info := "Unable to login due to network problem. Please try again later."
+							end
 						else
 							l_error_info := "Unable to login with the specified user name and password. Please check and try again."
 						end
@@ -545,20 +551,22 @@ feature {NONE} -- Action handlers
 			is_initialized: is_initialized
 		local
 			l_remember: BOOLEAN
+			l_session_data: like session_data
 		do
-			if session_manager.is_service_available then
+			if attached session_manager.service as l_session_service then
+				l_session_data := session_data (l_session_service)
 				l_remember := remember_me_check.is_selected
-				session_data.set_value (l_remember, remembered_session_id)
+				l_session_data.set_value (l_remember, remembered_session_id)
 				if l_remember then
-					session_data.set_value (username_text.text, username_session_id)
-					session_data.set_value (password_text.text, password_session_id)
+					l_session_data.set_value (username_text.text, username_session_id)
+					l_session_data.set_value (password_text.text, password_session_id)
 				else
 						-- Clear remembered data
-					session_data.set_value (Void, username_session_id)
-					session_data.set_value (Void, password_session_id)
+					l_session_data.set_value (Void, username_session_id)
+					l_session_data.set_value (Void, password_session_id)
 				end
 					-- Store session information incase user selects to quit ES.
-				session_manager.service.store (session_data)
+				l_session_service.store (l_session_data)
 			end
 		end
 
@@ -947,7 +955,11 @@ feature {NONE} -- Reporting
 				l_transistion.hide
 
 				if support_login.is_bad_request then
-					create l_error.make_standard ("Unable to submit bug report due to network problem. Please try again later.")
+					if attached support_login.last_error as ll_error then
+						create l_error.make_standard ("Unable to submit bug report due to network problem. Please try again later.%N" + ll_error)
+					else
+						create l_error.make_standard ("Unable to submit bug report due to network problem. Please try again later.")
+					end
 					l_error.show (dialog)
 				else
 					create l_thanks.make_standard (locale_formatter.translation (lb_submitted))
@@ -1038,7 +1050,7 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
