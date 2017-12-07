@@ -1,72 +1,60 @@
 ﻿note
 
-	description: "Error for a declaration of an instance-free object-relative once."
-	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Features with different instance-free status cannot be joined."
 
-class VFFD10X
+class VDJR4_NEW
 
 inherit
-
-	FEATURE_ERROR
+	VDJR_NEW
 		redefine
-			print_short_help,
-			trace_single_line
+			print_error_message,
+			print_single_line_error_message
 		end
 
-	INTERNAL_COMPILER_STRING_EXPORTER
-	SHARED_NAMES_HEAP
+create {COMPILER_EXPORTER}
 
-create
 	make
 
-feature {NONE} -- Creation
+feature -- Access
 
-	make (f: FEATURE_I; c: CLASS_C; l: LOCATION_AS)
-			-- Create an error for a feature `f` in class `c`.
-		require
-			f_attached: attached f
-			c_attached: attached c
-			l_attached: attached l
-		do
-			class_c := c
-			set_feature (f)
-			set_location (l)
-		ensure
-			class_c_set: class_c = c
-			e_feature_set: attached e_feature
-			line_set: line = l.line
-			column_set: column = l.column
-		end
-
-feature -- Properties
-
-	code: STRING = "VFFD10x"
-			-- Error code
+	subcode: INTEGER = 4
+			-- <Precursor>
 
 feature {NONE} -- Output
 
-	print_short_help (t: TEXT_FORMATTER)
+	print_error_message (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
+			print_error_code (t)
 			t.add_new_line
-			t.add (locale.translation_in_context ("[
-				Error: An object-relative once feature cannot be declared as instance-free.
-				What to do: Remove the value "instance_free" from the note tag "option" or remove the key "OBJECT" from the list of once keys.
-			]", "compiler.error"))
+			format_elements (t, locale.translation_in_context
+					({STRING_32} "[
+						Joined features {1} and {2} have different instance-free status.
+						
+						What to do:
+							• make sure both features have the same instance-free status or
+							• avoid joining them.
+					]",
+					"eiffel.error"),
+				<<agent feature_1.append_name, agent feature_2.append_name>>
+			)
+				-- Make sure any other information about the error comes at a new line.
+			t.add_new_line
 			t.add_new_line
 		end
 
-	trace_single_line (t: TEXT_FORMATTER)
+	print_single_line_error_message (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			format_elements (t, locale.translation_in_context ("The object-relative once feature {1} is declared as instance-free.", "compiler.error"),
-				<<agent e_feature.append_name>>)
+			format_elements (t, locale.translation_in_context
+					("Joined features {1} and {2} are not both instance-free.",
+					"eiffel.error"),
+				<<agent feature_1.append_name, agent feature_2.append_name>>)
 		end
 
 note
+	date: "$Date$";
+	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
