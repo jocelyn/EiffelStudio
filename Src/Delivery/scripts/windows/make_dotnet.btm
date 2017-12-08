@@ -5,9 +5,9 @@ cdd %EIFFEL_SRC
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
 espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake msbuild_20"
-copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
-copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
-copy EiffelSoftware.Runtime.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\lib
+safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+safe_copy EiffelSoftware.Runtime.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
 remtrace Compiling Eiffel Assembly Cache
 cdd %EIFFEL_SRC\dotnet\consumer
@@ -17,8 +17,8 @@ iff not exist libEiffelSoftware.MetadataConsumer.dll then
 	remtrace Could not compile EiffelSoftware.MetadataConsumer.dll
 	CANCEL
 endiff
-copy EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
-copy libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+safe_copy EiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+safe_copy libEiffelSoftware.MetadataConsumer.dll %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Compiling Eiffel Metadata Cosumer Executable
 cdd %EIFFEL_SRC\dotnet\consumer
@@ -28,8 +28,8 @@ iff not exist libemdc.dll then
 	remtrace Could not compile emdc.exe
 	CANCEL
 endiff
-copy emdc.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
-copy libemdc.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+safe_copy emdc.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+safe_copy libemdc.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
 
 cdd %EIFFEL_SRC

@@ -1,0 +1,4 @@
+iff not defined INIT_DIR then
+	set INIT_DIR=%@EXECSTR[cd]
+endiff
+call %INIT_DIR\set_aliases.btm

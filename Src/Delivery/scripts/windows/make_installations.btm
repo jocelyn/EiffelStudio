@@ -1,19 +1,17 @@
 @echo off
 
+call %~dp0init.btm
+
+set EIFFEL_SRC=%TMP_EIFFEL_SRC
+set ISE_LIBRARY=%TMP_EIFFEL_SRC
+set ISE_SRC=%TMP_EIFFEL_SRC
+
 iff not defined INSTALL_DIR then 
 	echo INSTALL_DIR not defined
 	CANCEL
 endiff
-iff not defined INIT_DIR then
-	set INIT_DIR=%@EXECSTR[cd]
-endiff
-iff not defined INSTALL_LOG then
-	set INSTALL_LOG=%INIT_DIR%\install.log
-endiff
 
-call %INIT_DIR%\set_simple_aliases.btm
-
-set SVN_VERSION=%@EXECSTR[bash -o igncr set_version.sh %EIFFEL_SRC]
+set SVN_VERSION=%@EXECSTR[bash set_version.sh %EIFFEL_SRC]
 
 cdd %INIT_DIR\install
 safe_md %INIT_DIR\install\bin
@@ -31,7 +29,7 @@ iff .%1.==.. then
 	remtrace ---------------------------------------------
 
 	cdd %EIFFEL_SRC\tools
-	co -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/hallow hallow
+	co -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/hallow hallow
 	cd %EIFFEL_SRC\tools\hallow
 	clean_project
 	finalize hallow.ecf
@@ -81,11 +79,11 @@ nmake /nologo
 
 remtrace Preparing GPL edition
 nmake /nologo gpl_%WINNAME
-copy %INIT_DIR\install\bin\studio_gpl_%WINNAME\package.msi %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.msi
+safe_copy %INIT_DIR\install\bin\studio_gpl_%WINNAME\package.msi %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.msi
 
 remtrace Preparing Commercial edition
 nmake /nologo enterprise_%WINNAME
-copy %INIT_DIR\install\bin\studio_ent_%WINNAME\package.msi %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.msi
+safe_copy %INIT_DIR\install\bin\studio_ent_%WINNAME\package.msi %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.msi
 
 remtrace ----------------------------------------------
 remtrace Building the Zips
@@ -93,19 +91,19 @@ remtrace ----------------------------------------------
 cdd %INSTALL_DIR
 ren EiffelStudio %STUDIO_NAME%
 
-copy %INSTALL_DIR\releases\gpl_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-copy %INSTALL_DIR\releases\gpl_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+safe_copy %INSTALL_DIR\releases\gpl_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+safe_copy %INSTALL_DIR\releases\gpl_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 iff exist %INSTALL_DIR\releases\gpl_version\LICENSE then
-	copy %INSTALL_DIR\releases\gpl_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+	safe_copy %INSTALL_DIR\releases\gpl_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
 else
 	remtrace Missing GPL license text
 endiff
 7z a -t7z %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.7z %STUDIO_NAME% -mx9 >>& %INSTALL_LOG
 
-copy %INSTALL_DIR\releases\enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
-copy %INSTALL_DIR\releases\enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+safe_copy %INSTALL_DIR\releases\enterprise_version\ec.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
+safe_copy %INSTALL_DIR\releases\enterprise_version\ecb.exe %INSTALL_DIR\%STUDIO_NAME%\studio\spec\%ISE_PLATFORM%\bin
 iff exist %INSTALL_DIR\releases\enterprise_version\LICENSE then
-	copy %INSTALL_DIR\releases\enterprise_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
+	safe_copy %INSTALL_DIR\releases\enterprise_version\LICENSE %INSTALL_DIR\%STUDIO_NAME%\LICENSE
 else
 	remtrace Missing Enterprise license text
 endiff
@@ -117,10 +115,10 @@ ren %STUDIO_NAME% EiffelStudio
 
 remtrace Uploading packages online
 cdd %INSTALL_DIR\setups\gpl
-scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.msi manus@eiffel.com:builds/nightly/
-ssh manus@eiffel.com chmod 444 builds/nightly/%STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.msi
-scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.7z manus@eiffel.com:builds/nightly/
-ssh manus@eiffel.com chmod 444 builds/nightly/%STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.7z
+scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.msi %ISE_NIGHTLY_SCP_LOCATION%
+ssh %ISE_NIGHTLY_SCP_USER%@%ISE_NIGHTLY_SCP_HOST% chmod 444 %ISE_NIGHTLY_SCP_PATH%/%STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.msi
+scp %STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.7z %ISE_NIGHTLY_SCP_LOCATION%
+ssh %ISE_NIGHTLY_SCP_USER%@%ISE_NIGHTLY_SCP_HOST% chmod 444 %ISE_NIGHTLY_SCP_PATH%/%STUDIO_NAME%_gpl_%SVN_VERSION%-%ISE_PLATFORM%.7z
 
 fullrf %INSTALL_DIR\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ec.exe
 fullrf %INSTALL_DIR\EiffelStudio\studio\spec\%ISE_PLATFORM%\bin\ecb.exe

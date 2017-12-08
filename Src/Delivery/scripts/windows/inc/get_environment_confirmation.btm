@@ -1,0 +1,12 @@
+echo You have 60s to cancel this build
+choice /T 60 /C cyn /N /D y /M "Press [C] to cancel, Press [Y] to continue now, or wait 60s ..."
+if %ERRORLEVEL% == 2 goto CONTINUE
+goto ABORT
+
+:ABORT
+echo Operation cancelled!
+CANCEL
+goto eof
+
+:CONTINUE
+goto eof

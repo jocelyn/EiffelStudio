@@ -16,9 +16,9 @@ iff not exist iron.exe then
 	CANCEL
 endiff
 move iron.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
-copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\libcurl.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
-copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\libeay32.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
-copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\ssleay32.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
+safe_copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\libcurl.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
+safe_copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\libeay32.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
+safe_copy %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin\ssleay32.dll %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin\
 
 remtrace Recompile syntax_updater
 cdd %EIFFEL_SRC\tools\syntax_updater
@@ -100,8 +100,8 @@ move po_generation_tool.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 remtrace Recompile eiffel_ribbon
 safe_md %STUDIO_DIR\tools\ribbon
 cdd %STUDIO_DIR\tools\ribbon
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/eiffel_ribbon/template template
-exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/tools/eiffel_ribbon/images images
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/eiffel_ribbon/template template
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/eiffel_ribbon/images images
 cdd %EIFFEL_SRC\tools\eiffel_ribbon
 clean_project
 finalize eiffel_ribbon.ecf
