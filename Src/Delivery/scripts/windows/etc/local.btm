@@ -1,0 +1,36 @@
+echo Load local settings
+
+set ISE_EIFFEL=C:\DEV\Eiffel\17.11
+set ISE_PLATFORM=win64
+set ISE_C_COMPILER=msc
+set ISE_C_COMPILER=msc_vc140
+set ISE_EC_FLAGS=-full
+REM set ISE_C_COMPILER_VER=WSDK71
+set ISE_C_COMPILER_VER=vc100
+set ISE_C_COMPILER_VER=vc140
+set MYSQL=C:\Program Files (x86)\MySQL\MySQL Connector.C 6.1
+rem set MYSQL=C:\DEV\mysql\winx64\
+rem set MYSQL=C:\apps\mysql-5.6.22-winx64\
+
+iff not defined WORK_DIR then
+	set WORK_DIR=C:\DEV\deliv
+endiff
+iff not defined DEFAULT_PUBLIC_SVN then
+	set DEFAULT_PUBLIC_SVN=file:///C:/DEV/ise/repos/mirrors/svn/eiffelstudio/trunk
+rem 	set DEFAULT_PUBLIC_SVN=svn://192.168.1.11:3699/trunk
+endiff
+iff not defined DEFAULT_ISE_SVN then
+	set DEFAULT_ISE_SVN=svn://jfiat@svn.ise:3691/ise_svn/trunk
+	set DEFAULT_ISE_SVN=file:///C:/DEV/ise/repos/mirrors/svn/ise/trunk
+rem	set DEFAULT_ISE_SVN=svn://192.168.1.11:3698/trunk
+endiff
+iff not defined ISE_C_COMPILER_VER then
+rem set ISE_C_COMPILER_VER=VC140
+rem set ISE_C_COMPILER_VER=WSDK71
+endiff
+
+set PATH=%PATH%;C:\cygwin64\bin
+
+set DELIV_SKIP_ERROR="True"
+set DELIV_CORE_ONLY="True"
+
