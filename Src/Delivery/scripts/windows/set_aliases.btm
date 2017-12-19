@@ -22,6 +22,7 @@ set DELIV_DIR=%WORK_DIR%\%STUDIO_VERSION_MAJOR_MINOR%_deliv
 
 REM The file where all output is stored
 set INSTALL_LOG=%DELIV_DIR\install.log
+set ERROR_LOG=%DELIV_DIR\error.log
 REM NB: The following directory is where a new version of ec.exe will be finalized.
 set FINALIZATION_DIR=%DELIV_DIR
 REM NB: The following directory must contain document.exe

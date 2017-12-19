@@ -259,48 +259,59 @@ cdd %EIFFEL_SRC\tools
 co %DEFAULT_ISE_SVN/Src/tools/gdiplus gdiplus
 move gdiplus\gdiplus.dll %INSTALL_DIR\releases
 
-remtrace Recompiling EiffelBuild
-cdd %INIT_DIR
-call make_build.btm
-
-remtrace Recompiling Vision2 tour
-cdd %INIT_DIR
-call make_vision2_demo.btm
-
-remtrace Recompile Legacy++
-cdd %EIFFEL_SRC\tools\legacy\PCCTS
-safe_md bin
-espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f makefile.win"
-cd ..
-cd legacy
-espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f makefile.win"
-iff exist legacy.exe then
-	move legacy.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+iff defined DELIV_CORE_ONLY then
+	remtrace Skipping EiffelBuild
+	remtrace Skipping Vision2 tour
 else
-	remtrace Couldnt generate legacy.exe
-REM	CANCEL
-endiff
+	remtrace Recompiling EiffelBuild
+	cdd %INIT_DIR
+	call make_build.btm
 
-remtrace Getting eweasel source code
-safe_md %EIFFEL_SRC\eweasel
-co -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/eweasel/source %EIFFEL_SRC\eweasel\source
-remtrace Compiling eweasel
-safe_md %STUDIO_DIR\eweasel
-safe_md %STUDIO_DIR\eweasel\spec
-safe_md %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM
-safe_md %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
-cdd %EIFFEL_SRC\eweasel\source
-clean_project
-set OLD_EWEASEL=%EWEASEL
-set EWEASEL=%EIFFEL_SRC\eweasel
-finalize eweasel.ecf eweasel_st
-cleanup_eiffel eweasel_st eweasel.exe
-move eweasel.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
-finalize eweasel.ecf eweasel_mt
-cleanup_eiffel eweasel_mt eweasel-mt.exe
-move eweasel-mt.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
-set EWEASEL=%OLD_EWEASEL
-set OLD_EWEASEL=
+	remtrace Recompiling Vision2 tour
+	cdd %INIT_DIR
+	call make_vision2_demo.btm
+
+	remtrace Recompile Legacy++
+	cdd %EIFFEL_SRC\tools\legacy\PCCTS
+	safe_md bin
+	espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f makefile.win"
+	cd ..
+	cd legacy
+	espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c nmake -f makefile.win"
+	iff exist legacy.exe then
+		move legacy.exe %STUDIO_DIR\studio\spec\%ISE_PLATFORM\bin
+	else
+		remtrace Couldnt generate legacy.exe
+		iff "%DELIV_SKIP_ERROR%" == "True" then
+			remerror Can not build syntax_updater
+		else
+			remerror Can not build syntax_updater
+REM			CANCEL
+		endiff
+	endiff
+
+	remtrace Getting eweasel source code
+	safe_md %EIFFEL_SRC\eweasel
+	co -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/eweasel/source %EIFFEL_SRC\eweasel\source
+	remtrace Compiling eweasel
+	safe_md %STUDIO_DIR\eweasel
+	safe_md %STUDIO_DIR\eweasel\spec
+	safe_md %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM
+	safe_md %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
+	cdd %EIFFEL_SRC\eweasel\source
+	clean_project
+	set OLD_EWEASEL=%EWEASEL
+	set EWEASEL=%EIFFEL_SRC\eweasel
+	finalize eweasel.ecf eweasel_st
+	cleanup_eiffel eweasel_st eweasel.exe
+	move eweasel.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
+	finalize eweasel.ecf eweasel_mt
+	cleanup_eiffel eweasel_mt eweasel-mt.exe
+	move eweasel-mt.exe %STUDIO_DIR\eweasel\spec\%ISE_PLATFORM\bin
+	set EWEASEL=%OLD_EWEASEL
+	set OLD_EWEASEL=
+
+endiff
 
 remtrace Compiling Eiffel Software tools
 cdd %INIT_DIR
@@ -317,47 +328,58 @@ finalize geant.ecf geant
 cleanup_eiffel geant geant.exe
 move geant.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
-remtrace gec
-finalize gec.ecf gec
-cleanup_eiffel gec gec.exe
-move gec.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
-
 remtrace gelex
 finalize gelex.ecf gelex
 cleanup_eiffel gelex gelex.exe
 move gelex.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
-
-remtrace gelint
-finalize gelint.ecf gelint
-cleanup_eiffel gelint gelint.exe
-move gelint.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
-
-remtrace gepp
-finalize gepp.ecf gepp
-cleanup_eiffel gepp gepp.exe
-move gepp.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
-
-remtrace getest
-finalize getest.ecf getest
-cleanup_eiffel getest getest.exe
-move getest.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
-
-remtrace gexace
-finalize gexace.ecf gexace
-cleanup_eiffel gexace gexace.exe
-move gexace.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
-
-remtrace gexslt
-finalize gexslt.ecf gexslt
-cleanup_eiffel gexslt gexslt.exe
-move gexslt.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
 remtrace geyacc
 finalize geyacc.ecf geyacc
 cleanup_eiffel geyacc geyacc.exe
 move geyacc.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
+iff defined DELIV_CORE_ONLY then
+	remtrace Skipping gec
+	remtrace Skipping gelint
+	remtrace Skipping gepp
+	remtrace Skipping getest
+	remtrace Skipping gexace
+	remtrace Skipping gexslt
+else
+
+	remtrace gec
+	finalize gec.ecf gec
+	cleanup_eiffel gec gec.exe
+	move gec.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+
+	remtrace gelint
+	finalize gelint.ecf gelint
+	cleanup_eiffel gelint gelint.exe
+	move gelint.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+
+	remtrace gepp
+	finalize gepp.ecf gepp
+	cleanup_eiffel gepp gepp.exe
+	move gepp.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+
+	remtrace getest
+	finalize getest.ecf getest
+	cleanup_eiffel getest getest.exe
+	move getest.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+
+	remtrace gexace
+	finalize gexace.ecf gexace
+	cleanup_eiffel gexace gexace.exe
+	move gexace.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+
+	remtrace gexslt
+	finalize gexslt.ecf gexslt
+	cleanup_eiffel gexslt gexslt.exe
+	move gexslt.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
+endiff
+
 remtrace Compiling .NET components
 cdd %INIT_DIR
 call make_dotnet.btm
 cdd %EIFFEL_SRC
+

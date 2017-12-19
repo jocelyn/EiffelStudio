@@ -74,15 +74,15 @@ safe_md %INSTALL_DIR\setups\gpl
 safe_md %INSTALL_DIR\setups\enterprise
 
 remtrace Creating WIX files
-nmake /nologo clean
-nmake /nologo
+espawn "nmake /nologo clean"
+espawn "nmake /nologo"
 
 remtrace Preparing GPL edition
-nmake /nologo gpl_%WINNAME
+espawn "nmake /nologo gpl_%WINNAME"
 safe_copy %INIT_DIR\install\bin\studio_gpl_%WINNAME\package.msi %INSTALL_DIR\setups\gpl\%STUDIO_NAME%_gpl_%SVN_VERSION-%ISE_PLATFORM%.msi
 
 remtrace Preparing Commercial edition
-nmake /nologo enterprise_%WINNAME
+espawn "nmake /nologo enterprise_%WINNAME"
 safe_copy %INIT_DIR\install\bin\studio_ent_%WINNAME\package.msi %INSTALL_DIR\setups\enterprise\%STUDIO_NAME%_ent_%SVN_VERSION-%ISE_PLATFORM%.msi
 
 remtrace ----------------------------------------------

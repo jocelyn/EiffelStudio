@@ -34,6 +34,7 @@ alias set_parent_dir_of `for %%a in ("%2") do set "%1=%%~dpa%%"`
 
 REM Helpers for the script
 REM Give some info on what's happening, both in the log and on the screen
+alias remerror `echo ERROR %$ & echo -------------------------------- >>& %ERROR_LOG% & echo %$ >>& %ERROR_LOG`
 alias remtrace `echo %$ & echo -------------------------------- >>& %INSTALL_LOG & echo %$ >>& %INSTALL_LOG`
 REM Give info concerning the elapsed time
 alias give_time_to `remtrace time used to %$: & remtrace %@TIMER[1] & TIMER ON /1 >> NUL`
@@ -73,6 +74,6 @@ REM Tests....
 alias testpar `if %@INDEX[%$,no_compile] ge 0 echo true`
 
 REM /bin/bash
-alias bash `bash -o igncr %$`
+alias bash `*bash -o igncr %$`
 
 

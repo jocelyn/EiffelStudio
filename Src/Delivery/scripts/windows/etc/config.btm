@@ -48,3 +48,8 @@ endiff
 iff not defined ISE_NIGHTLY_SCP_LOCATION then
 	set ISE_NIGHTLY_SCP_LOCATION=%ISE_NIGHTLY_SCP_USER%@%ISE_NIGHTLY_SCP_HOST%:%ISE_NIGHTLY_SCP_PATH%
 endiff
+
+set PATH=%PATH%;%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin;%ISE_EIFFEL%\tools\spec\%ISE_PLATFORM%\bin
+set PATH=%PATH%;%ISE_EIFFEL%\library\gobo\spec\%ISE_PLATFORM%\bin
+set PATH=%PATH%;%ISE_EIFFEL%\gcc\%ISE_PLATFORM%\msys\1.0\bin
+

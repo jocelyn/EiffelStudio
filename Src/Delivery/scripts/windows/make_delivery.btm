@@ -1,8 +1,8 @@
 @echo off
 setlocal
 
-REM Adding Wix to the path.
-set PATH=%PATH;%@EXECSTR[cd]\wix
+REM Save previous environment
+REM FIXME: is it still needed with use of setlocal?
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set OLD_ISE_LIBRARY=%ISE_LIBRARY
@@ -13,6 +13,11 @@ call %~dp0init.btm
 
 REM Create parent dir of %INSTALL_LOG if it does not exist.
 set_parent_dir_of PDIR %INSTALL_LOG%
+iff not isdir %PDIR then
+	md /S %PDIR
+	remtrace Create directory %PDIR
+endiff
+set_parent_dir_of PDIR %ERROR_LOG%
 iff not isdir %PDIR then
 	md /S %PDIR
 	remtrace Create directory %PDIR
@@ -63,14 +68,11 @@ else
 	unset /Q NO_WIZARDS
 endiff
 
-set EIFFEL_SRC=%TMP_EIFFEL_SRC
-set ISE_LIBRARY=%TMP_EIFFEL_SRC
-set ISE_SRC=%TMP_EIFFEL_SRC
-
 cdd %INIT_DIR
 
 REM This is not a comment, it should create a 0-sized log file.
-REM > %INSTALL_LOG
+REM > %INSTALL_LOG%
+REM > %ERROR_LOG%
 
 remtrace Approximative starting time:
 remtrace %_TIME
@@ -249,46 +251,57 @@ call make_libraries.btm %STUDIO_DIR\experimental experimental/library
 cdd %INIT_DIR
 call make_other_libraries.btm %STUDIO_DIR
 
+:clibs
 remtrace Compile C code of Eiffel Software C libraries
 
 call %INIT_DIR\inc\set_has_c_compiler HAS_VC140 VC140 
-iff defined ISE_C_COMPILER_VER .and. %ISE_C_COMPILER_VER% != "VC140" then
+
+iff defined ISE_C_COMPILER_VER .and. "%ISE_C_COMPILER_VER%" != "VC140" then
 	call %INIT_DIR\inc\set_has_c_compiler HAS_C_COMP_VER %ISE_C_COMPILER_VER 
 else
 	set "HAS_C_COMP_VER=False"
 endiff
 
-cdd %INIT_DIR
-iff %HAS_VC140% == "True" then
+iff "%HAS_VC140%" == "True" then
+	cdd %INIT_DIR
+	remtrace Build the C libraries of non-Eiffel Software C libraries for msc_vc140
 	call espawn -u:VC140 "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR msc_vc140"
 endiff
-iff %HAS_C_COMP_VER% == "True" then
+iff "%HAS_C_COMP_VER%" == "True" then
+	remtrace Build the C libraries of non-Eiffel Software C libraries for %ISE_C_COMPILER_VER%
 	cdd %INIT_DIR
 	call espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR msc"
 endiff
 cdd %INIT_DIR
+remtrace Build the C libraries of non-Eiffel Software C libraries for mingw
 call compile_c_libraries.btm %STUDIO_DIR mingw
 
-cdd %INIT_DIR
-iff %HAS_VC140% == "True" then
+iff "%HAS_VC140%" == "True" then
+	cdd %INIT_DIR
+	remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for msc_vc140
 	call espawn -u:VC140 "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc_vc140"
 endiff
-iff %HAS_C_COMP_VER% == "True" then
+
+iff "%HAS_C_COMP_VER%" == "True" then
+	remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for %ISE_C_COMPILER_VER%
 	cdd %INIT_DIR
 	espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_c_libraries.btm %STUDIO_DIR\experimental msc"
 endiff
 cdd %INIT_DIR
+remtrace Build the Experimental C libraries of non-Eiffel Software C libraries for mingw 
 call compile_c_libraries.btm %STUDIO_DIR\experimental mingw
 
-remtrace Build the C libraries of non-Eiffel Software C libraries
-cdd %INIT_DIR
-iff %HAS_VC140% == "True" then
+iff "%HAS_VC140%" == "True" then
+	remtrace Build the other C libraries of non-Eiffel Software C libraries for msc_vc140
+	cdd %INIT_DIR
 	espawn -u:VC140 "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc_vc140"
 endiff
-iff %HAS_C_COMP_VER% == "True" then
+iff "%HAS_C_COMP_VER%" == "True" then
+	remtrace Build the other C libraries of non-Eiffel Software C libraries for %ISE_C_COMPILER_VER%
 	cdd %INIT_DIR
 	espawn -u:%ISE_C_COMPILER_VER% "%COMSPEC% /c compile_other_c_libraries.btm %STUDIO_DIR msc"
 endiff
+remtrace Build the other C libraries of non-Eiffel Software C libraries for mingw
 cdd %INIT_DIR
 call compile_other_c_libraries.btm %STUDIO_DIR mingw
 
