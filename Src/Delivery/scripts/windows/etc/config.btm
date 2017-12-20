@@ -1,4 +1,3 @@
-
 REM Check local file
 iff exist %~dp0local.btm then
 	call %~dp0local.btm
@@ -32,8 +31,9 @@ iff not defined DEFAULT_ISE_SVN then
 endiff
 
 iff not defined ISE_C_COMPILER_VER then
-	set ISE_C_COMPILER_VER=WSDK71
+REM	set ISE_C_COMPILER_VER=WSDK71
 REM	set ISE_C_COMPILER_VER=VC140
+	set ISE_C_COMPILER_VER=VC100
 endiff
 
 iff not defined ISE_NIGHTLY_SCP_HOST then
@@ -53,3 +53,4 @@ set PATH=%PATH%;%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin;%ISE_EIFFEL%\tools\s
 set PATH=%PATH%;%ISE_EIFFEL%\library\gobo\spec\%ISE_PLATFORM%\bin
 set PATH=%PATH%;%ISE_EIFFEL%\gcc\%ISE_PLATFORM%\msys\1.0\bin
 
+set PATH=%PATH%;%~dp0..\bin

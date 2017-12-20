@@ -11,6 +11,8 @@ echo The public svn repository: %DEFAULT_PUBLIC_SVN
 echo The revision that will be generated: %PUBLIC_SVN_REVISION
 echo ecb version:
 ecb -version
+echo The C environment: ISE_C_COMPILER=%ISE_C_COMPILER% (ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%)
+echo MYSQL lib location: %MYSQL%
 echo -----------------------------
 iff exist %INSTALL_DIR .or. isdir %INSTALL_DIR then
 	echo Warning: %INSTALL_DIR will be replaced by the installation script, you will lose everything in it

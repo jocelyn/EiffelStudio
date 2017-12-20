@@ -1,16 +1,29 @@
 echo Load local settings
 
-set ISE_EIFFEL=C:\DEV\Eiffel\17.11
+REM set ISE_PLATFORM=windows
 set ISE_PLATFORM=win64
-set ISE_C_COMPILER=msc
-set ISE_C_COMPILER=msc_vc140
+
+set ISE_EIFFEL=C:\DEV\Eiffel\17.11_%ISE_PLATFORM%
+
 set ISE_EC_FLAGS=-full
-REM set ISE_C_COMPILER_VER=WSDK71
-set ISE_C_COMPILER_VER=vc100
-set ISE_C_COMPILER_VER=vc140
-set MYSQL=C:\Program Files (x86)\MySQL\MySQL Connector.C 6.1
-rem set MYSQL=C:\DEV\mysql\winx64\
-rem set MYSQL=C:\apps\mysql-5.6.22-winx64\
+
+set ISE_C_COMPILER=msc_vc140
+set ISE_C_COMPILER_VER=VC140
+
+set ISE_C_COMPILER=msc
+set ISE_C_COMPILER_VER=WSDK71
+rem set ISE_C_COMPILER_VER=VC100x
+rem set ISE_C_COMPILER_VER=VC100
+
+iff "%ISE_PLATFORM%" == "win64" then
+	rem set MYSQL=C:\Program Files (x86)\MySQL\MySQL Connector.C 6.1
+	rem set MYSQL=C:\DEV\mysql\winx64\
+	rem set MYSQL=C:\apps\mysql-5.6.22-winx64\
+	set MYSQL=C:\DEV\3rd\mysql\mysql-5.6.38-winx64
+else
+	rem set MYSQL=C:\Program Files (x86)\MySQL\MySQL Connector.C 6.1
+	set MYSQL=C:\DEV\3rd\mysql\mysql-5.6.38-win32
+endiff
 
 iff not defined WORK_DIR then
 	set WORK_DIR=C:\DEV\deliv
@@ -25,12 +38,12 @@ iff not defined DEFAULT_ISE_SVN then
 rem	set DEFAULT_ISE_SVN=svn://192.168.1.11:3698/trunk
 endiff
 iff not defined ISE_C_COMPILER_VER then
-rem set ISE_C_COMPILER_VER=VC140
+set ISE_C_COMPILER_VER=VC140
 rem set ISE_C_COMPILER_VER=WSDK71
 endiff
 
 set PATH=%PATH%;C:\cygwin64\bin
+set PATH=%PATH%;C:\Program Files\7-Zip
 
 set DELIV_SKIP_ERROR="True"
-set DELIV_CORE_ONLY="True"
 
