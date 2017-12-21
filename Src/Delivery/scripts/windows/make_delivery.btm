@@ -82,13 +82,15 @@ call inc\display_environment.btm
 call inc\get_environment_confirmation.btm
 if %ERRORLEVEL% == 0 CANCEL
 
-rem remtrace --------------------------------
-rem remtrace Installation parameters are:
-rem remtrace  - ISE_EIFFEL=%ISE_EIFFEL
-rem remtrace  - ISE_PLATFORM=%ISE_PLATFORM
-rem remtrace  - INSTALL_DIR=%INSTALL_DIR 
-rem remtrace  - STUDIO_DIR=%STUDIO_DIR
-rem remtrace --------------------------------
+remtrace --------------------------------
+remtrace Installation parameters are:
+remtrace  - ISE_EIFFEL=%ISE_EIFFEL%
+remtrace  - ISE_PLATFORM=%ISE_PLATFORM%
+remtrace  - ISE_C_COMPILER=%ISE_C_COMPILER%
+remtrace  - ISE_C_COMPILER_VER=%ISE_C_COMPILER_VER%
+remtrace  - INSTALL_DIR=%INSTALL_DIR%
+remtrace  - STUDIO_DIR=%STUDIO_DIR%
+remtrace --------------------------------
 
 cdd %INIT_DIR
 
@@ -255,12 +257,14 @@ call make_other_libraries.btm %STUDIO_DIR
 remtrace Compile C code of Eiffel Software C libraries
 
 call %INIT_DIR\inc\set_has_c_compiler HAS_VC140 VC140 
+remtrace HAS_VC140=%HAS_VC140%
 
 iff defined ISE_C_COMPILER_VER .and. "%ISE_C_COMPILER_VER%" != "VC140" then
-	call %INIT_DIR\inc\set_has_c_compiler HAS_C_COMP_VER %ISE_C_COMPILER_VER 
+	call %INIT_DIR\inc\set_has_c_compiler HAS_C_COMP_VER %ISE_C_COMPILER_VER%
 else
 	set "HAS_C_COMP_VER=False"
 endiff
+remtrace HAS_C_COMP_VER=%HAS_C_COMP_VER%
 
 iff "%HAS_VC140%" == "True" then
 	cdd %INIT_DIR

@@ -47,10 +47,12 @@ REM
 set STUDIO_NAME=Eiffel_%STUDIO_VERSION_MAJOR_MINOR
 
 iff "%ISE_PLATFORM%" == "win64" then
-set INSTALL_DIR=%WORK_DIR%\Installed%STUDIO_NAME%
+    set INSTALL_DIR=%WORK_DIR%\Installed%STUDIO_NAME%
 else
-set INSTALL_DIR=%WORK_DIR%\Installed%STUDIO_NAME%_32
+    set INSTALL_DIR=%WORK_DIR%\Installed%STUDIO_NAME%_32
 endiff
+REM Ignore previous and always use ISE_PLATFORM
+set INSTALL_DIR=%WORK_DIR%\Installed%STUDIO_NAME%_%ISE_PLATFORM%
 set STUDIO_DIR=%INSTALL_DIR\EiffelStudio
 
 REM Check for Windows 64 bits.

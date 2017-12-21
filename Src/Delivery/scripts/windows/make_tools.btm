@@ -91,45 +91,40 @@ iff not exist eiffel_echo.exe then
 endiff
 move eiffel_echo.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
-iff defined DELIV_CORE_ONLY then
-	remtrace Skipping po_generation_tool
-	remtrace Skipping eiffel_ribbon
-
-else
-	remtrace Recompile po_generation_tool
-	cdd %EIFFEL_SRC\tools\po_generation_tool
-	clean_project
-	finalize po_generation_tool.ecf
-	cleanup_eiffel po_generation_tool po_generation_tool.exe
-	iff not exist po_generation_tool.exe then
-		remtrace Could not finalize a new po_generation_tool
-		CANCEL
-	endiff
-	move po_generation_tool.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
-
-	remtrace Recompile eiffel_ribbon
-	safe_md %STUDIO_DIR\tools\ribbon
-	cdd %STUDIO_DIR\tools\ribbon
-	exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/eiffel_ribbon/template template
-	exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/eiffel_ribbon/images images
-	cdd %EIFFEL_SRC\tools\eiffel_ribbon
-	clean_project
-	finalize eiffel_ribbon.ecf
-	cleanup_eiffel eiffel_ribbon eiffel_ribbon.exe
-	iff not exist eiffel_ribbon.exe then
-		remtrace Could not finalize a new eiffel_ribbon
-		CANCEL
-	endiff
-	move eiffel_ribbon.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
-
-	remtrace Recompile ace2ecf
-	cdd %EIFFEL_SRC\tools\ace2ecf
-	clean_project
-	finalize ace2ecf.ecf
-	cleanup_eiffel ace2ecf ace2ecf.exe
-	iff not exist ace2ecf.exe then
-		remtrace Could not finalize a new ace2ecf
-		CANCEL
-	endiff
-	move ace2ecf.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+remtrace Recompile po_generation_tool
+cdd %EIFFEL_SRC\tools\po_generation_tool
+clean_project
+finalize po_generation_tool.ecf
+cleanup_eiffel po_generation_tool po_generation_tool.exe
+iff not exist po_generation_tool.exe then
+	remtrace Could not finalize a new po_generation_tool
+	CANCEL
 endiff
+move po_generation_tool.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile eiffel_ribbon
+safe_md %STUDIO_DIR\tools\ribbon
+cdd %STUDIO_DIR\tools\ribbon
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/eiffel_ribbon/template template
+exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/tools/eiffel_ribbon/images images
+cdd %EIFFEL_SRC\tools\eiffel_ribbon
+clean_project
+finalize eiffel_ribbon.ecf
+cleanup_eiffel eiffel_ribbon eiffel_ribbon.exe
+iff not exist eiffel_ribbon.exe then
+	remtrace Could not finalize a new eiffel_ribbon
+	CANCEL
+endiff
+move eiffel_ribbon.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
+remtrace Recompile ace2ecf
+cdd %EIFFEL_SRC\tools\ace2ecf
+clean_project
+finalize ace2ecf.ecf
+cleanup_eiffel ace2ecf ace2ecf.exe
+iff not exist ace2ecf.exe then
+	remtrace Could not finalize a new ace2ecf
+	CANCEL
+endiff
+move ace2ecf.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
