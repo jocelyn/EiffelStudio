@@ -209,7 +209,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTCCL(c) same as RTRCL, but first checks if `x' is expanded
  */
 #define RTCL(x)		rtclone(x)
-#define RTCCL(x)	((x && eif_is_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
+#define RTCCL(x)	(((x) && eif_is_expanded(HEADER(x)->ov_flags))? RTRCL(x): (x))
 #ifdef WORKBENCH
 #	define RTRCL(x)	((egc_twin(x)).it_r)
 #else
@@ -226,13 +226,18 @@ RT_LNK void eif_exit_eiffel_code(void);
 
 /* Macros used for assignments:
  *  RTAG(x) is true if 'x' is an old object not remembered
- *  RTAN(x) is true if 'x' is a new object (i.e. not old)
+ *  RTAN(x) is true if 'x' is a new object (i.e. not old) and not expanded (expanded objects get a new copy):
+ *                    mark .O.E.   &(EO_OLD|EO_EXP)  !=EO_OLD
+ *          new_ref    1   x0x0x         00000           1
+ *          new_exp    1   x0x1x         00010           1
+ *          old_ref    0   x1x0x         01000           0
+ *          old_exp    1   x1x1x         01010           1
  *  RTAM(x) memorizes 'x'
  *  RTAR(parent,source) remembers 'parent' if it is old and not remembered and 'source' is new
  */
 #ifdef ISE_GC
 #define RTAG(x)		((HEADER(x)->ov_flags & (EO_OLD | EO_REM)) == EO_OLD)
-#define RTAN(x)		(!(HEADER(x)->ov_flags & EO_OLD))
+#define RTAN(x)		((HEADER(x)->ov_flags & (EO_OLD | EO_EXP)) != EO_OLD)
 #define RTAM(x)		eremb(x)
 #define RTAR(parent,source) check_gc_tracking(parent,source)
 #else

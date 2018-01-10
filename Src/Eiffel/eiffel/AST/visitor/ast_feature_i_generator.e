@@ -363,9 +363,9 @@ feature {NONE} -- Implementation
 						l_result.set_is_empty (content.is_empty)
 					end
 				end
-				if attached l_routine.postcondition as postcondition and then postcondition.is_class then
-					l_result.set_is_class (True)
-				end
+				l_result.set_has_class_postcondition (l_routine.has_class_postcondition)
+				l_result.set_has_immediate_non_object_call (l_routine.has_non_object_call)
+				l_result.set_has_immediate_non_object_call_in_assertion (l_routine.has_non_object_call_in_assertion)
 			else
 				check
 					is_known_feature_content: False

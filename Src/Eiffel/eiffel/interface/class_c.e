@@ -582,6 +582,20 @@ feature -- Building conformance table
 			end
 		end
 
+feature -- Type checking
+
+	check_instance_free_usage (c: AST_INSTANCE_FREE_CHECKER)
+			-- Check if features declared as class ones as well as those used in instance-free calls
+			-- are instance-free using instance-free checker `c`.
+		require
+			absent_explicit_assertion: system.absent_explicit_assertion
+			system_defined: workbench.system_defined
+			has_feature_table: has_feature_table
+			not_precompiled: not is_precompiled
+		do
+				-- Nothing here.
+		end
+
 feature -- Expanded rules validity
 
 	check_expanded
@@ -3385,14 +3399,6 @@ feature -- Properties
 	is_external: BOOLEAN
 			-- Is class an external one?
 			-- If yes, we do not generate it.
-
-	is_ephemeral: BOOLEAN
-			-- Is class ephemeral?
-			--| Currently there is no real definition for it. It can be a class with a
-			--| special qualifier, or an expanded class without attribute.
-		do
-			-- Not implemented yet
-		end
 
 	is_true_external: BOOLEAN
 			-- Is class an instance of EXTERNAL_CLASS_C?

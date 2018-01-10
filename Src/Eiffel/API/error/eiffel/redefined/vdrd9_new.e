@@ -7,6 +7,7 @@ class VDRD9_NEW
 inherit
 	VDRD_NEW
 		redefine
+			build_explain,
 			print_error_message,
 			print_single_line_error_message
 		end
@@ -29,16 +30,20 @@ feature {NONE} -- Output
 			t.add_new_line
 			format_elements (t, locale.translation_in_context
 					({STRING_32} "[
-						Precursor {2} of an instance-free feature {1} is not instance-free.
+						Class routine {1} has precursor {2} from class {4} that is not instance-free.
 						
 						What to do:
 							• make sure the precursor is instance-free or
-							• make sure the redeclaration is not instance-free or
+							• make sure the redeclaration is not a class routine or
 							• remove the redeclaration.
 					]",
 					"eiffel.error"),
-				<<agent feature_1.append_name, agent feature_2.append_name>>
-			)
+				<<
+					agent feature_1.append_name,
+					agent feature_2.append_name,
+					agent (feature_1.written_class).append_name,
+					agent (feature_2.written_class).append_name
+				>>)
 				-- Make sure any other information about the error comes at a new line.
 			t.add_new_line
 			t.add_new_line
@@ -48,9 +53,33 @@ feature {NONE} -- Output
 			-- <Precursor>
 		do
 			format_elements (t, locale.translation_in_context
-					("Redeclaration {1} and its precursor {2} are not both instance-free.",
+					("Precursor {2} from class {4} of class routine {1} is not instance-free.",
 					"eiffel.error"),
-				<<agent feature_1.append_name, agent feature_2.append_name>>)
+				<<
+					agent feature_1.append_name,
+					agent feature_2.append_name,
+					agent (feature_1.written_class).append_name,
+					agent (feature_2.written_class).append_name
+				>>)
+		end
+
+	build_explain (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			format_elements (t, locale.translation_in_context
+					("Feature {1} from class {2} has a class postcondition.", "eiffel.error"),
+				<<
+					agent feature_1.append_name,
+					agent (feature_1.written_class).append_name
+				>>)
+			t.add_new_line
+			format_elements (t, locale.translation_in_context
+					("Feature {1} from class {2} is not instance-free.", "eiffel.error"),
+				<<
+					agent feature_2.append_name,
+					agent (feature_2.written_class).append_name
+				>>)
+			t.add_new_line
 		end
 
 note

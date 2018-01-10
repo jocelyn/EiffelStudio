@@ -939,12 +939,28 @@ feature -- Setting
 			is_stable_set: is_stable = v
 		end
 
-	set_is_class (v: BOOLEAN)
-			-- Set `is_class` to `v`.
+	set_has_class_postcondition (v: BOOLEAN)
+			-- Set `has_class_postcondition` to `v`.
 		do
-			feature_flags := feature_flags.set_bit_with_mask (v, is_class_mask)
+			feature_flags := feature_flags.set_bit_with_mask (v, has_class_postcondition_mask)
 		ensure
-			is_class_set: is_class = v
+			has_class_postcondition_set: has_class_postcondition = v
+		end
+
+	set_has_immediate_non_object_call (v: BOOLEAN)
+			-- Set `has_immediate_non_object_call` to `v`.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, has_non_object_call_mask)
+		ensure
+			has_immediate_non_object_call_set: has_immediate_non_object_call = v
+		end
+
+	set_has_immediate_non_object_call_in_assertion (v: BOOLEAN)
+			-- Set `has_immediate_non_object_call_in_assertion` to `v`.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, has_non_object_call_in_assertion_mask)
+		ensure
+			has_immediate_non_object_call_in_assertion_set: has_immediate_non_object_call_in_assertion = v
 		end
 
 	set_is_hidden_in_debugger_call_stack (v: BOOLEAN)
@@ -1049,12 +1065,12 @@ feature -- Incrementality
 				and then has_precondition = other.has_precondition
 				and then has_postcondition = other.has_postcondition
 				and then has_false_postcondition = other.has_false_postcondition
+				and then has_class_postcondition = other.has_class_postcondition
 				and then is_once = other.is_once
 				and then is_process_relative = other.is_process_relative
 				and then is_object_relative_once = other.is_object_relative_once
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
-				and then is_class = other.is_class
 				and then is_transient = other.is_transient
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
@@ -1382,11 +1398,43 @@ feature -- Conveniences
 			Result := feature_flags & is_stable_mask = is_stable_mask
 		end
 
+	has_non_object_call: BOOLEAN
+			-- Is there a non-object call in the feature?
+			-- See also: `has_immediate_non_object_call`, `has_immediate_non_object_call_in_assertion`.
+		do
+			Result :=
+				has_immediate_non_object_call or else
+				attached assert_id_set as a and then a.has_non_object_call
+		end
+
+	has_immediate_non_object_call: BOOLEAN
+			-- Is there a non-object call in the feature without taking inherited assertions into account?
+			-- See also: `set_immediate_has_non_object_call`, `has_immediate_non_object_call_in_assertion`.
+		do
+			Result := feature_flags & has_non_object_call_mask /= 0
+		end
+
+	has_immediate_non_object_call_in_assertion: BOOLEAN
+			-- Is there a non-object call in the immediate routine precondition or postcondition?
+			-- See also: `set_immediate_has_non_object_call_in_assertion`, `has_immediate_non_object_call`.
+		do
+			Result := feature_flags & has_non_object_call_in_assertion_mask /= 0
+		end
+
+	has_class_postcondition: BOOLEAN
+			-- Does feature have a class postcondition?
+			-- See also: `set_has_class_postcondition`, `is_class`.
+		do
+			Result := feature_flags & has_class_postcondition_mask /= 0
+		end
+
 	is_class: BOOLEAN
 			-- Is feature declared as a class one?
-			-- See also: `set_is_class`.
+			-- See also: `has_class_postcondition`, `is_instance_free`.
 		do
-			Result := feature_flags & is_class_mask /= 0
+			Result :=
+				has_class_postcondition or else
+				attached assert_id_set as a and then a.has_class_postcondition
 		end
 
 	is_hidden_in_debugger_call_stack: BOOLEAN
@@ -1416,6 +1464,7 @@ feature -- Conveniences
 
 	has_static_access: BOOLEAN
 			-- Can Current be access in a static manner?
+			-- See also: `is_class`, `is_instance_free`, `is_target_free`.
 		do
 			Result :=
 				is_class or else
@@ -1423,18 +1472,42 @@ feature -- Conveniences
 					 -- Static access only if it is a C external (IL_EXTENSION_I = Void)
 					 -- or if IL external does not need an object.
 				if System.il_generation and attached {IL_EXTENSION_I} extension as e then
-					not e.need_current (e.type)
+					e.is_static
 				else
 					is_external and not has_combined_assertion
 				end
+		ensure
+			true_if_is_instance_free: is_instance_free implies Result
+			true_if_is_target_free: is_target_free implies Result
+		end
+
+	is_instance_free: BOOLEAN
+			-- Is feature instance-free (as specified in the standard)?
+			-- See also: `is_class`, `has_static_access`, `is_target_free`.
+		do
+			Result :=
+				is_class or else
+					-- IL externals are instance-free if they are static.
+				System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static
+		ensure
+			true_if_class: is_class implies Result
+			true_if_safe_constant: (is_constant and then not has_combined_assertion) implies Result
+			true_if_static_member: (System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static) implies Result
 		end
 
 	is_target_free: BOOLEAN
 			-- Does the feature depend on the target type of the call?
 			-- (It can be instance-free, but depend on the target type.)
+			-- See also: `is_class`, `has_static_access`, `is_instance_free`.
 		do
 				-- IL externals have no unqualified calls if they do not need current object.
-			Result := System.il_generation and attached {IL_EXTENSION_I} extension as e and then not e.need_current (e.type)
+			Result := System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static
+		ensure
+			true_if_safe_constant: (is_constant and then not has_combined_assertion) implies Result
+			true_if_static_member: (System.il_generation and attached {IL_EXTENSION_I} extension as e and then e.is_static) implies Result
+			true_if_safe_external:
+				(is_external and not has_combined_assertion and
+				not (System.il_generation and attached {IL_EXTENSION_I} extension)) implies Result
 		end
 
 	frozen has_precondition: BOOLEAN
@@ -1463,10 +1536,10 @@ feature -- Conveniences
 				(attached assert_id_set as a and then a.has_false_postcondition)
 		end
 
-	has_assertion: BOOLEAN
-			-- Is feature declaring some pre or post conditions ?
+	has_printable_assertion: BOOLEAN
+			-- Is feature declaring some pre or post conditions that can be output?
 		do
-			Result := has_postcondition or else has_precondition
+			Result := has_postcondition or else has_precondition or else has_class_postcondition
 		end
 
 	has_combined_assertion: BOOLEAN
@@ -2451,10 +2524,6 @@ end
 					-- Report that assigner commands are not the same
 				Error_handler.insert_error (create {VDRD8_NEW}.make (system.current_class, Current, old_feature))
 			end
-				-- Check instance-free status.
-			if is_class /= old_feature.is_class then
-				error_handler.insert_error (create {VDRD9_NEW}.make (system.current_class, Current, old_feature))
-			end
 		end
 
 	delayed_check_same_signature (old_feature: FEATURE_I; t: FEATURE_TABLE)
@@ -2546,10 +2615,6 @@ end
 			if not is_same_alias (old_feature) then
 					-- Report that aliases are not the same
 				Error_handler.insert_error (create {VDJR2_NEW}.make (system.current_class, Current, old_feature))
-			end
-				-- Check instance-free status.
-			if is_class /= old_feature.is_class then
-				error_handler.insert_error (create {VDJR4_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
 
@@ -2977,7 +3042,10 @@ feature -- Undefinition
 			Result.set_body_index (body_index)
 			Result.set_has_precondition (has_precondition)
 			Result.set_has_postcondition (has_postcondition)
+			Result.set_has_class_postcondition (has_class_postcondition)
 			Result.set_has_false_postcondition (has_false_postcondition)
+			Result.set_has_immediate_non_object_call (has_immediate_non_object_call)
+			Result.set_has_immediate_non_object_call_in_assertion (has_immediate_non_object_call_in_assertion)
 			Result.set_is_bracket (is_bracket)
 			Result.set_is_parentheses (is_parentheses)
 			Result.set_is_binary (is_binary)
@@ -3102,7 +3170,9 @@ feature -- Replication
 			other.set_has_convert_mark (has_convert_mark)
 			other.set_has_replicated_ast (has_replicated_ast)
 			other.set_is_stable (is_stable)
-			other.set_is_class (is_class)
+			other.set_has_class_postcondition (has_class_postcondition)
+			other.set_has_immediate_non_object_call (has_immediate_non_object_call)
+			other.set_has_immediate_non_object_call_in_assertion (has_immediate_non_object_call_in_assertion)
 			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
@@ -3244,7 +3314,7 @@ feature -- Byte code access
 		require
 			access_type_not_void: access_type /= Void
 			-- is_separate_meaningful: is_separate implies (is_qualified or is_creation) -- Creation calls are not marked as qualified.
-			valid_is_instance_free_call: is_free implies has_static_access
+			valid_is_instance_free_call: is_free implies (has_static_access or else system.absent_explicit_assertion)
 		local
 			is_in_op: BOOLEAN
 			l_type: TYPE_A
@@ -3498,7 +3568,9 @@ feature {FEATURE_I} -- Feature flags
 	has_false_postcondition_mask: NATURAL_64 =      0x2000_0000
 	is_hidden_in_debugger_call_stack_mask: NATURAL_64 = 0x4000_0000
 	is_parentheses_mask: NATURAL_64 =					0x8000_0000
-	is_class_mask: NATURAL_64 =				0x1_0000_0000
+	has_class_postcondition_mask: NATURAL_64 =				0x0001_0000_0000
+	has_non_object_call_mask: NATURAL_64 =				0x0002_0000_0000
+	has_non_object_call_in_assertion_mask: NATURAL_64 =				0x0004_0000_0000
 			-- Mask used for each feature property.
 
 feature {FEATURE_I} -- Implementation

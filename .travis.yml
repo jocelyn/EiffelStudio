@@ -8,17 +8,26 @@ before_script:
     - export EIFFEL_SRC=$PWD/Src
     - export EWEASEL=$PWD/eweasel
     - export ISE_LIBRARY=$EIFFEL_SRC
+    - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
     - echo Check projects compilation status...
     
 branches:
     only:
+        - master
         - develop
 
 git:
     depth: 1
   
+env:
+    matrix:
+        - COMPILEALL_DIR=Src/Eiffel
+        - COMPILEALL_DIR=Src/framework
+        - COMPILEALL_DIR=Src/tools
+        - COMPILEALL_DIR=Src/library
+  
 script: 
-    - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l Src/Eiffel
-    - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l Src/tools
+    - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l $COMPILEALL_DIR
+
 group: stable
 os: linux

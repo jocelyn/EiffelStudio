@@ -1387,6 +1387,7 @@ test	weak-reference					runtime017	tcf pass runtime weak_reference
 test	memory-leak-with-dynamic-dispatch	runtime018	tcf pass runtime
 test	special-expanded-referring-new-object	runtime019	tcf fail used_to_pass runtime special
 test	standard-stream-redirection		runtime020	tcf pass runtime console file input output library
+test	generational-gc-expanded-semantics	runtime021	tcf pass runtime gc expanded reattachment
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded
@@ -2738,7 +2739,7 @@ test	complex-expanded-generic-inheritance-crash		expanded007 tcf pass expanded
 test	expanded-with-references-crash					expanded008 tcf pass expanded
 test	external-with-expanded-crash					expanded009 tcf pass expanded
 test	expanded-attribute-crash-with-tiny				expanded010 tcf fail used_to_pass expanded
-test	expanded-result-not-gc-tracked					expanded011 tcf fail expanded
+test	expanded-result-not-gc-tracked					expanded011 tcf pass expanded
 
 test	filename-classname-mismatch-warning	warn001	tcf pass warning
 
@@ -2769,6 +2770,10 @@ test	instance_free-call-redeclaration	free004 tcf pass instance_free call execut
 test	instance_free-call-derivation		free005 tcf pass instance_free call execution formal generic
 test	instance_free-call-on-deferred		free006 tcf fail instance_free call execution
 test	instance_free-external-assertion	free007 tcf pass instance_free call validity
+test	instance_free-redeclaration-of-class	free008 tcf pass instance_free declaration adaptation validity
+test	instance_free-merging			free009 tcf pass instance_free declaration adaptation validity
+test	instance_free-joining			free010 tcf pass instance_free declaration adaptation validity
+test	instance_free-redeclaration-to-class	free011 tcf pass instance_free declaration adaptation validity
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

@@ -24,22 +24,25 @@ create
 
 feature {NONE} -- Creation
 
-	make (f: FEATURE_I; c: CLASS_C)
-			-- Create an error for feature `f` in class `c`.
+	make (f: FEATURE_I; c, w: CLASS_C; l: LOCATION_AS)
+			-- Create an error for feature `f` from class `c` called in class `w` at location `l`.
 		do
 			class_c := c
-			written_class := f.written_class
+			written_class := w
 			set_feature (f)
+			set_location (l)
 		ensure
 			class_c_set: class_c = c
-			written_class_set: attached written_class
+			written_class_set: written_class = w
 			feature_set: attached e_feature
+			line_set: line = l.line
+			column_set: column = l.column
 		end
 
 feature -- Properties
 
 	code: STRING = "VD02"
-			-- Error code
+			-- <Precursor>
 
 feature {NONE} -- Output
 
@@ -48,15 +51,18 @@ feature {NONE} -- Output
 		do
 			t.add_new_line
 			t.add (locale.translation_in_context ("[
-				Error: A class with an instance-free feature should should be compiled with an option "full class checking".
-				What to do: Enable the option "full class checking" in the project settings or make sure there are no instance-free features in the class.
+				Error: A class with a feature used in a non-object call should be compiled with an option "Full class checking".
+				What to do: Enable the option "Full class checking" in the project settings or remove the non-object call to the feature.
 			]", "compiler.error"))
+			t.add_new_line
 		end
 
 	trace_single_line (t: TEXT_FORMATTER)
 			-- <Precursor>
 		do
-			format_elements (t, locale.translation_in_context ("The class with the instance-free feature {1} should be compiled with full class checking.", "compiler.error"), <<agent e_feature.append_name>>)
+			format_elements (t, locale.translation_in_context
+				("Full class checking is required for class {1} with feature {2} used in a non-object call.", "compiler.error"),
+				<<agent class_c.append_name, agent e_feature.append_name>>)
 		end
 
 note

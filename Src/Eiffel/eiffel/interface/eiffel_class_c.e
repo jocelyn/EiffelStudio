@@ -14,6 +14,7 @@ inherit
 			group as cluster
 		redefine
 			apply_msil_application_optimizations,
+			check_instance_free_usage,
 			cluster, original_class,
 			is_eiffel_class_c,
 			eiffel_class_c,
@@ -34,11 +35,6 @@ inherit
 		end
 
 	SHARED_GENERATION
-
---	KL_SHARED_FILE_SYSTEM
---		export
---			{NONE} all
---		end
 
 create
 	make
@@ -584,10 +580,6 @@ feature -- Third pass: byte code production and type check
 					l_ast_context.set_current_feature (feature_i)
 					type_checked := False
 
-					if feature_i.is_class and then not is_full_class_checking then
-						error_handler.insert_error (create {VD02}.make (feature_i, Current))
-					end
-
 					if feature_i.to_melt_in (Current) then
 						feature_name_id := feature_i.feature_name_id
 
@@ -717,12 +709,17 @@ feature -- Third pass: byte code production and type check
 							else
 								-- Check the conflicts between local variable names
 								-- and feature names
-								-- FIX ME: ONLY needed when new features are inserted in the feature table
+								-- FIXME: ONLY needed when new features are inserted in the feature table
 								check_local_names_needed := True
 							end
 						else
-								-- is_routine = False
-							record_suppliers (feature_i, dependances)
+								-- The content is not going to be checked.
+							if feature_i.is_class and then feature_i.is_attribute then
+								error_handler.insert_error (create {VUCR_ATTRIBUTE}.make (feature_i, Current, ast.feature_with_name (feature_i.feature_name_id).feature_names.first.internal_name))
+								type_check_error := True
+							else
+								record_suppliers (feature_i, dependances)
+							end
 						end
 
 						if
@@ -1306,6 +1303,31 @@ feature
 			end
 		ensure
 			feature_table_file_id_positive: Result > 0
+		end
+
+feature -- Type checking
+
+	check_instance_free_usage (c: AST_INSTANCE_FREE_CHECKER)
+			-- <Precursor>
+		local
+			features: COMPUTED_FEATURE_TABLE
+			f: FEATURE_I
+			i: INTEGER
+		do
+			features := feature_table.features
+			from
+				i := features.count
+			until
+				i <= 0
+			loop
+				f := features [i]
+				if f.is_class then
+					c.verify_class_feature (f, Current)
+				elseif f.has_non_object_call then
+					c.verify_non_object_calls (f, Current)
+				end
+				i := i - 1
+			end
 		end
 
 feature {NONE} -- Class initialization	

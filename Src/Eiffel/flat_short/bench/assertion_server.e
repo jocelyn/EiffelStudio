@@ -1,9 +1,9 @@
-note
-	description	: "Server for pre and post conditions."
+﻿note
+	description: "Server for pre and post conditions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ASSERTION_SERVER
 
@@ -90,7 +90,10 @@ feature -- Initialization
 				end
 			end
 
-			if f.has_assertion and then (not processed_features.has (f.body_index)) then
+			if
+				f.has_printable_assertion and then
+				not processed_features.has (f.body_index)
+			then
 				create assertion.make_for_feature (f, ast)
 				chained_assert.extend (assertion)
 			end
@@ -123,16 +126,16 @@ feature -- Element change
 			valid_adapter: feat_adapter /= Void
 			valid_body_index: feat_adapter.body_index /= 0
 		local
-			assert_id_set		: ASSERT_ID_SET
-			i					: INTEGER
-			inh_f				: INH_ASSERT_INFO
-			chained_assert		: CHAINED_ASSERTIONS
-			other_feat_as		: FEATURE_AS
-			feat				: FEATURE_I
-			source_feature		: FEATURE_I
-			assertion			: ROUTINE_ASSERTIONS
-			target_feat			: FEATURE_I
-			inh_feat_adapter	: FEATURE_ADAPTER
+			assert_id_set: ASSERT_ID_SET
+			i: INTEGER
+			inh_f: INH_ASSERT_INFO
+			chained_assert: CHAINED_ASSERTIONS
+			other_feat_as: FEATURE_AS
+			feat: FEATURE_I
+			source_feature: FEATURE_I
+			assertion: ROUTINE_ASSERTIONS
+			target_feat: FEATURE_I
+			inh_feat_adapter: FEATURE_ADAPTER
 			processed_features: ARRAYED_LIST [INTEGER]
 				-- feature already processed. To avoid displaying the same
 				-- pre/postcondition several times if there was a repeated
@@ -178,7 +181,7 @@ feature -- Element change
 				end
 				source_feature := feat_adapter.source_feature
 				if
-					source_feature.has_assertion and then
+					source_feature.has_printable_assertion and then
 					not processed_features.has (source_feature.body_index)
 				then
 					create assertion.make_for_feature (source_feature, feat_adapter.ast)
@@ -212,7 +215,7 @@ feature -- Debug
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -225,22 +228,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end
