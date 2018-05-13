@@ -45,10 +45,10 @@ remtrace net
 exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/%2/net net
 remtrace objc_base
 exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/%2/objc_base objc_base
-remtrace obsolete
-exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/%2/obsolete obsolete
 remtrace parse
 exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/%2/parse parse
+remtrace patterns
+exprt -r %ORIGO_SVN_REVISION %DEFAULT_ORIGO_SVN/Src/%2/patterns patterns
 remtrace preferences
 exprt -r %PUBLIC_SVN_REVISION %DEFAULT_PUBLIC_SVN/Src/%2/preferences preferences
 remtrace process

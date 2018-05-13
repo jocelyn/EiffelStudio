@@ -13,7 +13,7 @@ endiff
 
 REM General configuration
 iff not defined STUDIO_VERSION_MAJOR_MINOR then
-	set STUDIO_VERSION_MAJOR_MINOR=17.11
+	set STUDIO_VERSION_MAJOR_MINOR=18.05
 endiff
 
 iff not defined WORK_DIR then

@@ -3,7 +3,7 @@ echo Load local settings
 REM set ISE_PLATFORM=windows
 set ISE_PLATFORM=win64
 
-set ISE_EIFFEL=C:\DEV\Eiffel\17.11_%ISE_PLATFORM%
+set ISE_EIFFEL=C:\DEV\Eiffel\18.05_%ISE_PLATFORM%
 
 set ISE_EC_FLAGS=-full
 
