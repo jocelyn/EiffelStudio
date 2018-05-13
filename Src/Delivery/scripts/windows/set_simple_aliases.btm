@@ -76,4 +76,5 @@ alias testpar `if %@INDEX[%$,no_compile] ge 0 echo true`
 REM /bin/bash
 alias bash `*bash -o igncr %$`
 
+alias set_version `%INIT_DIR%\set_version.bat %1 %2 %3`
 

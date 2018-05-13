@@ -3,7 +3,7 @@ safe_copy %EIFFEL_SRC\tools\com_wizard\root\resources\*.* %STUDIO_DIR\wizards\co
 
 remtrace Compile the COM wizard
 cdd %EIFFEL_SRC\tools\com_wizard\root
-bash %INIT_DIR\set_version.sh %EIFFEL_SRC 0000 argument_parser.e
+set_version %EIFFEL_SRC 0000 argument_parser.e
 
 clean_project
 finalize com_wizard.ecf

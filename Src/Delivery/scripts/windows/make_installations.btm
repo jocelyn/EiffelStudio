@@ -11,7 +11,7 @@ iff not defined INSTALL_DIR then
 	CANCEL
 endiff
 
-set SVN_VERSION=%@EXECSTR[bash set_version.sh %EIFFEL_SRC]
+set SVN_VERSION=%@EXECSTR[set_version %EIFFEL_SRC]
 
 cdd %INIT_DIR\install
 safe_md %INIT_DIR\install\bin

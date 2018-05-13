@@ -97,7 +97,7 @@ iff defined BUILD_ENTERPRISE_ONLY then
 
 	remtrace Enterprise edition
 	cdd %EIFFEL_SRC\Eiffel\API\constants
-	bash %INIT_DIR\set_version.sh %EIFFEL_SRC 0000 system_constants.e
+	set_version %EIFFEL_SRC 0000 system_constants.e
 	sed -e "s/Version_type_name:\ STRING\ =\ \"GPL\ Edition\"/Version_type_name:\ STRING\ =\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
 	move new_system_constants.e system_constants.e
 	cdd %FINALIZATION_DIR
@@ -126,7 +126,7 @@ else
 	iff not defined NO_NEW_EC then
 		remtrace GPL edition
 		cdd %EIFFEL_SRC\Eiffel\API\constants
-		bash %INIT_DIR\set_version.sh %EIFFEL_SRC 0000 system_constants.e
+		set_version %EIFFEL_SRC 0000 system_constants.e
 		cdd %FINALIZATION_DIR
 		safe_copy %EIFFEL_SRC\Eiffel\Ace\*.* .
 		clean_project
