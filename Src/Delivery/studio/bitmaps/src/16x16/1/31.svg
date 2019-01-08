@@ -17,7 +17,10 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="15.svg">
+   sodipodi:docname="31.svg"
+   inkscape:export-filename="E:\eiffelstudio\trunk.git\Src\Delivery\studio\bitmaps\src\16x16\1\new31.png"
+   inkscape:export-xdpi="4.2209373"
+   inkscape:export-ydpi="4.2209373">
   <defs
      id="defs2">
     <linearGradient
@@ -219,6 +222,59 @@
          result="blur"
          id="feGaussianBlur2621" />
     </filter>
+    <linearGradient
+       id="linearGradient3554"
+       y2="137.73"
+       xlink:href="#linearGradient8789"
+       gradientUnits="userSpaceOnUse"
+       y1="71.676003"
+       gradientTransform="matrix(0.77564977,0,0,0.58343932,13.823116,202.01519)"
+       x2="7.6904998"
+       x1="32.348999"
+       inkscape:collect="always" />
+    <linearGradient
+       id="linearGradient8789">
+      <stop
+         id="stop8791"
+         style="stop-color:#9eed40"
+         offset="0" />
+      <stop
+         id="stop8793"
+         style="stop-color:#52af34"
+         offset="1" />
+    </linearGradient>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Drop Shadow"
+       id="filter1446">
+      <feFlood
+         flood-opacity="0.498039"
+         flood-color="rgb(0,0,0)"
+         result="flood"
+         id="feFlood1436" />
+      <feComposite
+         in="flood"
+         in2="SourceGraphic"
+         operator="in"
+         result="composite1"
+         id="feComposite1438" />
+      <feGaussianBlur
+         in="composite1"
+         stdDeviation="3"
+         result="blur"
+         id="feGaussianBlur1440" />
+      <feOffset
+         dx="4"
+         dy="4"
+         result="offset"
+         id="feOffset1442" />
+      <feComposite
+         in="SourceGraphic"
+         in2="offset"
+         operator="over"
+         result="composite2"
+         id="feComposite1444" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -227,9 +283,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.24748737"
-     inkscape:cx="-893.10017"
-     inkscape:cy="-307.0262"
+     inkscape:zoom="0.69999999"
+     inkscape:cx="563.00212"
+     inkscape:cy="-69.899571"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -300,5 +356,11 @@
            transform="rotate(90)" />
       </g>
     </g>
+    <path
+       inkscape:connector-curvature="0"
+       id="path2383"
+       sodipodi:nodetypes="cccccczc"
+       style="fill:url(#linearGradient3554);fill-rule:evenodd;stroke:#1d4100;stroke-width:3;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter1446)"
+       d="m 32.096966,291.53447 c -5.01716,-12.0081 0.64582,-26.72998 4.09218,-31.00179 3.76658,2.11372 6.93645,4.8248 6.93645,4.8248 l -2.20048,-25.36033 -24.53354,2.75144 5.28223,4.91694 c -5.46158,10.36935 -4.4967,20.47836 -2.95285,27.26614 1.54388,6.78777 10.34177,15.54663 13.37575,16.6028 z" />
   </g>
 </svg>

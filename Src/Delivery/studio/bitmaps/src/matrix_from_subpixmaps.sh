@@ -50,10 +50,10 @@ do
 		then
 			rows=$dn
 		fi
-		for f in $rootdir/$dn/*.png
+		for f in $rootdir/$dn/*.*
 		do
 			fn=$(basename -- $f)
-			if [[ $fn =~ ^[0-9][0-9]*.png$ ]]
+			if [[ $fn =~ ^[0-9][0-9]*.(png|svg)$ ]]
 			then
 				nb=$(echo $fn | cut -d'.' -f 1)
 				if (( $nb > $cols ))

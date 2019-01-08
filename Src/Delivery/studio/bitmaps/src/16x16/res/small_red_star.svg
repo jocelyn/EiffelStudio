@@ -17,24 +17,37 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="15.svg">
+   sodipodi:docname="small_red_star.svg">
   <defs
      id="defs2">
     <linearGradient
        inkscape:collect="always"
-       id="linearGradient5223">
+       id="linearGradient2303">
       <stop
-         style="stop-color:#004780;stop-opacity:1"
+         style="stop-color:#ffffff;stop-opacity:1"
          offset="0"
-         id="stop5219" />
+         id="stop2299" />
       <stop
-         id="stop5247"
-         offset="0.75454164"
-         style="stop-color:#0894ff;stop-opacity:1" />
+         id="stop2583"
+         offset="0.60852629"
+         style="stop-color:#ff0000;stop-opacity:1" />
       <stop
-         style="stop-color:#00ffff;stop-opacity:1"
+         style="stop-color:#210000;stop-opacity:1"
          offset="1"
-         id="stop5221" />
+         id="stop2301" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient859"
+       osb:paint="gradient">
+      <stop
+         style="stop-color:#ff0000;stop-opacity:1;"
+         offset="0"
+         id="stop855" />
+      <stop
+         style="stop-color:#ff0000;stop-opacity:0;"
+         offset="1"
+         id="stop857" />
     </linearGradient>
     <linearGradient
        id="linearGradient4806"
@@ -108,17 +121,6 @@
          result="composite2"
          id="feComposite5235" />
     </filter>
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient5223"
-       id="radialGradient5245"
-       cx="53.362125"
-       cy="271.06042"
-       fx="53.362125"
-       fy="271.06042"
-       r="49.439285"
-       gradientTransform="matrix(1.6796058,-0.41504493,0.29420517,1.190591,-97.937218,-35.513415)"
-       gradientUnits="userSpaceOnUse" />
     <filter
        style="color-interpolation-filters:sRGB;"
        inkscape:label="Drop Shadow"
@@ -162,56 +164,8 @@
        r="13.515203"
        gradientUnits="userSpaceOnUse"
        gradientTransform="matrix(0.83333382,-0.83333299,0.83333282,0.83333368,-82.360059,170.77703)" />
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient2303">
-      <stop
-         style="stop-color:#ffffff;stop-opacity:1"
-         offset="0"
-         id="stop2299" />
-      <stop
-         id="stop2583"
-         offset="0.60852629"
-         style="stop-color:#ff0000;stop-opacity:1" />
-      <stop
-         style="stop-color:#210000;stop-opacity:1"
-         offset="1"
-         id="stop2301" />
-    </linearGradient>
     <filter
-       style="color-interpolation-filters:sRGB"
-       inkscape:label="Drop Shadow"
-       id="filter6048-0">
-      <feFlood
-         flood-opacity="0.498039"
-         flood-color="rgb(0,0,0)"
-         result="flood"
-         id="feFlood6038-3" />
-      <feComposite
-         in="flood"
-         in2="SourceGraphic"
-         operator="in"
-         result="composite1"
-         id="feComposite6040-8" />
-      <feGaussianBlur
-         in="composite1"
-         stdDeviation="3"
-         result="blur"
-         id="feGaussianBlur6042-9" />
-      <feOffset
-         dx="4"
-         dy="4"
-         result="offset"
-         id="feOffset6044-0" />
-      <feComposite
-         in="SourceGraphic"
-         in2="offset"
-         operator="over"
-         result="composite2"
-         id="feComposite6046-0" />
-    </filter>
-    <filter
-       style="color-interpolation-filters:sRGB"
+       style="color-interpolation-filters:sRGB;"
        inkscape:label="Blur"
        id="filter2623">
       <feGaussianBlur
@@ -227,9 +181,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.24748737"
-     inkscape:cx="-893.10017"
-     inkscape:cy="-307.0262"
+     inkscape:zoom="0.49497475"
+     inkscape:cx="-381.33747"
+     inkscape:cy="43.768845"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -237,9 +191,9 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1840"
-     inkscape:window-height="1177"
-     inkscape:window-x="72"
+     inkscape:window-width="1680"
+     inkscape:window-height="1027"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -250,7 +204,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -259,15 +213,7 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-197)">
-    <ellipse
-       style="opacity:1;fill:url(#radialGradient5245);fill-opacity:1;fill-rule:nonzero;stroke:#00456c;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5237)"
-       id="path4891"
-       cx="49.892864"
-       cy="245.78423"
-       rx="41.199402"
-       ry="30.427082" />
     <g
-       transform="translate(2.4568451,-2.078876)"
        id="g2647">
       <rect
          inkscape:transform-center-y="-61.381537"
@@ -277,8 +223,8 @@
          x="166.78169"
          height="22.525337"
          width="22.525337"
-         id="rect6036-8"
-         style="opacity:1;fill:url(#radialGradient2305);fill-opacity:1;fill-rule:nonzero;stroke:#771b04;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter6048-0)" />
+         id="rect6036"
+         style="opacity:1;fill:url(#radialGradient2305);fill-opacity:1;fill-rule:nonzero;stroke:#771b04;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter6048)" />
       <g
          style="filter:url(#filter2623)"
          transform="matrix(1.2121212,0,0,1.2121212,-5.3203027,-46.890188)"
