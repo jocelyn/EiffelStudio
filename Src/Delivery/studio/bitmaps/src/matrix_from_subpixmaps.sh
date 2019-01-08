@@ -16,7 +16,6 @@
 rootdir=$1
 #w=$( basename -- $rootdir | cut -d'x' -f 1)
 #h=$( basename -- $rootdir | cut -d'x' -f 2)
-tmpdir=/tmp
 
 target=$2
 w=$( basename -- $target | cut -d'x' -f 1)
@@ -26,6 +25,11 @@ wsep=1
 hsep=1
 color="rgb(217,217,217)"
 
+tmpdir=/tmp/${w}x${h}
+if [ ! -e $tmpdir ]
+then
+	mkdir -p $tmpdir
+fi
 
 echo from $rootdir to $target
 mkdir -p $rootdir
