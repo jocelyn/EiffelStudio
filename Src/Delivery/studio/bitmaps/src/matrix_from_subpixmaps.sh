@@ -2,7 +2,7 @@
 
 # Usage:
 #
-# matrix_from_subpixmaps.sh 16x16 32x32
+# matrix_from_subpixmaps.sh 16x16 32x32.png
 #
 # it will build an icons matrix of 32x32 into 32x32.png
 
