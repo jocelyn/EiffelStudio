@@ -16,7 +16,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="15.svg">
+   sodipodi:docname="19.svg">
   <defs
      id="defs2">
     <linearGradient
@@ -92,79 +92,6 @@
          id="feComposite5235" />
     </filter>
     <filter
-       style="color-interpolation-filters:sRGB;"
-       inkscape:label="Drop Shadow"
-       id="filter6048">
-      <feFlood
-         flood-opacity="0.498039"
-         flood-color="rgb(0,0,0)"
-         result="flood"
-         id="feFlood6038" />
-      <feComposite
-         in="flood"
-         in2="SourceGraphic"
-         operator="in"
-         result="composite1"
-         id="feComposite6040" />
-      <feGaussianBlur
-         in="composite1"
-         stdDeviation="3"
-         result="blur"
-         id="feGaussianBlur6042" />
-      <feOffset
-         dx="4"
-         dy="4"
-         result="offset"
-         id="feOffset6044" />
-      <feComposite
-         in="SourceGraphic"
-         in2="offset"
-         operator="over"
-         result="composite2"
-         id="feComposite6046" />
-    </filter>
-    <filter
-       style="color-interpolation-filters:sRGB"
-       inkscape:label="Drop Shadow"
-       id="filter6048-0">
-      <feFlood
-         flood-opacity="0.498039"
-         flood-color="rgb(0,0,0)"
-         result="flood"
-         id="feFlood6038-3" />
-      <feComposite
-         in="flood"
-         in2="SourceGraphic"
-         operator="in"
-         result="composite1"
-         id="feComposite6040-8" />
-      <feGaussianBlur
-         in="composite1"
-         stdDeviation="3"
-         result="blur"
-         id="feGaussianBlur6042-9" />
-      <feOffset
-         dx="4"
-         dy="4"
-         result="offset"
-         id="feOffset6044-0" />
-      <feComposite
-         in="SourceGraphic"
-         in2="offset"
-         operator="over"
-         result="composite2"
-         id="feComposite6046-0" />
-    </filter>
-    <filter
-       style="color-interpolation-filters:sRGB"
-       inkscape:label="Blur"
-       id="filter2623">
-      <feGaussianBlur
-         stdDeviation="2 2"
-         result="blur"
-         id="feGaussianBlur2621" />
-    </filter>
-    <filter
        style="color-interpolation-filters:sRGB"
        inkscape:label="Cross Blur"
        id="filter879">
@@ -199,6 +126,14 @@
          result="blend"
          id="feBlend877" />
     </filter>
+    <filter
+       style="color-interpolation-filters:sRGB;"
+       inkscape:label="Greyscale"
+       id="filter842">
+      <feColorMatrix
+         values="0.21 0.72 0.072 0 0 0.21 0.72 0.072 0 0 0.21 0.72 0.072 0 0 0 0 0 1 0 "
+         id="feColorMatrix840" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -207,9 +142,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.24748737"
-     inkscape:cx="-1066.8464"
-     inkscape:cy="-307.0262"
+     inkscape:zoom="0.7"
+     inkscape:cx="-385.28271"
+     inkscape:cy="113.65192"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -217,9 +152,9 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1840"
-     inkscape:window-height="1177"
-     inkscape:window-x="72"
+     inkscape:window-width="1680"
+     inkscape:window-height="1027"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
      inkscape:window-maximized="1" />
   <metadata
@@ -241,7 +176,8 @@
      transform="translate(0,-197)">
     <g
        id="g2102"
-       transform="translate(-2.3092649,0.02266407)">
+       transform="translate(-0.37798281,1.5580957)"
+       style="filter:url(#filter842)">
       <g
          id="g2096">
         <g
@@ -251,7 +187,7 @@
              rx="41.199402"
              cy="245.78423"
              cx="49.892864"
-             id="path4891"
+             id="path4891-2"
              style="opacity:1;fill:#0b8ff9;fill-opacity:1;fill-rule:nonzero;stroke:#00456c;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
           <path
              sodipodi:nodetypes="cscsc"
@@ -263,15 +199,5 @@
         </g>
       </g>
     </g>
-    <rect
-       style="opacity:1;fill:#cc0000;fill-opacity:1;fill-rule:nonzero;stroke:#771b04;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
-       id="rect6036"
-       width="22.525337"
-       height="22.525337"
-       x="166.97729"
-       y="119.96585"
-       transform="rotate(46.279309)"
-       inkscape:transform-center-x="99.111493"
-       inkscape:transform-center-y="-61.381537" />
   </g>
 </svg>

@@ -71,7 +71,7 @@ function svg_to_png {
 	echo " - SVG to ${w}x${h} png"
 	convert -resize ${w}x${h} -background transparent $1 $2
 	#Try with inkscape:
-	# inkscape -z -w $w -h $h $1 --export-png=$2
+	#inkscape -z -w $w -h $h $1 --export-png=$2
 }
 
 function append_icon {

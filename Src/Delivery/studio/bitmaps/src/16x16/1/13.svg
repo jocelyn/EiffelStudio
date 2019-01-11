@@ -8,7 +8,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="100mm"
@@ -20,22 +19,6 @@
    sodipodi:docname="13.svg">
   <defs
      id="defs2">
-    <linearGradient
-       inkscape:collect="always"
-       id="linearGradient5223">
-      <stop
-         style="stop-color:#004780;stop-opacity:1"
-         offset="0"
-         id="stop5219" />
-      <stop
-         id="stop5247"
-         offset="0.75454164"
-         style="stop-color:#0894ff;stop-opacity:1" />
-      <stop
-         style="stop-color:#00ffff;stop-opacity:1"
-         offset="1"
-         id="stop5221" />
-    </linearGradient>
     <linearGradient
        id="linearGradient4806"
        osb:paint="gradient">
@@ -108,17 +91,41 @@
          result="composite2"
          id="feComposite5235" />
     </filter>
-    <radialGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient5223"
-       id="radialGradient5245"
-       cx="53.362125"
-       cy="271.06042"
-       fx="53.362125"
-       fy="271.06042"
-       r="49.439285"
-       gradientTransform="matrix(1.6796058,-0.41504493,0.29420517,1.190591,-97.937218,-35.513415)"
-       gradientUnits="userSpaceOnUse" />
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Cross Blur"
+       id="filter879">
+      <feColorMatrix
+         in="SourceGraphic"
+         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -0.2125 -0.7154 -0.0721 1 0 "
+         result="colormatrix"
+         id="feColorMatrix869" />
+      <feComposite
+         k1="0"
+         in="SourceGraphic"
+         in2="colormatrix"
+         operator="arithmetic"
+         k2="1"
+         k3="0"
+         k4="0"
+         result="composite"
+         id="feComposite871" />
+      <feGaussianBlur
+         stdDeviation="5 0.01"
+         result="blur1"
+         id="feGaussianBlur873" />
+      <feGaussianBlur
+         in="composite"
+         stdDeviation="0.01 5"
+         result="blur2"
+         id="feGaussianBlur875" />
+      <feBlend
+         in="blur2"
+         in2="blur1"
+         mode="darken"
+         result="blend"
+         id="feBlend877" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -128,7 +135,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="90.431577"
+     inkscape:cx="-147.42557"
      inkscape:cy="113.65192"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -159,12 +166,29 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-197)">
-    <ellipse
-       style="opacity:1;fill:url(#radialGradient5245);fill-opacity:1;fill-rule:nonzero;stroke:#00456c;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter5237)"
-       id="path4891"
-       cx="49.892864"
-       cy="245.78423"
-       rx="41.199402"
-       ry="30.427082" />
+    <g
+       id="g2102"
+       transform="translate(-0.37798281,1.5580957)">
+      <g
+         id="g2096">
+        <g
+           id="g1467">
+          <ellipse
+             ry="30.427082"
+             rx="41.199402"
+             cy="245.78423"
+             cx="49.892864"
+             id="path4891-2"
+             style="opacity:1;fill:#0b8ff9;fill-opacity:1;fill-rule:nonzero;stroke:#00456c;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+          <path
+             sodipodi:nodetypes="cscsc"
+             inkscape:connector-curvature="0"
+             id="path832"
+             d="m -83.97641,208.44868 c 2e-6,2.86502 -13.21346,0.85756 -19.05847,0.85756 -5.84502,0 -18.66755,0.89684 -18.66755,-1.96818 0,-2.86502 10.29752,-6.00533 16.14253,-6.00533 5.845016,0 21.583492,4.25093 21.58349,7.11595 z"
+             style="opacity:1;fill:#f6fbff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter879)"
+             transform="rotate(-33.905617)" />
+        </g>
+      </g>
+    </g>
   </g>
 </svg>
