@@ -18,8 +18,13 @@ rootdir=$1
 #h=$( basename -- $rootdir | cut -d'x' -f 2)
 
 target=$2
-w=$( basename -- $target | cut -d'x' -f 1)
-h=$( basename -- $target | cut -d'x' -f 2 | cut -d'.' -f 1)
+if [ -z "$target" ]
+then
+	target=$1.png
+else
+	w=$( basename -- $target | cut -d'x' -f 1)
+	h=$( basename -- $target | cut -d'x' -f 2 | cut -d'.' -f 1)
+fi
 
 wsep=1
 hsep=1
