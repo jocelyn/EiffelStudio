@@ -21,10 +21,9 @@ target=$2
 if [ -z "$target" ]
 then
 	target=$1.png
-else
-	w=$( basename -- $target | cut -d'x' -f 1)
-	h=$( basename -- $target | cut -d'x' -f 2 | cut -d'.' -f 1)
 fi
+w=$( basename -- $target | cut -d'x' -f 1)
+h=$( basename -- $target | cut -d'x' -f 2 | cut -d'.' -f1 | cut -d'_' -f 1)
 
 wsep=1
 hsep=1
@@ -71,6 +70,7 @@ do
 done
 echo rows=$rows
 echo cols=$cols
+echo icon size: ${w}x${h}
 
 function svg_to_png {
 	echo " - SVG to ${w}x${h} png"
@@ -120,6 +120,21 @@ do
 		do
 			icon=$tmpdir/$r-$c.png
 			#echo "Append icon at position ${r},${c}"
+#			if [ -e $d/$c.png ]
+#			then
+#				echo "($r,$c) resize to ${w}x${h}"
+#				convert -resize ${w}x${h} $d/$c.png $icon
+#				#cp $d/$c.png $icon
+#				#identify $icon
+#			else
+#				if [ -e $d/$c.svg ] 
+#				then
+#					svg_to_png $d/$c.svg $icon
+#				else
+#					cp $tmpdir/empty.png $icon
+#				fi
+#			fi
+
 			if [ -e $d/$c.svg ] 
 			then
 				svg_to_png $d/$c.svg $icon

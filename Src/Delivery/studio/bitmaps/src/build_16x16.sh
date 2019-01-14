@@ -1,10 +1,13 @@
 #!/bin/bash
 
-RES=../res
+PIXDIR=16x16
+RES=../../res
 BIN=../..
 SVGADD=../../svg_add.py
-pushd 1
 
+mkdir -p $PIXDIR/1
+pushd $PIXDIR/1
+# [class]
 # @class
 # normal
 $SVGADD $RES/class.svg 13.svg
@@ -57,15 +60,17 @@ $SVGADD $RES/class_frozen.svg $RES/overridden.svg 33.svg
 $SVGADD $RES/class_frozen.svg $RES/overridden.svg $RES/readonly.svg 34.svg
 popd
 
-pushd 2
+mkdir -p $PIXDIR/2
+pushd $PIXDIR/2
 # uncompiled
 $SVGADD $RES/class_uncompiled.svg $RES/overridden.svg 1.svg
 # uncompiled readonly
 $SVGADD $RES/class_uncompiled.svg $RES/overridden.svg $RES/readonly.svg 2.svg
 popd
 
+mkdir -p $PIXDIR/3
+pushd $PIXDIR/3
 #[feature]
-pushd 3
 # routine
 $SVGADD $RES/feature.svg 1.svg
 # attribute
