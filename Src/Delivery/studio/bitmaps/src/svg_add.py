@@ -1,5 +1,15 @@
 #!/usr/bin/python
 
+# Usage:
+#	svg_add.py base.svg one.svg two.svg ... output.svg
+#
+# Add one.svg, two.svg, and so on to the base.svg imageṡ and save into `output.svg`
+# i.e base.svg + one.svg + two.svg -> output.svg
+# note that due to svg stacking behavior, the last image added will appear over the previous.
+
+# Note: 
+# before using this script, it is recommended to use https://github.com/RazrFalcon/svgcleaner on the svg images. So that the svg content is cleaned for non svg data, and it gets easier to manipulate the SVG/XML structure.
+
 from xml.etree import ElementTree
 import sys
 
@@ -39,6 +49,7 @@ def svgadd(x_left, ids, right):
 		x_left.append(e)
 
 def svg_getids(x, ids):
+	# Records the various id="..." 
 	for e in x:
 		if e.get('id'):
 			ids.append (e.get('id'))
