@@ -7,7 +7,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="10"
@@ -27,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="45.254834"
-     inkscape:cx="5.554833"
+     inkscape:cx="-1.803497"
      inkscape:cy="4.0394435"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -35,9 +34,9 @@
      showguides="true"
      inkscape:guide-bbox="true"
      units="px"
-     inkscape:window-width="1680"
-     inkscape:window-height="1027"
-     inkscape:window-x="1912"
+     inkscape:window-width="1840"
+     inkscape:window-height="1177"
+     inkscape:window-x="72"
      inkscape:window-y="-8"
      inkscape:window-maximized="1">
     <inkscape:grid
@@ -45,47 +44,6 @@
        id="grid843"
        dotted="false"
        empspacing="1" />
-    <sodipodi:guide
-       position="-0.52916665,0"
-       orientation="0,1"
-       id="guide4549"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       position="0,5.5562498"
-       orientation="1,0"
-       id="guide4555"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       position="0.66145833,2.9104166"
-       orientation="1,0"
-       id="guide4565"
-       inkscape:locked="false"
-       inkscape:label=""
-       inkscape:color="rgb(0,0,255)" />
-    <sodipodi:guide
-       position="1.984375,3.175"
-       orientation="1,0"
-       id="guide4567"
-       inkscape:locked="false"
-       inkscape:label=""
-       inkscape:color="rgb(0,0,255)" />
-    <sodipodi:guide
-       position="3.175,1.984375"
-       orientation="0,1"
-       id="guide4569"
-       inkscape:locked="false"
-       inkscape:label=""
-       inkscape:color="rgb(0,0,255)" />
-    <sodipodi:guide
-       position="1.3229167,3.175"
-       orientation="1,0"
-       id="guide4571"
-       inkscape:locked="false" />
-    <sodipodi:guide
-       position="1.0583333,1.3229167"
-       orientation="0,1"
-       id="guide4573"
-       inkscape:locked="false" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -111,17 +69,8 @@
        height="2.6458333"
        x="0"
        y="294.35416" />
-    <image
-       y="278.86502"
-       x="12.953558"
-       id="image823"
-       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKBAMAAAB/HNKOAAAABGdBTUEAALGOfPtRkwAAACBjSFJN AACHDwAAjA8AAP1SAACBQAAAfXkAAOmLAAA85QAAGcxzPIV3AAAAD1BMVEUAAADU3/I0YKy9zuv/ //9KJpeCAAAAAXRSTlMAQObYZgAAAAFiS0dEBI9o2VEAAAAJb0ZGcwAAAAEAAAABAAhtVCoAAAAJ cEhZcwAACwsAAAsLAW0EhLcAAAAHdElNRQfiDBMWKwEJ2BdkAAAACXZwQWcAAACFAAAATgA1VVrp AAAAOElEQVQI1y2LQREAIAzDAgp2VUDBwQ4H4F8Te/DpI0nRoBsnS6wzd6J9j2m+CqiFXmR864wq 5Xo9wKAGcu1EdfcAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTgtMTItMTlUMjI6NDM6MDErMDE6MDBM I1RTAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE4LTEyLTE5VDIyOjQzOjAxKzAxOjAwPX7s7wAAABh0 RVh0U29mdHdhcmUAcGFpbnQubmV0IDQuMS40E0BoxAAAAABJRU5ErkJggg== "
-       style="image-rendering:optimizeQuality"
-       preserveAspectRatio="none"
-       height="10.095114"
-       width="10.095114" />
     <path
-       style="opacity:1;fill:#f0f0ff;fill-opacity:1;fill-rule:nonzero;stroke:#3460ac;stroke-width:0.24695407;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#114399;stroke-width:0.24695407;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
        d="m 0.75389499,294.53857 -0.56902153,0.57739 0.55301781,0.56112 -0.55301781,0.56117 0.56902153,0.57736 0.56902151,-0.57736 0.5690216,0.57736 0.5690217,-0.57736 -0.553018,-0.56117 0.553018,-0.56112 -0.5690217,-0.57739 -0.5690216,0.57739 z"
        id="rect828"
        inkscape:connector-curvature="0" />
