@@ -2,61 +2,117 @@
 
 RES=../res
 BIN=../..
+SVGADD=../../svg_add.py
 pushd 1
 
 # @class
 # normal
-cp $RES/class.svg 13.svg
+$SVGADD $RES/class.svg 13.svg
 # readonly
-cp $RES/class_readonly.svg 14.svg
+$SVGADD $RES/class.svg $RES/readonly.svg 14.svg
 # deferred
-$BIN/svg_add.py $RES/class.svg $RES/deferred.svg 15.svg
+$SVGADD $RES/class.svg $RES/deferred.svg 15.svg
 # deferred readonly
-$BIN/svg_add.py $RES/class.svg $RES/deferred.svg $RES/readonly.svg 16.svg
+$SVGADD $RES/class.svg $RES/deferred.svg $RES/readonly.svg 16.svg
 # frozen
-cp $RES/class_frozen.svg 17.svg
+$SVGADD $RES/class_frozen.svg 17.svg
 # frozen readonly
-cp $RES/class_frozen.svg $RES/readonly.svg 18.svg
+$SVGADD $RES/class_frozen.svg $RES/readonly.svg 18.svg
 # uncompiled
-cp $RES/class_uncompiled.svg 19.svg
+$SVGADD $RES/class_uncompiled.svg 19.svg
 # uncompiled readonly
-cp $RES/class_uncompiled.svg $RES/readonly.svg 20.svg
+$SVGADD $RES/class_uncompiled.svg $RES/readonly.svg 20.svg
 
 # @class override 
 # normal
-$BIN/svg_add.py $RES/class.svg $RES/override.svg 21.svg
+$SVGADD $RES/class.svg $RES/override.svg 21.svg
 # readonly
-$BIN/svg_add.py $RES/class.svg $RES/override.svg $RES/readonly.svg 22.svg
+$SVGADD $RES/class.svg $RES/override.svg $RES/readonly.svg 22.svg
 
 # deferred
-$BIN/svg_add.py $RES/class.svg $RES/deferred.svg $RES/override.svg 23.svg
+$SVGADD $RES/class.svg $RES/deferred.svg $RES/override.svg 23.svg
 # deferred readonly
-$BIN/svg_add.py $RES/class.svg $RES/deferred.svg $RES/override.svg $RES/readonly.svg 24.svg
+$SVGADD $RES/class.svg $RES/deferred.svg $RES/override.svg $RES/readonly.svg 24.svg
 # frozen
-$BIN/svg_add.py $RES/class_frozen.svg $RES/override.svg 25.svg
+$SVGADD $RES/class_frozen.svg $RES/override.svg 25.svg
 # frozen readonly
-$BIN/svg_add.py $RES/class_frozen.svg $RES/override.svg $RES/readonly.svg 26.svg
+$SVGADD $RES/class_frozen.svg $RES/override.svg $RES/readonly.svg 26.svg
 # uncompiled
-$BIN/svg_add.py $RES/class_uncompiled.svg $RES/override.svg 27.svg
+$SVGADD $RES/class_uncompiled.svg $RES/override.svg 27.svg
 # uncompiled readonly
-$BIN/svg_add.py $RES/class_uncompiled.svg $RES/override.svg $RES/readonly.svg 28.svg
+$SVGADD $RES/class_uncompiled.svg $RES/override.svg $RES/readonly.svg 28.svg
 
 # @class overridden
 # normal
-$BIN/svg_add.py $RES/class.svg $RES/overridden.svg 29.svg
+$SVGADD $RES/class.svg $RES/overridden.svg 29.svg
 # readonly
-$BIN/svg_add.py $RES/class_readonly.svg $RES/overridden.svg 30.svg
+$SVGADD $RES/class.svg $RES/overridden.svg $RES/readonly.svg 30.svg
 # deferred
-$BIN/svg_add.py $RES/class.svg $RES/deferred.svg $RES/overridden.svg 31.svg
+$SVGADD $RES/class.svg $RES/deferred.svg $RES/overridden.svg 31.svg
 # deferred readonly
-$BIN/svg_add.py $RES/class_readonly.svg $RES/deferred.svg $RES/overridden.svg 32.svg
+$SVGADD $RES/class.svg $RES/deferred.svg $RES/overridden.svg $RES/readonly.svg 32.svg
 # frozen
-$BIN/svg_add.py $RES/class_frozen.svg $RES/overridden.svg 33.svg
+$SVGADD $RES/class_frozen.svg $RES/overridden.svg 33.svg
 # frozen readonly
-$BIN/svg_add.py $RES/class_frozen.svg $RES/overridden.svg $RES/readonly.svg 34.svg
-# uncompiled
-$BIN/svg_add.py $RES/class_uncompiled.svg $RES/overridden.svg 35.svg
-# uncompiled readonly
-$BIN/svg_add.py $RES/class_uncompiled.svg $RES/overridden.svg $RES/readonly.svg 36.svg
+$SVGADD $RES/class_frozen.svg $RES/overridden.svg $RES/readonly.svg 34.svg
+popd
 
+pushd 2
+# uncompiled
+$SVGADD $RES/class_uncompiled.svg $RES/overridden.svg 1.svg
+# uncompiled readonly
+$SVGADD $RES/class_uncompiled.svg $RES/overridden.svg $RES/readonly.svg 2.svg
+popd
+
+#[feature]
+pushd 3
+# routine
+$SVGADD $RES/feature.svg 1.svg
+# attribute
+$SVGADD $RES/feature.svg $RES/attribute.svg 2.svg
+# once
+$SVGADD $RES/feature.svg $RES/once.svg 3.svg
+# deferred
+# external
+# assigner
+# deferred assigner
+
+# [@feature instance_free]
+# routine
+$SVGADD $RES/feature.svg $RES/instance-free.svg 8.svg
+# once
+$SVGADD $RES/feature.svg $RES/instance-free.svg $RES/once.svg 9.svg
+# deferred
+# external
+# 
+# [@feature frozen]
+# routine
+# attribute
+# once
+# external
+# assigner
+# 
+# [@feature frozen instance_free]
+# routine
+# once
+# external
+# 
+# [@feature]
+# constant
+# obsolete constant
+# 
+# [@feature obsolete]
+# routine
+# attribute
+# once
+# deferred
+# external
+# assigner
+# deferred assigner
+# 
+# [@feature obsolete instance_free]
+# routine
+# once
+# deferred
+# external
 popd

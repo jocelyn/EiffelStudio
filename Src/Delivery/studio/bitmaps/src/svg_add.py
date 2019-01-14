@@ -3,6 +3,9 @@
 from xml.etree import ElementTree
 import sys
 
+dbg=False
+#dbg=True
+
 def next_id(a_id, a_list):
 	l_id = a_id
 	while l_id in a_list:
@@ -19,15 +22,17 @@ def svgadd(x_left, ids, right):
 			new_ids[l_id] = l_new_id 
 			e.set('id', l_new_id)
 			ids.append(l_new_id)
-			#print "Id: %s -> %s"% (l_id, l_new_id)
+			if dbg: print "Id: %s -> %s"% (l_id, l_new_id)
+		else:
+			new_ids[l_id] = l_id 
 	for e in x_right.iter('*'):
 		for k in e.attrib:
 			v = e.attrib[k]
-			#print "(%s => %s)"%(k, v)
+			#if dbg: print "(%s => %s)"%(k, v)
 			if v[0:5] == 'url(#':
 				l_ref_id = v[5:-1]
 				l_new_ref_id = new_ids[l_ref_id]
-				#print "Found %s -> %s"% (l_ref_id, l_new_ref_id)
+				if dbg: print "Found %s -> %s"% (l_ref_id, l_new_ref_id)
 				if l_new_ref_id:
 					e.set(k,"url(#%s)"%(l_new_ref_id))
 	for e in x_right:
@@ -45,7 +50,7 @@ def svg_showids(ids):
 		sys.stdout.write("\n")
 
 nb = len(sys.argv)
-if nb > 3:
+if nb > 2:
 	left=sys.argv[1]
 	r=2
 	output=sys.argv[nb - 1]
@@ -54,11 +59,11 @@ if nb > 3:
 	x_left = ElementTree.parse(left).getroot()
 	left_ids = []
 	svg_getids(x_left, left_ids)
-	#svg_showids(left_ids)
+	if dbg: svg_showids(left_ids)
 	for r in range(2, nb - 1):
 		right=sys.argv[r]
 		svgadd(x_left, left_ids, right)
-		#svg_showids(left_ids)
+		if dbg: svg_showids(left_ids)
 
 	#ElementTree.dump(x_left)
 	ElementTree.ElementTree(x_left).write(output)
