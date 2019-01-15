@@ -3,103 +3,144 @@
 PIXDIR=16x16
 RES=../../res
 BIN=../..
-SVGADD=../../svg_add.py
+SVGadd="../../svg_cli.py add"
+SVGgrey="../../svg_cli.py filter grey"
+SVGlight="../../svg_cli.py filter light"
+SVGfrozen="../../svg_cli.py filter frozen"
 
 mkdir -p $PIXDIR/1
 pushd $PIXDIR/1
+
+# [expanded]
+# normal
+# edited: 1.svg
+# readonly
+#$SVGfrozen 1.svg 2.svg
+$SVGadd 1.svg $RES/readonly.svg 2.svg
+# uncompiled
+$SVGgrey 1.svg 3.svg
+# uncompiled readonly
+$SVGadd 3.svg $RES/readonly.svg 4.svg
+# 
+# [@expanded override]
+# normal
+$SVGadd 1.svg $RES/override.svg 5.svg
+# readonly
+$SVGadd 2.svg $RES/override.svg 6.svg
+# uncompiled
+$SVGadd 3.svg $RES/override.svg 7.svg
+# uncompiled readonly
+$SVGadd 4.svg $RES/override.svg 8.svg
+# 
+# [@expanded overriden]
+# normal
+$SVGadd 1.svg $RES/overridden.svg 9.svg
+# readonly
+$SVGadd 9.svg $RES/readonly.svg 10.svg
+# uncompiled
+$SVGadd 3.svg $RES/overridden.svg 11.svg
+# uncompiled readonly
+$SVGadd 11.svg $RES/readonly.svg 12.svg
+
 # [class]
 # @class
 # normal
-$SVGADD $RES/class.svg 13.svg
+$SVGadd $RES/class.svg 13.svg
 # readonly
-$SVGADD $RES/class.svg $RES/readonly.svg 14.svg
+$SVGadd 13.svg $RES/readonly.svg 14.svg
 # deferred
-$SVGADD $RES/class.svg $RES/deferred.svg 15.svg
+$SVGadd 13.svg $RES/deferred.svg 15.svg
 # deferred readonly
-$SVGADD $RES/class.svg $RES/deferred.svg $RES/readonly.svg 16.svg
+$SVGadd 13.svg $RES/deferred.svg $RES/readonly.svg 16.svg
 # frozen
-$SVGADD $RES/class_frozen.svg 17.svg
+$SVGfrozen 13.svg 17.svg
 # frozen readonly
-$SVGADD $RES/class_frozen.svg $RES/readonly.svg 18.svg
+$SVGadd 17.svg $RES/readonly.svg 18.svg
 # uncompiled
-$SVGADD $RES/class_uncompiled.svg 19.svg
+$SVGgrey 13.svg 19.svg
 # uncompiled readonly
-$SVGADD $RES/class_uncompiled.svg $RES/readonly.svg 20.svg
+$SVGadd 19.svg $RES/readonly.svg 20.svg
 
 # @class override 
 # normal
-$SVGADD $RES/class.svg $RES/override.svg 21.svg
+$SVGadd 13.svg $RES/override.svg 21.svg
 # readonly
-$SVGADD $RES/class.svg $RES/override.svg $RES/readonly.svg 22.svg
+$SVGadd 21.svg $RES/readonly.svg 22.svg
 
 # deferred
-$SVGADD $RES/class.svg $RES/deferred.svg $RES/override.svg 23.svg
+$SVGadd 21.svg $RES/deferred.svg 23.svg
 # deferred readonly
-$SVGADD $RES/class.svg $RES/deferred.svg $RES/override.svg $RES/readonly.svg 24.svg
+$SVGadd 23.svg $RES/readonly.svg 24.svg
 # frozen
-$SVGADD $RES/class_frozen.svg $RES/override.svg 25.svg
+$SVGadd 17.svg $RES/override.svg 25.svg
 # frozen readonly
-$SVGADD $RES/class_frozen.svg $RES/override.svg $RES/readonly.svg 26.svg
+$SVGadd 25.svg $RES/readonly.svg 26.svg
 # uncompiled
-$SVGADD $RES/class_uncompiled.svg $RES/override.svg 27.svg
+$SVGadd 19.svg $RES/override.svg 27.svg
 # uncompiled readonly
-$SVGADD $RES/class_uncompiled.svg $RES/override.svg $RES/readonly.svg 28.svg
+$SVGadd 27.svg $RES/readonly.svg 28.svg
 
 # @class overridden
 # normal
-$SVGADD $RES/class.svg $RES/overridden.svg 29.svg
+$SVGadd 13.svg $RES/overridden.svg 29.svg
 # readonly
-$SVGADD $RES/class.svg $RES/overridden.svg $RES/readonly.svg 30.svg
+$SVGadd 29.svg $RES/readonly.svg 30.svg
 # deferred
-$SVGADD $RES/class.svg $RES/deferred.svg $RES/overridden.svg 31.svg
+$SVGadd 29.svg $RES/deferred.svg 31.svg
 # deferred readonly
-$SVGADD $RES/class.svg $RES/deferred.svg $RES/overridden.svg $RES/readonly.svg 32.svg
+$SVGadd 31.svg $RES/readonly.svg 32.svg
 # frozen
-$SVGADD $RES/class_frozen.svg $RES/overridden.svg 33.svg
+$SVGadd 17.svg $RES/overridden.svg 33.svg
 # frozen readonly
-$SVGADD $RES/class_frozen.svg $RES/overridden.svg $RES/readonly.svg 34.svg
+$SVGadd 33.svg $RES/readonly.svg 34.svg
 popd
 
 mkdir -p $PIXDIR/2
 pushd $PIXDIR/2
 # uncompiled
-$SVGADD $RES/class_uncompiled.svg $RES/overridden.svg 1.svg
+$SVGadd ../1/19.svg $RES/overridden.svg 1.svg
 # uncompiled readonly
-$SVGADD $RES/class_uncompiled.svg $RES/overridden.svg $RES/readonly.svg 2.svg
+$SVGadd 1.svg $RES/readonly.svg 2.svg
 popd
 
 mkdir -p $PIXDIR/3
 pushd $PIXDIR/3
 #[feature]
 # routine
-$SVGADD $RES/feature.svg 1.svg
+$SVGadd $RES/feature.svg 1.svg
 # attribute
-$SVGADD $RES/feature.svg $RES/attribute.svg 2.svg
+$SVGadd 1.svg $RES/attribute.svg 2.svg
 # once
-$SVGADD $RES/feature.svg $RES/once.svg 3.svg
+$SVGadd 1.svg $RES/once.svg 3.svg
 # deferred
+$SVGlight 1.svg 4.svg
 # external
 # assigner
 # deferred assigner
 
 # [@feature instance_free]
 # routine
-$SVGADD $RES/feature.svg $RES/instance-free.svg 8.svg
+$SVGadd 1.svg $RES/instance-free.svg 8.svg
 # once
-$SVGADD $RES/feature.svg $RES/instance-free.svg $RES/once.svg 9.svg
-# deferred
-# external
+$SVGadd 8.svg $RES/once.svg 9.svg
+# deferred 10
+# external 11
 # 
 # [@feature frozen]
 # routine
+$SVGfrozen 1.svg 12.svg
 # attribute
+$SVGfrozen 2.svg 13.svg
 # once
+$SVGfrozen 3.svg 14.svg
 # external
 # assigner
 # 
 # [@feature frozen instance_free]
 # routine
+$SVGadd 12.svg $RES/instance-free.svg 17.svg
 # once
+$SVGadd 17.svg $RES/once.svg 18.svg
 # external
 # 
 # [@feature]
@@ -107,17 +148,23 @@ $SVGADD $RES/feature.svg $RES/instance-free.svg $RES/once.svg 9.svg
 # obsolete constant
 # 
 # [@feature obsolete]
-# routine
+# routine 22
+$SVGgrey 1.svg 22.svg
 # attribute
+$SVGgrey 2.svg 23.svg
 # once
+$SVGgrey 3.svg 24.svg
 # deferred
+$SVGgrey 4.svg 25.svg
 # external
 # assigner
 # deferred assigner
 # 
 # [@feature obsolete instance_free]
 # routine
+$SVGgrey 8.svg 29.svg
 # once
+$SVGgrey 9.svg 30.svg
 # deferred
 # external
 popd
