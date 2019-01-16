@@ -54,7 +54,7 @@ do
 		then
 			rows=$dn
 		fi
-		for f in $rootdir/$dn/*.*
+		for f in `ls $rootdir/$dn/*.* | sort -V -r`
 		do
 			fn=$(basename -- $f)
 			if [[ $fn =~ ^[0-9][0-9]*.(png|svg)$ ]]
@@ -63,6 +63,8 @@ do
 				if (( $nb > $cols ))
 				then
 					cols=$nb
+				else
+					break
 				fi
 			fi
 		done
