@@ -81,9 +81,9 @@ function svg_to_png {
 
 function append_icon {
 	echo " - append icon"
-	convert +append -gravity East -background transparent -geometry +0+0 $2 $1 $2
-	echo " - append vertical separator"
-	convert +append -gravity East -background transparent -geometry +0+0 $2 $tmpdir/v.png $2
+	convert +append -gravity East -background transparent -geometry +0+0 $2 $1 $tmpdir/v.png $2
+	#echo " - append vertical separator"
+	#convert +append -gravity East -background transparent -geometry +0+0 $2 $tmpdir/v.png $2
 }
 
 function append_icons_row {
