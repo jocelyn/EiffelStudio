@@ -14,7 +14,7 @@ from xml.etree import ElementTree
 import sys
 
 dbg=False
-dbg=True
+#dbg=True
 
 def next_id(a_id, a_list):
 	if len(a_id) > 1 or a_id == 'z':
