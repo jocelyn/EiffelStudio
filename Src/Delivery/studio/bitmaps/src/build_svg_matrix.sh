@@ -17,6 +17,9 @@
 background="transparent"
 #background="rgb(0,255,0)"
 
+#comment following line, to have transparent background, instead of green background, for remaining PNG icons!
+background_png="#0f0"
+
 # Arguments
 rootdir=$1
 target=$2
@@ -122,23 +125,15 @@ do
 		x=$(( $x + $wsep + $svg_width ))
 		if [ -e $d/$c.svg ] 
 		then
-			icon=$d/$c.svg
+			echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"$d/$c.svg\" />" >> $target
 		else
 			if [ -e $d/$c.png ]
 			then
-				icon=$d/$c.png
-			else
-				icon=
-			fi
-		fi
-
-		#echo "Icon ($r,$c)"
-		if [ ! -z $icon ]
-		then
-			if [ -e $icon ]
-			then
-				#append_icon $icon $target
-				echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"$icon\" />" >> $target
+				if [ ! -z "$background_png" ]
+				then
+					echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"$background_png\" />" >> $target
+				fi
+				echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"$d/$c.png\" />" >> $target
 			fi
 		fi
 
