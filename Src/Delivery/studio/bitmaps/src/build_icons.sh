@@ -3,6 +3,14 @@
 PIXDIR=16x16
 RES=../../res
 
+EnterRow() {
+	mkdir -p $PIXDIR/$1 > /dev/null
+	pushd $PIXDIR/$1 > /dev/null
+	echo Process $PIXDIR/$1
+}
+ExitRow() {
+	popd > /dev/null
+}
 SVGadd() 
 { 
 	../../svg_cli.py add $* 
@@ -25,9 +33,7 @@ SVGfrozen()
 # ;
 
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/1
-pushd $PIXDIR/1
-echo Process $PIXDIR/1
+EnterRow 1
 
 # [expanded]
 # normal
@@ -111,26 +117,22 @@ SVGadd 31.svg $RES/readonly.svg 32.svg
 SVGadd 17.svg $RES/overridden.svg 33.svg
 # frozen readonly
 SVGadd 33.svg $RES/readonly.svg 34.svg
-popd
+ExitRow
 
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/2
-pushd $PIXDIR/2
-echo Process $PIXDIR/2
+EnterRow 2
 # uncompiled
 SVGadd ../1/19.svg $RES/overridden.svg 1.svg
 # uncompiled readonly
 SVGadd 1.svg $RES/readonly.svg 2.svg
-popd
+ExitRow
 
 #----------------------------------------------------------------------------------
 # ;
 # ; Feature declarations
 # ;
 
-mkdir -p $PIXDIR/3
-pushd $PIXDIR/3
-echo Process $PIXDIR/3
+EnterRow 3
 #[feature]
 # routine
 SVGadd $RES/feature.svg 1.svg
@@ -193,43 +195,53 @@ SVGgrey 8.svg 29.svg
 SVGgrey 9.svg 30.svg
 # deferred
 # external
-popd
+ExitRow
 
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/4
-pushd $PIXDIR/4
-echo Process $PIXDIR/4
+EnterRow 4
 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
 # ;
 # ; Folder Declarations
 # ;
-mkdir -p $PIXDIR/5
-pushd $PIXDIR/5
-echo Process $PIXDIR/5
+EnterRow 5
 
 # [top level folder]
 # clusters
+SVGadd $RES/folder.svg $RES/class_sw.svg 1.svg
 # overrides
+SVGadd 1.svg $RES/override_se.svg 2.svg
 # library
+SVGadd $RES/folder.svg $RES/library.svg 3.svg
 # precompiles
 # references
 # targets
+SVGadd $RES/folder.svg $RES/target_se.svg 6.svg
 # remote_targets
+SVGgrey 6.svg 7.svg
 # 
 # [@folder features]
 # all
+SVGadd $RES/folder.svg $RES/feature_se.svg 8.svg
 # some
 # none
+SVGadd $RES/folder.svg $RES/lock_se.svg 10.svg
 # 
 # [@folder]
 # cluster
+SVGadd $RES/folder.svg $RES/class_se.svg 11.svg
 # cluster readonly
+SVGgrey 11.svg 12.svg
+SVGadd 11.svg $RES/lock_sw.svg 12.svg
 # blank
+SVGadd $RES/folder.svg 13.svg
 # blank readonly
+SVGlight 13.svg 14.svg
 # library
+SVGadd $RES/library.svg 15.svg
 # library readonly
+SVGlight 15.svg 16.svg
 # precompiled library
 # precompiled library readonly
 # assembly
@@ -237,25 +249,34 @@ echo Process $PIXDIR/5
 # preference
 # config
 # target
+SVGadd $RES/folder.svg $RES/library_se.svg 23.svg
 # 
 # [@folder hidden]
 # cluster
+SVGlight 11.svg 24.svg
 # cluster readonly
+SVGlight 12.svg 25.svg
 # blank
+SVGlight 13.svg 26.svg
 # blank readonly
+SVGlight 14.svg 27.svg
 # 
 # [@folder override]
 # cluster
+SVGadd 2.svg 28.svg
 # cluster readonly
+SVGadd 1.svg 29.svg
+SVGgrey 29.svg 29.svg
+SVGadd 29.svg $RES/override_se.svg 29.svg
 # blank
+SVGadd 13.svg $RES/override_se.svg 30.svg
 # blank readonly
+SVGadd 25.svg $RES/override_se.svg 30.svg
 # 
 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/6
-pushd $PIXDIR/6
-echo Process $PIXDIR/6
+EnterRow 6
 # ;
 # ; Tool Window Icons
 # ;
@@ -295,11 +316,9 @@ echo Process $PIXDIR/6
 # contract editor
 # terminal
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/7
-pushd $PIXDIR/7
-echo Process $PIXDIR/7
+EnterRow 7
 # ;
 # ; Iron
 # ;
@@ -331,11 +350,9 @@ echo Process $PIXDIR/7
 # verify refresh
 # preferences
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/8
-pushd $PIXDIR/8
-echo Process $PIXDIR/8
+EnterRow 8
 # ;
 # ; Project Operation Declarations
 # ;
@@ -385,11 +402,9 @@ echo Process $PIXDIR/8
 # disable
 # enable
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/9
-pushd $PIXDIR/9
-echo Process $PIXDIR/9
+EnterRow 9
 # [@callstack]
 # active arrow
 # empty arrow
@@ -416,11 +431,9 @@ echo Process $PIXDIR/9
 # detach
 # attach
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/10
-pushd $PIXDIR/10
-echo Process $PIXDIR/10
+EnterRow 10
 # ;
 # ; All Purpose Icons
 # ;
@@ -459,11 +472,9 @@ echo Process $PIXDIR/10
 # move up
 # move down
 # move left
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/11
-pushd $PIXDIR/11
-echo Process $PIXDIR/11
+EnterRow 11
 # move right
 # close document
 # close all documents
@@ -472,11 +483,9 @@ echo Process $PIXDIR/11
 # filter
 # information
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/12
-pushd $PIXDIR/12
-echo Process $PIXDIR/12
+EnterRow 12
 # [sort]
 # descending
 # acending
@@ -527,11 +536,9 @@ echo Process $PIXDIR/12
 # expand_all
 # collapse_all
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/13
-pushd $PIXDIR/13
-echo Process $PIXDIR/13
+EnterRow 13
 # ;
 # ; Navigation Related Declarations
 # ;
@@ -548,11 +555,9 @@ echo Process $PIXDIR/13
 # clickable feature
 # unmodified
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/14
-pushd $PIXDIR/14
-echo Process $PIXDIR/14
+EnterRow 14
 # ;
 # ; New and Add Related Declarations
 # ;
@@ -586,11 +591,9 @@ echo Process $PIXDIR/14
 # cflag
 # linker flag
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/15
-pushd $PIXDIR/15
-echo Process $PIXDIR/15
+EnterRow 15
 # ;
 # ; View Related Declarations
 # ;
@@ -624,11 +627,9 @@ echo Process $PIXDIR/15
 # exported
 # instance_free routine
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/16
-pushd $PIXDIR/16
-echo Process $PIXDIR/16
+EnterRow 16
 # ;
 # ; Metric Tool Related Declarations
 # ;
@@ -673,11 +674,9 @@ echo Process $PIXDIR/16
 # feature
 # local or argument
 # assertion
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/17
-pushd $PIXDIR/17
-echo Process $PIXDIR/17
+EnterRow 17
 # line
 # compilation
 # ratio
@@ -685,11 +684,9 @@ echo Process $PIXDIR/17
 # [@metric]
 # filter
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/18
-pushd $PIXDIR/18
-echo Process $PIXDIR/18
+EnterRow 18
 # ;
 # ; Diagram Tool Related Declarations
 # ;
@@ -718,11 +715,9 @@ echo Process $PIXDIR/18
 # fill cluster
 # view uml
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/19
-pushd $PIXDIR/19
-echo Process $PIXDIR/19
+EnterRow 19
 # ;
 # ; Preference Related Declarations
 # ;
@@ -743,11 +738,9 @@ echo Process $PIXDIR/19
 # blank
 # eiffel project large
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/20
-pushd $PIXDIR/20
-echo Process $PIXDIR/20
+EnterRow 20
 # ;
 # ; Animations
 # ;
@@ -771,11 +764,9 @@ echo Process $PIXDIR/20
 # animation 4
 # animation 5
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/21
-pushd $PIXDIR/21
-echo Process $PIXDIR/21
+EnterRow 21
 # [project settings]
 # system
 # target
@@ -799,11 +790,9 @@ echo Process $PIXDIR/21
 # default highlighted
 # default
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/22
-pushd $PIXDIR/22
-echo Process $PIXDIR/22
+EnterRow 22
 # ;
 # ; Overlay icons
 # ;
@@ -856,11 +845,9 @@ SVGadd $RES/instance-free.svg 24.svg
 SVGadd $RES/feature_se.svg 25.svg
 # verifier right
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/23
-pushd $PIXDIR/23
-echo Process $PIXDIR/23
+EnterRow 23
 # [errors and warnings]
 # next error
 # previous error
@@ -872,11 +859,9 @@ echo Process $PIXDIR/23
 # fix ignore
 # fix apply
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/24
-pushd $PIXDIR/24
-echo Process $PIXDIR/24
+EnterRow 24
 # ;
 # ; Information Tool Related Declarations
 # ;
@@ -892,11 +877,9 @@ echo Process $PIXDIR/24
 # with info sign
 # affected resource
 # 
-popd
+ExitRow
 #----------------------------------------------------------------------------------
-mkdir -p $PIXDIR/25
-pushd $PIXDIR/25
-echo Process $PIXDIR/25
+EnterRow 25
 # ;
 # ; Testing tool 
 # ;
@@ -911,4 +894,4 @@ echo Process $PIXDIR/25
 # tool
 # result_tool
 # 
-popd
+ExitRow
