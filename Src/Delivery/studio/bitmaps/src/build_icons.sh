@@ -451,11 +451,11 @@ ExitRow
 EnterRow 9
 # [@callstack]
 # active arrow
-SVGadd $RES/triangle_green.svg
+SVGadd $RES/triangle_green.svg 1.svg
 # empty arrow
-SVGadd $RES/triangle_white.svg
+SVGadd $RES/triangle_white.svg 2.svg
 # marked arrow
-SVGadd $RES/triangle_red.svg
+SVGadd $RES/triangle_red.svg 3.svg
 # replayed active
 # replayed empty
 # replayed marked
@@ -530,7 +530,7 @@ EnterRow 11
 # close all documents
 # show hidden
 # refresh
-SVGadd $RES/refresh.svh 5.svg
+SVGadd $RES/refresh.svg 5.svg
 # filter
 # information
 SVGadd $RES/info.svg 7.svg
