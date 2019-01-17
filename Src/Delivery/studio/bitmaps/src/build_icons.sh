@@ -143,8 +143,11 @@ SVGadd 1.svg $RES/once.svg 3.svg
 # deferred
 SVGlight 1.svg 4.svg
 # external
+SVGadd 1.svg $RES/curly_brackets.svg 5.svg
 # assigner
+# 6.svg
 # deferred assigner
+SVGlight 6.svg 7.svg
 
 # [@feature instance_free]
 # routine
@@ -152,7 +155,9 @@ SVGadd 1.svg $RES/instance-free.svg 8.svg
 # once
 SVGadd 8.svg $RES/once.svg 9.svg
 # deferred 10
+SVGadd 4.svg $RES/instance-free.svg 10.svg
 # external 11
+SVGadd 5.svg $RES/instance-free.svg 11.svg
 # 
 # [@feature frozen]
 # routine
@@ -162,7 +167,9 @@ SVGfrozen 2.svg 13.svg
 # once
 SVGfrozen 3.svg 14.svg
 # external
+SVGfrozen 5.svg 15.svg
 # assigner
+SVGfrozen 6.svg 16.svg
 # 
 # [@feature frozen instance_free]
 # routine
@@ -170,10 +177,14 @@ SVGadd 12.svg $RES/instance-free.svg 17.svg
 # once
 SVGadd 17.svg $RES/once.svg 18.svg
 # external
+SVGadd 15.svg $RES/instance-free.svg 19.svg
 # 
 # [@feature]
 # constant
+SVGadd 18.svg 20.svg
 # obsolete constant
+SVGgrey 3.svg 21.svg
+SVGadd 21.svg $RES/instance-free.svg 21.svg
 # 
 # [@feature obsolete]
 # routine 22
@@ -185,8 +196,11 @@ SVGgrey 3.svg 24.svg
 # deferred
 SVGgrey 4.svg 25.svg
 # external
+SVGgrey 5.svg 26.svg
 # assigner
+SVGgrey 6.svg 27.svg
 # deferred assigner
+SVGgrey 7.svg 28.svg
 # 
 # [@feature obsolete instance_free]
 # routine
@@ -194,7 +208,10 @@ SVGgrey 8.svg 29.svg
 # once
 SVGgrey 9.svg 30.svg
 # deferred
+SVGgrey 29.svg 31.svg
 # external
+SVGgrey 11.svg 32.svg
+SVGgrey 32.svg 32.svg
 ExitRow
 
 #----------------------------------------------------------------------------------
@@ -226,15 +243,16 @@ SVGgrey 6.svg 7.svg
 # all
 SVGadd $RES/folder.svg $RES/feature_se.svg 8.svg
 # some
+SVGadd $RES/folder.svg $RES/key.svg $RES/feature_se.svg 9.svg
 # none
-SVGadd $RES/folder.svg $RES/lock_se.svg 10.svg
+SVGadd $RES/folder.svg $RES/lock_sw.svg 10.svg
 # 
 # [@folder]
 # cluster
 SVGadd $RES/folder.svg $RES/class_se.svg 11.svg
 # cluster readonly
 SVGgrey 11.svg 12.svg
-SVGadd 11.svg $RES/lock_sw.svg 12.svg
+SVGadd 12.svg $RES/lock_sw.svg 12.svg
 # blank
 SVGadd $RES/folder.svg 13.svg
 # blank readonly
@@ -254,13 +272,13 @@ SVGadd 18.svg $RES/packaged_se.svg 18.svg
 # preference
 # config
 # target
-SVGadd $RES/folder.svg $RES/library_se.svg 23.svg
+SVGadd $RES/folder.svg $RES/target_se.svg 23.svg
 # 
 # [@folder hidden]
 # cluster
 SVGlight 11.svg 24.svg
 # cluster readonly
-SVGlight 12.svg 25.svg
+SVGgrey 12.svg 25.svg
 # blank
 SVGlight 13.svg 26.svg
 # blank readonly
@@ -276,7 +294,7 @@ SVGadd 29.svg $RES/override_se.svg 29.svg
 # blank
 SVGadd 13.svg $RES/override_se.svg 30.svg
 # blank readonly
-SVGadd 25.svg $RES/override_se.svg 30.svg
+SVGadd 25.svg $RES/override_se.svg 31.svg
 # 
 
 ExitRow
@@ -291,6 +309,7 @@ EnterRow 6
 # clusters
 SVGadd $RES/folder.svg $RES/class_se.svg 2.svg
 # class
+SVGadd $RES/class.svg 3.svg
 # feature
 # search
 SVGadd $RES/search.svg 5.svg
@@ -348,21 +367,30 @@ SVGadd $RES/microscope.svg 3.svg
 # analyze class
 SVGadd 3.svg $RES/class_sw.svg 4.svg
 # analyze editor
+SVGadd 3.svg $RES/editor_sw.svg 5.svg
 # analyze cluster
 SVGadd 3.svg $RES/folder_sw.svg 6.svg
 # analyze target
 SVGadd 3.svg $RES/target_sw.svg 7.svg
 # analyze refresh
+SVGadd 3.svg $RES/refresh_sw.svg 8.svg
 # preferences
 # 
 # [@verifier]
 # verify
+SVGadd $RES/verify.svg 10.svg
 # verify feature
+SVGadd 10.svg $RES/feature_sw.svg 11.svg
 # verify class
+SVGadd 10.svg $RES/class_sw.svg 12.svg
 # verify editor
+SVGadd 10.svg $RES/editor_sw.svg 13.svg
 # verify cluster
+SVGadd 10.svg $RES/folder_sw.svg 14.svg
 # verify target
+SVGadd 10.svg $RES/target_sw.svg 15.svg
 # verify refresh
+SVGadd 10.svg $RES/refresh_sw.svg 16.svg
 # preferences
 # 
 ExitRow
@@ -423,8 +451,11 @@ ExitRow
 EnterRow 9
 # [@callstack]
 # active arrow
+SVGadd $RES/triangle_green.svg
 # empty arrow
+SVGadd $RES/triangle_white.svg
 # marked arrow
+SVGadd $RES/triangle_red.svg
 # replayed active
 # replayed empty
 # replayed marked
@@ -499,6 +530,7 @@ EnterRow 11
 # close all documents
 # show hidden
 # refresh
+SVGadd $RES/refresh.svh 5.svg
 # filter
 # information
 SVGadd $RES/info.svg 7.svg
@@ -876,7 +908,9 @@ SVGadd $RES/library_se.svg 13.svg
 # clusters
 SVGadd $RES/folders_se.svg 14.svg
 # editor
+SVGadd $RES/editor_se.svg 15.svg
 # refresh
+SVGadd $RES/refresh_se.svg 16.svg
 # class left
 SVGadd $RES/class_sw.svg 17.svg
 # cluster left
@@ -888,12 +922,15 @@ SVGadd $RES/library_sw.svg 20.svg
 # clusters left
 SVGadd $RES/folders_sw.svg 21.svg
 # editor left
+SVGadd $RES/editor_sw.svg 22.svg
 # refresh left
+SVGadd $RES/refresh_sw.svg 23.svg
 # instance free
 SVGadd $RES/instance-free.svg 24.svg
 # feature left
 SVGadd $RES/feature_se.svg 25.svg
 # verifier right
+SVGadd $RES/verify_se.svg 26.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------
@@ -925,6 +962,7 @@ EnterRow 24
 # sweep now
 # edit auto node
 # with info sign
+SVGadd $RES/info_ne.svg 8.svg
 # affected resource
 # 
 ExitRow
@@ -941,7 +979,7 @@ SVGadd $RES/error.svg 2.svg
 # run_last_failed_tests_first
 # all_test_runs
 # see_failure_trace
-SVGadd $RES/info_ne.svg 6.svg
+SVGadd $RES/info.svg 6.svg
 # compare_with_expected_result
 # tool
 # result_tool
