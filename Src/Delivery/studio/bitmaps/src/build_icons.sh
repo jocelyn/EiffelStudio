@@ -213,7 +213,7 @@ SVGadd $RES/folder.svg $RES/class_sw.svg 1.svg
 # overrides
 SVGadd 1.svg $RES/override_se.svg 2.svg
 # library
-SVGadd $RES/folder.svg $RES/library_center.svg 3.svg
+SVGadd $RES/folder.svg $RES/library_c.svg 3.svg
 # precompiles
 SVGadd 3.svg $RES/packaged_se.svg 4.svg
 # references
@@ -591,7 +591,7 @@ SVGadd $RES/folder.svg $RES/class_sw.svg $RES/new_nw.svg 2.svg
 # override cluster
 SVGadd 2.svg $RES/override_se.svg 3.svg
 # library
-SVGadd $RES/folder.svg $RES/library_center.svg $RES/new_nw.svg 4.svg
+SVGadd $RES/folder.svg $RES/library_c.svg $RES/new_nw.svg 4.svg
 # precompiled library
 SVGadd $RES/library.svg $RES/packaged_se.svg $RES/new_nw.svg 5.svg
 # reference
