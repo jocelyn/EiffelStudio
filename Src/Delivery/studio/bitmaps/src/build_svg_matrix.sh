@@ -18,7 +18,7 @@ background="transparent"
 #background="rgb(0,255,0)"
 
 #comment following line, to have transparent background, instead of green background, for remaining PNG icons!
-background_png="#0f0"
+#background_png="#0f0"
 
 # Arguments
 rootdir=$1

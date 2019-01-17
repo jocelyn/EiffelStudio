@@ -137,7 +137,7 @@ EnterRow 3
 # routine
 SVGadd $RES/feature.svg 1.svg
 # attribute
-SVGadd 1.svg $RES/attribute.svg 2.svg
+SVGadd 1.svg $RES/attribute_e.svg 2.svg
 # once
 SVGadd 1.svg $RES/once.svg 3.svg
 # deferred
@@ -213,8 +213,9 @@ SVGadd $RES/folder.svg $RES/class_sw.svg 1.svg
 # overrides
 SVGadd 1.svg $RES/override_se.svg 2.svg
 # library
-SVGadd $RES/folder.svg $RES/library.svg 3.svg
+SVGadd $RES/folder.svg $RES/library_center.svg 3.svg
 # precompiles
+SVGadd 3.svg $RES/packaged_se.svg 4.svg
 # references
 # targets
 SVGadd $RES/folder.svg $RES/target_se.svg 6.svg
@@ -243,7 +244,11 @@ SVGadd $RES/library.svg 15.svg
 # library readonly
 SVGlight 15.svg 16.svg
 # precompiled library
+SVGadd $RES/library.svg $RES/packaged_se.svg 17.svg
 # precompiled library readonly
+SVGadd $RES/library.svg 18.svg
+SVGlight 18.svg
+SVGadd 18.svg $RES/packaged_se.svg 18.svg
 # assembly
 # namespace
 # preference
@@ -284,13 +289,19 @@ EnterRow 6
 # [tool]
 # features
 # clusters
+SVGadd $RES/folder.svg $RES/class_se.svg 2.svg
 # class
 # feature
 # search
+SVGadd $RES/search.svg 5.svg
 # advanced search
+SVGadd $RES/search.svg $RES/feature_e.svg 6.svg
 # diagram
+SVGadd $RES/pen.svg 7.svg
 # error
+SVGadd $RES/error.svg 8.svg
 # warning
+SVGadd $RES/warning.svg 9.svg
 # breakpoints
 # external commands
 # preferences
@@ -333,10 +344,14 @@ EnterRow 7
 # 
 # [@analyzer]
 # analyze
+SVGadd $RES/microscope.svg 3.svg
 # analyze class
+SVGadd 3.svg $RES/class_sw.svg 4.svg
 # analyze editor
 # analyze cluster
+SVGadd 3.svg $RES/folder_sw.svg 6.svg
 # analyze target
+SVGadd 3.svg $RES/target_sw.svg 7.svg
 # analyze refresh
 # preferences
 # 
@@ -386,6 +401,7 @@ EnterRow 8
 # 
 # [@debugger object]
 # immediate
+SVGadd $RES/attribute.svg 20.svg
 # eiffel
 # dotnet
 # dotnet static
@@ -455,8 +471,11 @@ EnterRow 10
 # undo
 # redo
 # error
+SVGadd $RES/error.svg 16.svg
 # mini error
+SVGadd $RES/mini_error.svg 17.svg
 # warning
+SVGadd $RES/warning.svg 18.svg
 # show tool tips
 # close
 # arrow up
@@ -482,6 +501,7 @@ EnterRow 11
 # refresh
 # filter
 # information
+SVGadd $RES/info.svg 7.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------
@@ -499,6 +519,7 @@ EnterRow 12
 # send to external editor
 # error info
 # system info
+SVGadd $RES/info.svg 6.svg
 # show features of any
 # go to definition
 # 
@@ -526,6 +547,7 @@ EnterRow 12
 # 
 # [@priority]
 # high
+SVGadd $RES/attribute.svg 21.svg
 # low
 # 
 # [@tab]
@@ -565,12 +587,18 @@ EnterRow 14
 # [new]
 # eiffel project
 # cluster
+SVGadd $RES/folder.svg $RES/class_sw.svg $RES/new_nw.svg 2.svg
 # override cluster
+SVGadd 2.svg $RES/override_se.svg 3.svg
 # library
+SVGadd $RES/folder.svg $RES/library_center.svg $RES/new_nw.svg 4.svg
 # precompiled library
+SVGadd $RES/library.svg $RES/packaged_se.svg $RES/new_nw.svg 5.svg
 # reference
 # feature
+SVGadd $RES/feature.svg $RES/new_nw.svg 7.svg
 # class
+SVGadd $RES/class.svg $RES/new_nw.svg 8.svg
 # window
 # editor
 # document
@@ -587,7 +615,11 @@ EnterRow 14
 # pre compilation task
 # post compilation task
 # target
+SVGadd $RES/folder.svg $RES/target_se.svg $RES/new_nw.svg 24.svg
 # remote_target
+SVGadd $RES/folder.svg $RES/target_se.svg 25.svg
+SVGgrey 25.svg 25.svg
+SVGadd 25.svg $RES/new_nw.svg 25.svg
 # cflag
 # linker flag
 # 
@@ -618,14 +650,18 @@ EnterRow 15
 # 
 # [@class features]
 # attribute
+SVGadd $RES/feature.svg $RES/attribute_e.svg 15.svg
 # routine
+SVGadd $RES/feature.svg 16.svg
 # invariant
 # creator
 # deferred
 # once
+SVGadd $RES/feature.svg $RES/once.svg  20.svg
 # external
 # exported
 # instance_free routine
+SVGadd $RES/feature.svg $RES/instance-free.svg  23.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------
@@ -668,8 +704,11 @@ EnterRow 16
 # 
 # [@metric unit]
 # target
+SVGadd $RES/target.svg 27.svg
 # group
+SVGadd $RES/folders.svg 28.svg
 # class
+SVGadd $RES/class.svg 29.svg
 # generic
 # feature
 # local or argument
@@ -747,13 +786,21 @@ EnterRow 20
 # 
 # [compile]
 # animation 1
+# 1.svg
 # animation 2
+# 2.svg
 # animation 3
+# 3.svg
 # animation 4
+# 4.svg
 # animation 5
+# 5.svg
 # animation 6
+# 6.svg
 # animation 7
+# 7.svg
 # animation 8
+# 8.svg
 # error
 # success
 # 
@@ -774,6 +821,7 @@ EnterRow 21
 # groups
 # advanced
 # warnings
+SVGadd $RES/warning.svg 6.svg
 # debug
 # externals
 # tasks
@@ -806,6 +854,7 @@ SVGadd $RES/error_se.svg 2.svg
 # warning
 SVGadd $RES/warning_se.svg 3.svg
 # packaged
+SVGadd $RES/packaged_se.svg 4.svg
 # search
 SVGadd $RES/search_se.svg 5.svg
 # new
@@ -815,6 +864,7 @@ SVGadd $RES/flag_se.svg 7.svg
 # information
 SVGadd $RES/info_nw.svg 8.svg
 # edit
+SVGadd $RES/pen.svg 9.svg
 # class
 SVGadd $RES/class_se.svg 10.svg
 # cluster
@@ -886,10 +936,12 @@ EnterRow 25
 # [testing]
 # new_unit_test
 # failure
+SVGadd $RES/error.svg 2.svg
 # run_last_tests
 # run_last_failed_tests_first
 # all_test_runs
 # see_failure_trace
+SVGadd $RES/info_ne.svg 6.svg
 # compare_with_expected_result
 # tool
 # result_tool
