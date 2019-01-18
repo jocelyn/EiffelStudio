@@ -96,7 +96,7 @@ if nb > 1:
 		#ElementTree.dump(x_base)
 		ElementTree.ElementTree(x_base).write(output)
 		print "Add: output saved into %s"% (output)
-	elif nb > 5 and command == "overlay":
+	elif nb > 4 and command == "overlay":
 		reg=sys.argv[2]
 		if nb > 5:
 			l_scale = float(sys.argv[3])
@@ -116,10 +116,8 @@ if nb > 1:
 			y=0
 		elif reg == 'sw':
 			x=0
-			y=l_page_size / l_scale
+			y=l_page_size * (1 - l_scale) / l_scale
 		elif reg == 'se':
-			x=l_page_size / l_scale
-			y=l_page_size / l_scale
 			x=l_page_size * (1 - l_scale) / l_scale
 			y=l_page_size * (1 - l_scale) / l_scale
 		else:
@@ -137,9 +135,12 @@ if nb > 1:
 
 		x_defs = ElementTree.fromstring("<defs/>")
 		x_gsrc = ElementTree.fromstring("<g id=\"%s\"/>" % (l_group_id))
+		elts=[]
 		for e in x_base:
-			x_gsrc.append (e)
+			elts.append (e)
+		for e in elts:
 			x_base.remove (e)
+			x_gsrc.append (e)
 
 		x_defs.append (x_gsrc)
 		x_base.append (x_defs)
@@ -169,9 +170,12 @@ if nb > 1:
 
 		x_defs = ElementTree.fromstring("<defs/>")
 		x_gsrc = ElementTree.fromstring("<g id=\"%s\"/>" % (l_group_id))
+		elts=[]
 		for e in x_base:
-			x_gsrc.append (e)
+			elts.append (e)
+		for e in elts:
 			x_base.remove (e)
+			x_gsrc.append (e)
 
 		x_defs.append (x_gsrc)
 		x_base.append (x_defs)
@@ -219,6 +223,8 @@ if nb > 1:
 		x_base.insert(0, x_filter)
 		base_ids.append(l_filter_id)
 
+		elts=[]
+
 		for e in x_base:
 			l_tag = e.tag
 			i = l_tag.find("}")
@@ -230,9 +236,13 @@ if nb > 1:
 				else:
 					ef = ElementTree.fromstring("<g filter=\"url(#%s)\"></g>" % (l_filter_id))
 					#ElementTree.dump(ef)
-					x_base.remove(e)
+					elts.append(e)
+					#x_base.remove(e)
 					ef.append(e)
 					x_base.append(ef)
+
+		for e in elts:
+			x_base.remove (e)
 
 		#ElementTree.dump(x_base)
 		ElementTree.ElementTree(x_base).write(output)

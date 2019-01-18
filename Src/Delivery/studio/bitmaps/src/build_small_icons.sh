@@ -1,5 +1,7 @@
 #!/bin/bash
 
+. ./inc/svgbuilder.sh
+
 PIXDIR=12x12
 RES=../../res
 
@@ -10,22 +12,6 @@ EnterRow() {
 }
 ExitRow() {
 	popd > /dev/null
-}
-SVGadd() 
-{ 
-	../../svg_cli.py add $* 
-}
-SVGgrey() 
-{
-       	../../svg_cli.py filter grey $* 
-}
-SVGlight() 
-{
-       	../../svg_cli.py filter light $* 
-}
-SVGfrozen() 
-{ 
-	../../svg_cli.py filter frozen $* 
 }
 
 EnterRow 1
