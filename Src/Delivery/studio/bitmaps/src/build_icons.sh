@@ -4,6 +4,7 @@
 
 PIXDIR=16x16
 RES=../../res
+OVERLAY=$RES/overlay
 
 EnterRow() {
 	mkdir -p $PIXDIR/$1 > /dev/null
@@ -34,21 +35,21 @@ SVGadd 3.svg $RES/readonly.svg 4.svg
 # 
 # [@expanded override]
 # normal
-SVGadd 1.svg $RES/override.svg 5.svg
+SVGadd 1.svg $OVERLAY/override_se.svg 5.svg
 # readonly
-SVGadd 2.svg $RES/override.svg 6.svg
+SVGadd 2.svg $OVERLAY/override_se.svg 6.svg
 # uncompiled
-SVGadd 3.svg $RES/override.svg 7.svg
+SVGadd 3.svg $OVERLAY/override_se.svg 7.svg
 # uncompiled readonly
-SVGadd 4.svg $RES/override.svg 8.svg
+SVGadd 4.svg $OVERLAY/override_se.svg 8.svg
 # 
 # [@expanded overriden]
 # normal
-SVGadd 1.svg $RES/overridden.svg 9.svg
+SVGadd 1.svg $OVERLAY/overridden_sw.svg 9.svg
 # readonly
 SVGadd 9.svg $RES/readonly.svg 10.svg
 # uncompiled
-SVGadd 3.svg $RES/overridden.svg 11.svg
+SVGadd 3.svg $OVERLAY/overridden_sw.svg 11.svg
 # uncompiled readonly
 SVGadd 11.svg $RES/readonly.svg 12.svg
 
@@ -73,7 +74,7 @@ SVGadd 19.svg $RES/readonly.svg 20.svg
 
 # @class override 
 # normal
-SVGadd 13.svg $RES/override.svg 21.svg
+SVGadd 13.svg $OVERLAY/override_se.svg 21.svg
 # readonly
 SVGadd 21.svg $RES/readonly.svg 22.svg
 
@@ -82,17 +83,17 @@ SVGadd 21.svg $RES/deferred.svg 23.svg
 # deferred readonly
 SVGadd 23.svg $RES/readonly.svg 24.svg
 # frozen
-SVGadd 17.svg $RES/override.svg 25.svg
+SVGadd 17.svg $OVERLAY/override_se.svg 25.svg
 # frozen readonly
 SVGadd 25.svg $RES/readonly.svg 26.svg
 # uncompiled
-SVGadd 19.svg $RES/override.svg 27.svg
+SVGadd 19.svg $OVERLAY/override_se.svg 27.svg
 # uncompiled readonly
 SVGadd 27.svg $RES/readonly.svg 28.svg
 
 # @class overridden
 # normal
-SVGadd 13.svg $RES/overridden.svg 29.svg
+SVGadd 13.svg $OVERLAY/overridden_sw.svg 29.svg
 # readonly
 SVGadd 29.svg $RES/readonly.svg 30.svg
 # deferred
@@ -100,7 +101,7 @@ SVGadd 29.svg $RES/deferred.svg 31.svg
 # deferred readonly
 SVGadd 31.svg $RES/readonly.svg 32.svg
 # frozen
-SVGadd 17.svg $RES/overridden.svg 33.svg
+SVGadd 17.svg $OVERLAY/overridden_sw.svg 33.svg
 # frozen readonly
 SVGadd 33.svg $RES/readonly.svg 34.svg
 ExitRow
@@ -108,7 +109,7 @@ ExitRow
 #----------------------------------------------------------------------------------
 EnterRow 2
 # uncompiled
-SVGadd ../1/19.svg $RES/overridden.svg 1.svg
+SVGadd ../1/19.svg $OVERLAY/overridden_sw.svg 1.svg
 # uncompiled readonly
 SVGadd 1.svg $RES/readonly.svg 2.svg
 ExitRow
@@ -212,33 +213,33 @@ EnterRow 5
 
 # [top level folder]
 # clusters
-SVGadd $RES/folder.svg $RES/class_sw.svg 1.svg
+SVGadd $RES/folder.svg $OVERLAY/class_sw.svg 1.svg
 # overrides
-SVGadd 1.svg $RES/override_se.svg 2.svg
+SVGadd 1.svg $OVERLAY/override_se.svg 2.svg
 # library
 SVGadd $RES/folder.svg $RES/library_c.svg 3.svg
 # precompiles
-SVGadd 3.svg $RES/packaged_se.svg 4.svg
+SVGadd 3.svg $OVERLAY/packaged_se.svg 4.svg
 # references
 # targets
-SVGadd $RES/folder.svg $RES/target_se.svg 6.svg
+SVGadd $RES/folder.svg $OVERLAY/target_se.svg 6.svg
 # remote_targets
 SVGgrey 6.svg 7.svg
 # 
 # [@folder features]
 # all
-SVGadd $RES/folder.svg $RES/feature_se.svg 8.svg
+SVGadd $RES/folder.svg $OVERLAY/feature_se.svg 8.svg
 # some
-SVGadd $RES/folder.svg $RES/key.svg $RES/feature_se.svg 9.svg
+SVGadd $RES/folder.svg $RES/key.svg $OVERLAY/feature_se.svg 9.svg
 # none
-SVGadd $RES/folder.svg $RES/lock_sw.svg 10.svg
+SVGadd $RES/folder.svg $OVERLAY/lock_sw.svg 10.svg
 # 
 # [@folder]
 # cluster
-SVGadd $RES/folder.svg $RES/class_se.svg 11.svg
+SVGadd $RES/folder.svg $OVERLAY/class_se.svg 11.svg
 # cluster readonly
 SVGgrey 11.svg 12.svg
-SVGadd 12.svg $RES/lock_sw.svg 12.svg
+SVGadd 12.svg $OVERLAY/lock_sw.svg 12.svg
 # blank
 SVGadd $RES/folder.svg 13.svg
 # blank readonly
@@ -248,17 +249,17 @@ SVGadd $RES/library.svg 15.svg
 # library readonly
 SVGlight 15.svg 16.svg
 # precompiled library
-SVGadd $RES/library.svg $RES/packaged_se.svg 17.svg
+SVGadd $RES/library.svg $OVERLAY/packaged_se.svg 17.svg
 # precompiled library readonly
 SVGadd $RES/library.svg 18.svg
 SVGlight 18.svg
-SVGadd 18.svg $RES/packaged_se.svg 18.svg
+SVGadd 18.svg $OVERLAY/packaged_se.svg 18.svg
 # assembly
 # namespace
 # preference
 # config
 # target
-SVGadd $RES/folder.svg $RES/target_se.svg 23.svg
+SVGadd $RES/folder.svg $OVERLAY/target_se.svg 23.svg
 # 
 # [@folder hidden]
 # cluster
@@ -276,11 +277,11 @@ SVGadd 2.svg 28.svg
 # cluster readonly
 SVGadd 1.svg 29.svg
 SVGgrey 29.svg 29.svg
-SVGadd 29.svg $RES/override_se.svg 29.svg
+SVGadd 29.svg $OVERLAY/override_se.svg 29.svg
 # blank
-SVGadd 13.svg $RES/override_se.svg 30.svg
+SVGadd 13.svg $OVERLAY/override_se.svg 30.svg
 # blank readonly
-SVGadd 25.svg $RES/override_se.svg 31.svg
+SVGadd 25.svg $OVERLAY/override_se.svg 31.svg
 # 
 
 ExitRow
@@ -293,7 +294,7 @@ EnterRow 6
 # [tool]
 # features
 # clusters
-SVGadd $RES/folder.svg $RES/class_se.svg 2.svg
+SVGadd $RES/folder.svg $OVERLAY/class_se.svg 2.svg
 # class
 SVGadd $RES/class.svg 3.svg
 # feature
@@ -351,33 +352,35 @@ EnterRow 7
 # analyze
 SVGadd $RES/microscope.svg 3.svg
 # analyze class
-SVGadd 3.svg $RES/class_sw.svg 4.svg
+SVGadd 3.svg $OVERLAY/class_sw.svg 4.svg
 # analyze editor
-SVGadd 3.svg $RES/editor_sw.svg 5.svg
+SVGadd 3.svg $OVERLAY/editor_sw.svg 5.svg
 # analyze cluster
-SVGadd 3.svg $RES/folder_sw.svg 6.svg
+SVGadd 3.svg $OVERLAY/folder_sw.svg 6.svg
 # analyze target
-SVGadd 3.svg $RES/target_sw.svg 7.svg
+SVGadd 3.svg $OVERLAY/target_sw.svg 7.svg
 # analyze refresh
-SVGadd 3.svg $RES/refresh_sw.svg 8.svg
+SVGadd 3.svg $OVERLAY/refresh_sw.svg 8.svg
 # preferences
+SVGadd $RES/cog.svg $OVERLAY/microscope_se.svg 9.svg
 # 
 # [@verifier]
 # verify
 SVGadd $RES/verify.svg 10.svg
 # verify feature
-SVGadd 10.svg $RES/feature_sw.svg 11.svg
+SVGadd 10.svg $OVERLAY/feature_sw.svg 11.svg
 # verify class
-SVGadd 10.svg $RES/class_sw.svg 12.svg
+SVGadd 10.svg $OVERLAY/class_sw.svg 12.svg
 # verify editor
-SVGadd 10.svg $RES/editor_sw.svg 13.svg
+SVGadd 10.svg $OVERLAY/editor_sw.svg 13.svg
 # verify cluster
-SVGadd 10.svg $RES/folder_sw.svg 14.svg
+SVGadd 10.svg $OVERLAY/folder_sw.svg 14.svg
 # verify target
-SVGadd 10.svg $RES/target_sw.svg 15.svg
+SVGadd 10.svg $OVERLAY/target_sw.svg 15.svg
 # verify refresh
-SVGadd 10.svg $RES/refresh_sw.svg 16.svg
+SVGadd 10.svg $OVERLAY/refresh_sw.svg 16.svg
 # preferences
+SVGadd $RES/cog.svg $OVERLAY/verify_se.svg 17.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------
@@ -605,18 +608,18 @@ EnterRow 14
 # [new]
 # eiffel project
 # cluster
-SVGadd $RES/folder.svg $RES/class_sw.svg $RES/new_nw.svg 2.svg
+SVGadd $RES/folder.svg $OVERLAY/class_sw.svg $OVERLAY/new_nw.svg 2.svg
 # override cluster
-SVGadd 2.svg $RES/override_se.svg 3.svg
+SVGadd 2.svg $OVERLAY/override_se.svg 3.svg
 # library
-SVGadd $RES/folder.svg $RES/library_c.svg $RES/new_nw.svg 4.svg
+SVGadd $RES/folder.svg $RES/library_c.svg $OVERLAY/new_nw.svg 4.svg
 # precompiled library
-SVGadd $RES/library.svg $RES/packaged_se.svg $RES/new_nw.svg 5.svg
+SVGadd $RES/library.svg $OVERLAY/packaged_se.svg $OVERLAY/new_nw.svg 5.svg
 # reference
 # feature
-SVGadd $RES/feature.svg $RES/new_nw.svg 7.svg
+SVGadd $RES/feature.svg $OVERLAY/new_nw.svg 7.svg
 # class
-SVGadd $RES/class.svg $RES/new_nw.svg 8.svg
+SVGadd $RES/class.svg $OVERLAY/new_nw.svg 8.svg
 # window
 # editor
 # document
@@ -633,11 +636,11 @@ SVGadd $RES/class.svg $RES/new_nw.svg 8.svg
 # pre compilation task
 # post compilation task
 # target
-SVGadd $RES/folder.svg $RES/target_se.svg $RES/new_nw.svg 24.svg
+SVGadd $RES/folder.svg $OVERLAY/target_se.svg $OVERLAY/new_nw.svg 24.svg
 # remote_target
-SVGadd $RES/folder.svg $RES/target_se.svg 25.svg
+SVGadd $RES/folder.svg $OVERLAY/target_se.svg 25.svg
 SVGgrey 25.svg 25.svg
-SVGadd 25.svg $RES/new_nw.svg 25.svg
+SVGadd 25.svg $OVERLAY/new_nw.svg 25.svg
 # cflag
 # linker flag
 # 
@@ -788,6 +791,7 @@ EnterRow 19
 # font
 # shortcut
 # option
+SVGadd $RES/cog_green.svg 8.svg
 # 
 # [@document]
 # eiffel project
@@ -865,58 +869,58 @@ EnterRow 22
 # 
 # [overlay]
 # locked
-SVGadd $RES/lock_se.svg 1.svg
+SVGadd $OVERLAY/lock_se.svg 1.svg
 #    ok
 # error
-SVGadd $RES/error_se.svg 2.svg
+SVGadd $OVERLAY/error_se.svg 2.svg
 # warning
-SVGadd $RES/warning_se.svg 3.svg
+SVGadd $OVERLAY/warning_se.svg 3.svg
 # packaged
-SVGadd $RES/packaged_se.svg 4.svg
+SVGadd $OVERLAY/packaged_se.svg 4.svg
 # search
-SVGadd $RES/search_se.svg 5.svg
+SVGadd $OVERLAY/search_se.svg 5.svg
 # new
-SVGadd $RES/new_nw.svg 6.svg
+SVGadd $OVERLAY/new_nw.svg 6.svg
 # flag
-SVGadd $RES/flag_se.svg 7.svg
+SVGadd $OVERLAY/flag_se.svg 7.svg
 # information
-SVGadd $RES/info_nw.svg 8.svg
+SVGadd $OVERLAY/info_nw.svg 8.svg
 # edit
 SVGadd $RES/pen.svg 9.svg
 # class
-SVGadd $RES/class_se.svg 10.svg
+SVGadd $OVERLAY/class_se.svg 10.svg
 # cluster
-SVGadd $RES/folder_se.svg 11.svg
+SVGadd $OVERLAY/folder_se.svg 11.svg
 # target
-SVGadd $RES/target_se.svg 12.svg
+SVGadd $OVERLAY/target_se.svg 12.svg
 # library
-SVGadd $RES/library_se.svg 13.svg
+SVGadd $OVERLAY/library_se.svg 13.svg
 # clusters
-SVGadd $RES/folders_se.svg 14.svg
+SVGadd $OVERLAY/folders_se.svg 14.svg
 # editor
-SVGadd $RES/editor_se.svg 15.svg
+SVGadd $OVERLAY/editor_se.svg 15.svg
 # refresh
-SVGadd $RES/refresh_se.svg 16.svg
+SVGadd $OVERLAY/refresh_se.svg 16.svg
 # class left
-SVGadd $RES/class_sw.svg 17.svg
+SVGadd $OVERLAY/class_sw.svg 17.svg
 # cluster left
-SVGadd $RES/folder_sw.svg 18.svg
+SVGadd $OVERLAY/folder_sw.svg 18.svg
 # target left
-SVGadd $RES/target_sw.svg 19.svg
+SVGadd $OVERLAY/target_sw.svg 19.svg
 # library left
-SVGadd $RES/library_sw.svg 20.svg
+SVGadd $OVERLAY/library_sw.svg 20.svg
 # clusters left
-SVGadd $RES/folders_sw.svg 21.svg
+SVGadd $OVERLAY/folders_sw.svg 21.svg
 # editor left
-SVGadd $RES/editor_sw.svg 22.svg
+SVGadd $OVERLAY/editor_sw.svg 22.svg
 # refresh left
-SVGadd $RES/refresh_sw.svg 23.svg
+SVGadd $OVERLAY/refresh_sw.svg 23.svg
 # instance free
 SVGadd $RES/instance-free.svg 24.svg
 # feature left
-SVGadd $RES/feature_se.svg 25.svg
+SVGadd $OVERLAY/feature_se.svg 25.svg
 # verifier right
-SVGadd $RES/verify_se.svg 26.svg
+SVGadd $OVERLAY/verify_se.svg 26.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------
@@ -948,7 +952,7 @@ EnterRow 24
 # sweep now
 # edit auto node
 # with info sign
-SVGadd $RES/info_ne.svg 8.svg
+SVGadd $OVERLAY/info_ne.svg 8.svg
 # affected resource
 # 
 ExitRow
