@@ -2,7 +2,7 @@
 
 . ./inc/svgbuilder.sh
 
-PIXDIR=16x16
+PIXDIR=icons
 RES=../../res
 OVERLAY=$RES/overlay
 

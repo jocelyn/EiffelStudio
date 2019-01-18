@@ -27,7 +27,6 @@ if [ -z "$target" ]
 then
 	target=$1.svg
 fi
-echo cond=$( basename $target | cut -d'.' -f 1 | cut -d'_' -f 2) 
 
 if [[ $( basename $target | cut -d'.' -f 1 | cut -d'_' -f 2 ) =~ ^[0-9][0-9]*x[0-9][0-9]*$ ]]
 then

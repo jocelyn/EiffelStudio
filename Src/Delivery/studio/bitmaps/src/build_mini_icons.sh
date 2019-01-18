@@ -2,7 +2,7 @@
 
 . ./inc/svgbuilder.sh
 
-PIXDIR=10x10
+PIXDIR=mini
 RES=../../res
 
 EnterRow() {
