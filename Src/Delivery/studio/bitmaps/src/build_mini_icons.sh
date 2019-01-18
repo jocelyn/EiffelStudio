@@ -56,9 +56,12 @@ EnterRow 2
 # save
 # add
 # edit
+SVGadd $RES/pen.svg 4.svg
 # delete
+SVGadd $RES/red_cross.svg 5.svg
 # copy
 # search
+SVGadd $RES/search.svg 7.svg
 # previous
 # next
 # up
@@ -70,18 +73,21 @@ EnterRow 3
 # [debugger]
 # callstack depth
 # error
+SVGadd $RES/error.svg 2.svg
 # expand info
 # set sizes
 # show hex value
 # 
 # [@breakpoints]
 # enable
+SVGadd $RES/green_mark.svg 6.svg
 # disable
 # 
 # [@viewer]
 # wrap
 # expand
 # lock
+SVGadd $RES/lock.svg 10.svg
 # formatting
 # 
 # [@watch]
@@ -94,6 +100,7 @@ EnterRow 4
 # is melted
 # has rescue
 # is non object call
+SVGadd $RES/class.svg 4.svg
 # 
 # [@execution]
 # record
@@ -110,15 +117,20 @@ EnterRow 4
 # 
 # [@evaluation]
 # refresh
+SVGadd $RES/refresh.svg 11.svg
 # 
 ExitRow
 EnterRow 5
 # [new]
 # feature
+SVGadd $RES/feature.svg $RES/new_nw.svg 1.svg
 # class
+SVGadd $RES/class.svg $RES/new_nw.svg 2.svg
 # cluster
+SVGadd $RES/folder.svg $RES/new_nw.svg 3.svg
 # expression
 # library
+SVGadd $RES/library.svg $RES/new_nw.svg 5.svg
 # assembly
 # watch tool
 # window
@@ -136,6 +148,7 @@ EnterRow 6
 # show assigner
 # show obsolete
 # show target class
+SVGadd $RES/class.svg 9.svg
 # 
 ExitRow
 EnterRow 7
