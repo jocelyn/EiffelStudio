@@ -2,11 +2,15 @@
 
 # Usage:
 #	svg_cli.py add base.svg one.svg two.svg ... output.svg
+# 		Add one.svg, two.svg, and so on to the base.svg images and save into output.svg
+# 		i.e base.svg + one.svg + two.svg -> output.svg
+# 		note that due to svg stacking behavior, the last image added will appear over the previous.
+#	svg_cli.py filter (grey|light|frozen) base.svg output.svg
+#	svg_cli.py rotate deg base.svg output.svg
+#	svg_cli.py overlay (region=nw|ne|se|sw) {scale=.45} base.svg output.svg
+#		region: nw=NorthWest (i.e top right), ...
+#		scale: by default .45
 #
-# Add one.svg, two.svg, and so on to the base.svg images and save into output.svg
-# i.e base.svg + one.svg + two.svg -> output.svg
-# note that due to svg stacking behavior, the last image added will appear over the previous.
-
 # Note: 
 # before using this script, it is recommended to use https://github.com/RazrFalcon/svgcleaner on the svg images. So that the svg content is cleaned for non svg data, and it gets easier to manipulate the SVG/XML structure.
 
@@ -68,6 +72,7 @@ def svg_showids(ids):
 		sys.stdout.write("\n")
 
 ElementTree.register_namespace('', 'http://www.w3.org/2000/svg')
+ElementTree.register_namespace('xlink', "http://www.w3.org/1999/xlink")
 
 nb = len(sys.argv)
 if nb > 1:
@@ -91,6 +96,95 @@ if nb > 1:
 		#ElementTree.dump(x_base)
 		ElementTree.ElementTree(x_base).write(output)
 		print "Add: output saved into %s"% (output)
+	elif nb > 5 and command == "overlay":
+		reg=sys.argv[2]
+		if nb > 5:
+			l_scale = float(sys.argv[3])
+			base=sys.argv[4]
+		else:
+			l_scale = .45
+			base=sys.argv[3]
+		output=sys.argv[nb - 1]
+		# check nb == 4
+		if dbg: print "Overlay(%s)+Scale(%s) -> %s"% (reg, l_scale, output)
+		l_page_size=100
+		if reg == 'nw':
+			x=0
+			y=0
+		elif reg == 'ne':
+			x=l_page_size * (1 - l_scale) / l_scale
+			y=0
+		elif reg == 'sw':
+			x=0
+			y=l_page_size / l_scale
+		elif reg == 'se':
+			x=l_page_size / l_scale
+			y=l_page_size / l_scale
+			x=l_page_size * (1 - l_scale) / l_scale
+			y=l_page_size * (1 - l_scale) / l_scale
+		else:
+			x=l_size / 4 / l_scale
+			y=l_size / 4 / l_scale
+
+		l_group_id = "src"
+
+		x_base = ElementTree.parse(base).getroot()
+		x_base.set("xmlns:xlink", "http://www.w3.org/1999/xlink")
+		base_ids = []
+		svg_getids(x_base, base_ids)
+		l_group_id = next_id(l_group_id, base_ids)
+
+
+		x_defs = ElementTree.fromstring("<defs/>")
+		x_gsrc = ElementTree.fromstring("<g id=\"%s\"/>" % (l_group_id))
+		for e in x_base:
+			x_gsrc.append (e)
+			x_base.remove (e)
+
+		x_defs.append (x_gsrc)
+		x_base.append (x_defs)
+		l_use = "<use xlink-href=\"#%s\" x=\"%s\" y=\"%s\" transform=\"scale(%s)\"/>" % (l_group_id, x, y, l_scale)
+		x_use = ElementTree.fromstring(l_use)
+		x_base.append (x_use)
+		svg = ElementTree.tostring(x_base)
+		svg = svg.replace("xlink-href", "xlink:href")
+
+#		svg="""<svg height="100" viewBox="0 0 100 100" width="100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><image x="%s" y="%s" width="%s" height="%s" xlink:href="%s"/></svg>""" % (x, y, l_size, l_size, base)
+		f=open(output, 'w')
+		f.write (svg)
+		f.close ()
+
+		print "%s(%s)+scale(%s): output saved into %s"% (command, reg, l_scale, output)
+	elif nb > 4 and command == "rotate":
+		deg=sys.argv[2]
+		base=sys.argv[3]
+		output=sys.argv[nb - 1]
+		if dbg: print "Rotate(%s) -> %s"% (deg, output)
+		l_group_id = "src"
+		x_base = ElementTree.parse(base).getroot()
+		x_base.set("xmlns:xlink", "http://www.w3.org/1999/xlink")
+		base_ids = []
+		svg_getids(x_base, base_ids)
+		l_group_id = next_id(l_group_id, base_ids)
+
+		x_defs = ElementTree.fromstring("<defs/>")
+		x_gsrc = ElementTree.fromstring("<g id=\"%s\"/>" % (l_group_id))
+		for e in x_base:
+			x_gsrc.append (e)
+			x_base.remove (e)
+
+		x_defs.append (x_gsrc)
+		x_base.append (x_defs)
+		l_page_size=100
+		l_use = "<use xlink-href=\"#%s\" transform=\"rotate(%s %s,%s)\"/>" % (l_group_id, deg, l_page_size / 2, l_page_size /2)
+		x_use = ElementTree.fromstring(l_use)
+		x_base.append (x_use)
+		svg = ElementTree.tostring(x_base)
+		svg = svg.replace("xlink-href", "xlink:href")
+		f=open(output, 'w')
+		f.write (svg)
+		f.close ()
+		print "%s(%s): output saved into %s"% (command, deg, output)
 	elif nb > 3 and command == "filter":
 		l_filter_name=sys.argv[2]
 		base=sys.argv[3]
