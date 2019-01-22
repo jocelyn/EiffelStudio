@@ -7,9 +7,9 @@
 # 		note that due to svg stacking behavior, the last image added will appear over the previous.
 #	svg_cli.py filter (grey|light|frozen) base.svg output.svg
 #	svg_cli.py rotate deg base.svg output.svg
-#	svg_cli.py overlay (region=nw|ne|se|sw) {scale=.45} base.svg output.svg
+#	svg_cli.py overlay (region=nw|ne|se|sw) {scale=.50} base.svg output.svg
 #		region: nw=NorthWest (i.e top right), ...
-#		scale: by default .45
+#		scale: by default .50
 #
 # Note: 
 # before using this script, it is recommended to use https://github.com/RazrFalcon/svgcleaner on the svg images. So that the svg content is cleaned for non svg data, and it gets easier to manipulate the SVG/XML structure.
@@ -36,37 +36,68 @@ def next_id(a_id, a_list):
 def svgadd(x_left, ids, right):
 	x_right = ElementTree.parse(right).getroot()
 	new_ids={} # new id, indexed by old id.
-	for e in x_right.iter('*'):
-		l_id = e.get('id')
-		if l_id and l_id in ids:
-			l_new_id = next_id(l_id, ids)
-			new_ids[l_id] = l_new_id 
-			e.set('id', l_new_id)
-			ids.append(l_new_id)
-			if dbg: print "Id: %s -> %s"% (l_id, l_new_id)
-		else:
-			new_ids[l_id] = l_id 
-	for e in x_right.iter('*'):
-		for k in e.attrib:
-			v = e.attrib[k]
-			#if dbg: print "(%s => %s)"%(k, v)
-			if v[0:5] == 'url(#':
-				l_ref_id = v[5:-1]
-				l_new_ref_id = new_ids[l_ref_id]
-				if dbg: print "Found %s -> %s"% (l_ref_id, l_new_ref_id)
-				if l_new_ref_id:
-					e.set(k,"url(#%s)"%(l_new_ref_id))
+	svg_update_ids(x_right, ids, new_ids)
+	if dbg: svg_showids("ids", ids)
+	if dbg: svg_showids("new_ids", new_ids)
 	for e in x_right:
 		x_left.append(e)
+
+def svg_update_ids(x, ids, local_ids):
+	#local_ids={} # new id, indexed by old id.
+	for e in x.iter('*'):
+		l_id = e.get('id')
+		if l_id:
+			if l_id in ids:
+				l_new_id = next_id(l_id, ids)
+				local_ids[l_id] = l_new_id 
+				e.set('id', l_new_id)
+				ids.append(l_new_id)
+				if dbg: print "Id: %s -> %s"% (l_id, l_new_id)
+			else:
+				if dbg: print "Id: %s -> %s"% (l_id, l_id)
+				local_ids[l_id] = l_id 
+				ids.append(l_id)
+		for k in e.attrib:
+			v = e.attrib[k]
+			if dbg: print "(%s => %s)"%(k, v)
+			if svg_attribname (k) == "href":
+				l_ref_id = v[1:]
+				l_new_ref_id = local_ids[l_ref_id]
+				if dbg: print "Found HREF %s -> %s"% (l_ref_id, l_new_ref_id)
+				if l_new_ref_id:
+					e.set(k,"#%s"%(l_new_ref_id))
+			elif v[0:5] == 'url(#':
+				l_ref_id = v[5:-1]
+				if l_ref_id:
+					l_new_ref_id = local_ids[l_ref_id]
+					if dbg: print "Found URL %s -> %s"% (l_ref_id, l_new_ref_id)
+					if l_new_ref_id:
+						e.set(k,"url(#%s)"%(l_new_ref_id))
 
 def svg_getids(x, ids):
 	# Records the various id="..." 
 	for e in x:
 		if e.get('id'):
 			ids.append (e.get('id'))
+		else:
+			svg_getids(e, ids)
 
-def svg_showids(ids):
-		sys.stdout.write ("Ids: ")
+def svg_tagname(e):
+	e_tag = e.tag
+	i = e_tag.find("}")
+	if i > 0:
+		e_tag = e_tag[i+1:]
+	return e_tag
+
+def svg_attribname(k):
+	l_name = k
+	i = l_name.find("}")
+	if i > 0:
+		l_name = l_name[i+1:]
+	return l_name
+
+def svg_showids(n, ids):
+		sys.stdout.write ("%s: " % (n))
 		for i in ids:
 			sys.stdout.write ("%s " % (i))
 		sys.stdout.write("\n")
@@ -87,11 +118,11 @@ if nb > 1:
 		x_base = ElementTree.parse(base).getroot()
 		base_ids = []
 		svg_getids(x_base, base_ids)
-		if dbg: svg_showids(base_ids)
+		if dbg: svg_showids("base_ids", base_ids)
 		for r in range(2, nb - 1):
 			right=sys.argv[r]
 			svgadd(x_base, base_ids, right)
-			if dbg: svg_showids(base_ids)
+			if dbg: svg_showids("base_ids", base_ids)
 
 		#ElementTree.dump(x_base)
 		ElementTree.ElementTree(x_base).write(output)
@@ -102,7 +133,7 @@ if nb > 1:
 			l_scale = float(sys.argv[3])
 			base=sys.argv[4]
 		else:
-			l_scale = .45
+			l_scale = .50
 			base=sys.argv[3]
 		output=sys.argv[nb - 1]
 		# check nb == 4
@@ -120,6 +151,12 @@ if nb > 1:
 		elif reg == 'se':
 			x=l_page_size * (1 - l_scale) / l_scale
 			y=l_page_size * (1 - l_scale) / l_scale
+		elif reg == 's':
+			x=l_page_size / 4 / l_scale
+			y=l_page_size * (1 - l_scale) / l_scale
+		elif reg == 'n':
+			x=l_page_size / 4 / l_scale
+			y=0
 		elif reg == 'e':
 			x=l_page_size * (1 - l_scale) / l_scale
 			y=l_page_size / 4 / l_scale
@@ -205,12 +242,12 @@ if nb > 1:
 		x_base = ElementTree.parse(base).getroot()
 		base_ids = []
 		svg_getids(x_base, base_ids)
-		if dbg: svg_showids(base_ids)
+		if dbg: svg_showids("base_ids", base_ids)
 		l_filter_id = l_filter_name
 		if l_filter_id in base_ids:
 			l_filter_id = next_id(l_filter_id,base_ids)
 
-		if dbg: svg_showids(base_ids)
+		if dbg: svg_showids("base_ids", base_ids)
 		if l_filter_name == "grey":
 			l_filter = """<filter id="%s" color-interpolation-filters="sRGB"><feColorMatrix values="0.4 0.4 0.4 0 0 0.4 0.4 0.4 0 0 0.4 0.4 0.4 0 0 0 0 0 1 0"/></filter>""" % (l_filter_id)
 		elif l_filter_name == "light":
@@ -233,10 +270,7 @@ if nb > 1:
 #		elts=[]
 
 		for e in x_base:
-			l_tag = e.tag
-			i = l_tag.find("}")
-			if i > 0:
-				l_tag = l_tag[i+1:]
+			l_tag = svg_tagname (e)
 			if l_tag == 'g' or l_tag == 'path':
 				if not e.attrib.has_key("filter") or e.attrib["filter"] == "none":
 					e.set("filter", "url(#%s)" % (l_filter_id));

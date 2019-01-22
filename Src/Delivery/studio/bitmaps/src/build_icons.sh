@@ -124,7 +124,7 @@ EnterRow 3
 # routine
 SVGadd $RES/feature.svg 1.svg
 # attribute
-SVGadd 1.svg $RES/attribute_e.svg 2.svg
+SVGadd 1.svg $OVERLAY/attribute_e.svg 2.svg
 # once
 SVGadd 1.svg $RES/once.svg 3.svg
 # deferred
@@ -301,7 +301,7 @@ SVGadd $RES/class.svg 3.svg
 # search
 SVGadd $RES/search.svg 5.svg
 # advanced search
-SVGadd $RES/search.svg $RES/feature_e.svg 6.svg
+SVGadd $RES/search.svg $OVERLAY/feature_e.svg 6.svg
 # diagram
 SVGadd $RES/pen.svg 7.svg
 # error
@@ -391,10 +391,15 @@ EnterRow 8
 # 
 # [project]
 # melt
+SVGadd $RES/compile.svg $OVERLAY/water_drop_se.svg 1.svg
 # quick melt
+SVGadd 1.svg $OVERLAY/flash_nw.svg 2.svg
 # freeze
+SVGadd $RES/compile.svg 3.svg
 # finalize
+SVGadd $RES/compile.svg $OVERLAY/packaged_se.svg 4.svg
 # discover melt
+SVGadd $RES/compile.svg $OVERLAY/search_se.svg 5.svg
 # 
 # ;
 # ; Debugger Declarations
@@ -477,17 +482,22 @@ EnterRow 10
 # [general]
 # blank
 # dialog
+SVGadd $RES/window.svg $OVERLAY/eiffelstudio_se.svg 2.svg
 # open
 # save
+SVGadd $RES/floppy.svg 4.svg
 # save all
 # add
 # edit
 # remove
 # delete
+SVGadd $RES/red_cross.svg 9.svg
 # document
+SVGadd $RES/document.svg 10.svg
 # cut
 # copy
 # paste
+SVGadd $RES/clipboard.svg $OVERLAY/editor_se.svg 13.svg
 # undo
 # redo
 # error
@@ -499,8 +509,11 @@ SVGadd $RES/warning.svg 18.svg
 # show tool tips
 # close
 # arrow up
+SVGadd $RES/nav_up.svg 21.svg
 # arrow down
+SVGadd $RES/nav_down.svg 22.svg
 # tick
+SVGadd $RES/green_mark.svg 23.svg
 # word wrap
 # send enter
 # reset
@@ -509,13 +522,18 @@ SVGadd $RES/warning.svg 18.svg
 # undo history
 # check document
 # move up
+SVGadd $RES/arrow_green_up.svg 31.svg
 # move down
+SVGadd $RES/arrow_green_down.svg 32.svg
 # move left
+SVGadd $RES/arrow_green_left.svg 33.svg
 ExitRow
 #----------------------------------------------------------------------------------
 EnterRow 11
 # move right
+SVGadd $RES/arrow_green_right.svg 1.svg
 # close document
+SVGadd $RES/document.svg $OVERLAY/close_ne.svg 2.svg
 # close all documents
 # show hidden
 # refresh
@@ -573,7 +591,9 @@ SVGadd $RES/attribute.svg 21.svg
 # 
 # [@tab]
 # close
+SVGadd $RES/document.svg $OVERLAY/close_ne.svg 23.svg
 # close_all
+SVGadd $RES/documents.svg $OVERLAY/close_ne.svg 24.svg
 # 
 # [@grid]
 # expand_all
@@ -588,15 +608,21 @@ EnterRow 13
 # 
 # [view]
 # previous
+SVGadd $RES/document.svg $OVERLAY/arrow_green_left_s.svg 1.svg
 # next
+SVGadd $RES/document.svg $OVERLAY/arrow_green_right_s.svg 2.svg
 # editor
+SVGadd $RES/document.svg $OVERLAY/pen_e.svg 3.svg
 # flat
+SVGadd $RES/es_flat_formatter.svg 4.svg
 # clickable
 # contracts
 # flat contracts
 # editor feature
+SVGadd $RES/es_formatter.svg $OVERLAY/pen_e.svg 8.svg
 # clickable feature
 # unmodified
+SVGadd $RES/document.svg $RES/green_mark.svg 10.svg
 # 
 ExitRow
 #----------------------------------------------------------------------------------
@@ -607,6 +633,7 @@ EnterRow 14
 # 
 # [new]
 # eiffel project
+SVGadd $RES/document.svg $OVERLAY/eiffelstudio_sw.svg $OVERLAY/new_nw.svg 2.svg
 # cluster
 SVGadd $RES/folder.svg $OVERLAY/class_sw.svg $OVERLAY/new_nw.svg 2.svg
 # override cluster
@@ -621,8 +648,10 @@ SVGadd $RES/feature.svg $OVERLAY/new_nw.svg 7.svg
 # class
 SVGadd $RES/class.svg $OVERLAY/new_nw.svg 8.svg
 # window
+SVGadd $RES/window.svg $OVERLAY/new_nw.svg 9.svg
 # editor
 # document
+SVGadd $RES/document.svg $OVERLAY/new_nw.svg 11.svg
 # metric
 # supplier link
 # aggregate supplier link
@@ -671,7 +700,7 @@ EnterRow 15
 # 
 # [@class features]
 # attribute
-SVGadd $RES/feature.svg $RES/attribute_e.svg 15.svg
+SVGadd $RES/feature.svg $OVERLAY/attribute_e.svg 15.svg
 # routine
 SVGadd $RES/feature.svg 16.svg
 # invariant
@@ -765,7 +794,9 @@ EnterRow 18
 # inheritance link
 # export to png
 # pinned
+SVGadd $RES/pinned.svg 13.svg
 # unpinned
+SVGadd $RES/unpinned.svg 14.svg
 # anchor
 # remove anchor
 # toggle quality
