@@ -1,8 +1,8 @@
 /*
 	description: "Macros used by C code at run time."
-	date:		"$Date$"
-	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2017, Eiffel Software."
+	date:		"$Date: 2019-05-24 14:35:06 +0200 (Fri, 24 May 2019) $"
+	revision:	"$Revision: 103205 $"
+	copyright:	"Copyright (c) 1985-2019, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -170,6 +170,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTLNTY(x) allocates a new TYPE [like x] instance using the encoded ftype 'x'
  *  RTLNTY2(x, a) allocates a new TYPE [like x] instance of ftype 'x'
  *  RTLNSMART(x) allocates a new object of dftype 'x'
+ *  RTLNALIVE(x) same as `RTLNSMART(x)` with a check that the code for the type is generated
  *  RTLNR(x,y,a,o,c) allocates a new routine object of type 'x' and
  *  RTLNC(x) creates a new non-initialized instance of 'x'.
  *  RTLNSP(t,n,e,b) allocates a new special array
@@ -186,6 +187,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNTY(x)			eif_type_malloc(eif_decoded_type(x), 0)
 #define RTLNTY2(x,a)		eif_type_malloc(x, a)
 #define RTLNSMART(x)		smart_emalloc(x)
+#define RTLNALIVE(x)		alive_emalloc(x)
 #define RTLNRW(a,d,e,f,g,h,i,j,k,l,m) rout_obj_create_wb((a),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNRF(a,b,c,d,e,f,g) rout_obj_create_fl((a),(b),(c),(d),(e),(f), (g))
 #define RTLNC(x)			eclone(x)
@@ -1135,7 +1137,9 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTMS(s) creates an Eiffel string from a C manifest string s.
  *  RTMS_EX(s,c) creates an Eiffel string from a C manifest string s of length c.
  *  RTMS_EX_H(s,c,h) creates an Eiffel string from a C manifest string s of length c and hash-code h.
+ *  RTMIS8_EX_H(s,c,h) creates an IMMUTABLE_STRING_8 from a C manifest string s of length c and hash-code h.
  *  RTMS32_EX_H(s,c,h) creates an STRING_32 from a C manifest string s of length c and hash-code h.
+ *  RTMIS32_EX_H(s,c,h) creates an IMMUTABLE_STRING_32 from a C manifest string s of length c and hash-code h.
  *  RTMS_EX_O(s,c,h) creates an Eiffel string in heap for old objects from a C manifest string s of length c and hash-code h.
  *  RTOMS(b,n) a value of a once manifest string object for routine body index `b' and number `n'.
  *  RTDOMS(b,m) declares a field to store once manifest string objects for routine body index `b' and number `n' of such objects.
@@ -1150,15 +1154,21 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTOF(x) returns the offset of expanded 'x' within enclosing object
  *  RTEO(x) returns the address of the enclosing object for expanded 'x'
  */
-#define	RTMS(s)			makestr_with_hash(s,strlen(s),0)
-#define	RTMS_EX(s,c)	makestr_with_hash(s,c,0)
-#define	RTMS_EX_H(s,c,h)	makestr_with_hash(s,c,h)
-#define RTMS_EX_O(s,c,h)	makestr_with_hash_as_old(s,c,h)
+#define	RTMS(s)				makestr_with_hash(s,strlen(s),EIF_FALSE,0)
+#define	RTMS_EX(s,c)		makestr_with_hash(s,c,EIF_FALSE,0)
+#define	RTMS_EX_H(s,c,h)	makestr_with_hash(s,c,EIF_FALSE,h)
+#define RTMS_EX_O(s,c,h)	makestr_with_hash_as_old(s,c,EIF_FALSE,h)
+#define	RTMIS8_EX(s,c)		makestr_with_hash(s,c,EIF_TRUE,0)
+#define	RTMIS8_EX_H(s,c,h)	makestr_with_hash(s,c,EIF_TRUE,h)
+#define RTMIS8_EX_O(s,c,h)	makestr_with_hash_as_old(s,c,EIF_TRUE,h)
 
-#define	RTMS32(s)		makestr32_with_hash(s,strlen(s),0)
-#define	RTMS32_EX(s,c)	makestr32_with_hash(s,c,0)
-#define	RTMS32_EX_H(s,c,h)	makestr32_with_hash(s,c,h)
-#define RTMS32_EX_O(s,c,h)	makestr32_with_hash_as_old(s,c,h)
+#define	RTMS32(s)			makestr32_with_hash(s,strlen(s),EIF_FALSE, 0)
+#define	RTMS32_EX(s,c)		makestr32_with_hash(s,c,EIF_FALSE,0)
+#define	RTMS32_EX_H(s,c,h)	makestr32_with_hash(s,c,EIF_FALSE,h)
+#define RTMS32_EX_O(s,c,h)	makestr32_with_hash_as_old(s,c,EIF_FALSE,h)
+#define	RTMIS32_EX(s,c)		makestr32_with_hash(s,c,EIF_TRUE,0)
+#define	RTMIS32_EX_H(s,c,h)	makestr32_with_hash(s,c,EIF_TRUE,h)
+#define RTMIS32_EX_O(s,c,h)	makestr32_with_hash_as_old(s,c,EIF_TRUE,h)
 
 #if defined(WORKBENCH) || defined(EIF_THREADS)
 #define RTOMS(b,n)	(EIF_oms[(b)][(n)])
@@ -1197,6 +1207,32 @@ RT_LNK void eif_exit_eiffel_code(void);
 			if (!rs) { \
 				register_oms (rsp); \
 				rs = RTMS32_EX_O(s,c,h); \
+				*rsp = rs; \
+			} \
+			r = rs; \
+		}
+#define RTCOMIS8(r,b,n,s,c,h) \
+		{ \
+			EIF_REFERENCE * rsp; \
+			EIF_REFERENCE rs; \
+			rsp = &RTOMS(b,n); \
+			rs = *rsp; \
+			if (!rs) { \
+				register_oms (rsp); \
+				rs = RTMIS8_EX_O(s,c,h); \
+				*rsp = rs; \
+			} \
+			r = rs; \
+		}
+#define RTCOMIS32(r,b,n,s,c,h) \
+		{ \
+			EIF_REFERENCE * rsp; \
+			EIF_REFERENCE rs; \
+			rsp = &RTOMS(b,n); \
+			rs = *rsp; \
+			if (!rs) { \
+				register_oms (rsp); \
+				rs = RTMIS32_EX_O(s,c,h); \
 				*rsp = rs; \
 			} \
 			r = rs; \
@@ -1446,7 +1482,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTWC(rid,dtype) is a creation procedure call
  *  RTWA(rid,dtype) is the access to an attribute
  *  RTVA(rid,name,obj) is a nested access to an attribute (dot expression)
- *  RTWCT(rid,dtype,dftype) fetches the creation type of a generic features
+ *  RTWCT(rid,dtype,dftype) fetches the creation type of a generic feature
  *  RTWCTT(rid,dftype) same as RTWCT but takes dftype and dtype is computed from dftype
  *  RTWPP(x) returns the feature address ($ or agent operator) of id x. The ids are assigned int ADDRESS_TABLE.
  *  RTWO(x) stores in a list the body id of the just called once routine

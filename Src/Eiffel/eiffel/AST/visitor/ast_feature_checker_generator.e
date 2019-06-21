@@ -1231,11 +1231,15 @@ feature {NONE} -- Implementation
 			tuple_argument_number: INTEGER
 			w: like {ERROR_HANDLER}.warning_level
 			has_vucr: BOOLEAN
+			l_is_qualified_call: BOOLEAN
 		do
 				-- Reset any previously reported VUAR error.
 			last_vuar_error := Void
 				-- Record if the call is controlled.
 			l_is_controlled := is_controlled
+				-- Record if the call is qualified (the attribute `is_qualified_call` may change when processing arguments).
+				-- TODO: check whether `is_qualified` would be a safe replacement for `is_qualified_call`.
+			l_is_qualified_call := is_qualified_call
 				-- Reset
 			l_error_level := error_level
 			if a_feature = Void then
@@ -1585,7 +1589,7 @@ feature {NONE} -- Implementation
 							if error_level /= l_error_level then
 								reset_types
 							end
-						elseif not is_qualified_call and then current_feature.is_class and then not l_feature.is_class then
+						elseif not l_is_qualified_call and then current_feature.is_class and then not l_feature.is_class then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
 								w := error_handler.warning_level
@@ -1647,10 +1651,10 @@ feature {NONE} -- Implementation
 						if error_level = l_error_level then
 							if is_static and then not l_feature.is_class then
 									-- The instance-free call is OK, but the called feature is not instance-free.
-								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name))
+								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name), context.current_class.lace_class.options.is_warning_as_error)
 							elseif
 								not has_vucr and then
-								not is_qualified_call and then
+								not l_is_qualified_call and then
 								current_feature.is_class and then
 								not l_feature.is_class and then
 								not is_agent
@@ -1661,7 +1665,8 @@ feature {NONE} -- Implementation
 										create {VUCR_BODY_WARNING}.make_precursor (l_feature, current_feature, context.current_class, context.written_class, a_name)
 									else
 										create {VUCR_BODY_WARNING}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name)
-									end)
+									end,
+									l_context_current_class.lace_class.options.is_warning_as_error)
 							end
 							if not system.il_generation then
 								if l_feature.is_inline_agent then
@@ -2034,7 +2039,7 @@ feature {NONE} -- Implementation
 								current_feature.written_class /= System.current_class
 							then
 									-- Invalid call to replicated feature, raise VMCS.
-								Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
+								Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature), context.current_class.lace_class.options.is_warning_as_error)
 							end
 
 								-- Check if cat-call detection only for qualified calls and if enabled for current context class and
@@ -2053,14 +2058,17 @@ feature {NONE} -- Implementation
 								check_cat_call (l_last_type, l_feature, l_arg_types, l_feature_name, l_parameters)
 							end
 
-								-- We need to take the deep_actual_type because we cannot carry
-								-- the anchors from the result type which do not make sense in
-								-- the current context.
-							if is_qualified_call then
-								set_type (l_result_type.deep_actual_type, a_name)
-							else
-  								set_type (l_result_type, a_name)
-							end
+							set_type
+								(if l_is_qualified_call then
+										-- We need to use deep_actual_type because we cannot carry
+										-- the anchors from the result type which do not make sense in
+										-- the current context.
+										-- TODO: Remove this branch when anchored types are properly adapted to the current context.
+									l_result_type.deep_actual_type
+								else
+	  								l_result_type
+								end,
+								a_name)
 							last_calls_target_type := l_last_constrained
 							if l_feature.is_attribute then
 								last_access_writable := True
@@ -2439,7 +2447,7 @@ feature {NONE} -- Visitor
 								-- The implicit type is required to compute array type, it should be replaced with an explicit one.
 							if context.current_class.lace_class.is_manifest_array_type_mismatch_warning then
 									-- Report a warning.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, False), context.current_class.lace_class.options.is_warning_as_error)
 							elseif context.current_class.lace_class.is_manifest_array_type_mismatch_error then
 									-- Report an error.
 								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, True))
@@ -2495,7 +2503,7 @@ feature {NONE} -- Visitor
 								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, True))
 							else
 									-- Report a warning.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, False), context.current_class.lace_class.options.is_warning_as_error)
 							end
 						end
 							-- Use the default (computed) array type.
@@ -2563,14 +2571,28 @@ feature {NONE} -- Visitor
 			end
 		end
 
+	adapted_manifest_string_class_c (a_class_id: INTEGER; a_class_i: detachable CLASS_I): detachable CLASS_C
+		do
+			if a_class_i /= Void then
+				Result := a_class_i.compiled_class
+				if Result.class_id /= a_class_id then
+					Result := Void
+				end
+			end
+		ensure
+			Result /= Void implies Result.class_id = a_class_id and Result.original_class = a_class_i
+		end
+
 	process_string_as (l_as: STRING_AS)
 		local
 			l_simplified_string_type: TYPE_A
 			l_is_string_32: BOOLEAN
 			l_value: detachable STRING
 			class_id: INTEGER
+			ci: detachable CLASS_I
 			s8, s32: detachable CLASS_C
 			t8, t32: detachable TYPE_A
+			l_is_immutable: BOOLEAN
 		do
 			if l_as.type = Void then
 					-- Default to STRING_8, if not specified in the code.
@@ -2591,13 +2613,20 @@ feature {NONE} -- Visitor
 					record_creation_dependence (l_simplified_string_type)
 				end
 				class_id := l_simplified_string_type.base_class.class_id
-				if attached system.string_8_class as c then
-					s8 := c.compiled_class
+				s32 := adapted_manifest_string_class_c (class_id, system.string_32_class)
+				if s32 = Void then
+					s32 := adapted_manifest_string_class_c (class_id, system.immutable_string_32_class)
+					l_is_immutable := s32 /= Void
 				end
-				if attached system.string_32_class as c then
-					s32 := c.compiled_class
+				if s32 = Void then
+					s8 := adapted_manifest_string_class_c (class_id, system.string_8_class)
+					if s8 = Void then
+						s8 := adapted_manifest_string_class_c (class_id, system.immutable_string_8_class)
+						l_is_immutable := s8 /= Void
+					end
 				end
-				if attached s8 and then s8.class_id = class_id then
+				if attached s8 then
+					check s8.class_id = class_id end
 					if l_as.is_code_point_valid_string_8 then
 							-- Constant is of type "STRING_8".
 						if is_byte_node_enabled then
@@ -2614,7 +2643,8 @@ feature {NONE} -- Visitor
 						error_handler.insert_error (create {VWMQ}.make (l_simplified_string_type, <<t32>>, context, l_as))
 						reset_types
 					end
-				elseif attached s32 and then s32.class_id = class_id then
+				elseif attached s32 then
+					check s32.class_id = class_id end
 						-- Constant is of type "STRING_32".
 					if is_byte_node_enabled then
 							-- For STRING_32 manifest string, UTF-8 value is kept for later transformation.
@@ -2635,9 +2665,9 @@ feature {NONE} -- Visitor
 				if attached l_value then
 					if l_as.is_once_string then
 						once_manifest_string_index := once_manifest_string_index + 1
-						create {ONCE_STRING_B} last_byte_node.make (l_value, l_is_string_32, once_manifest_string_index)
+						create {ONCE_STRING_B} last_byte_node.make (l_value, l_is_string_32, l_is_immutable, once_manifest_string_index)
 					else
-						create {STRING_B} last_byte_node.make (l_value, l_is_string_32)
+						create {STRING_B} last_byte_node.make (l_value, l_is_string_32, l_is_immutable)
 					end
 				end
 			end
@@ -3712,7 +3742,7 @@ feature {NONE} -- Visitor
 						context.current_class.is_warning_enabled (w_vwab)
 					then
 							-- Warn that the attribute has a non-empty body that is never executed.
-						error_handler.insert_warning (create {VWAB}.make (l_as.routine_body.start_location, context))
+						error_handler.insert_warning (create {VWAB}.make (l_as.routine_body.start_location, context), context.current_class.is_warning_reported_as_error (w_vwab))
 					end
 						-- Check postconditions
 					if l_as.postcondition /= Void then
@@ -5476,7 +5506,7 @@ feature {NONE} -- Visitor
 							l_vweq.set_left_type (l_left_type)
 							l_vweq.set_right_type (l_right_type)
 							l_vweq.set_location (l_as.operator_location)
-							error_handler.insert_warning (l_vweq)
+							error_handler.insert_warning (l_vweq, context.current_class.is_warning_reported_as_error (w_vweq))
 						end
 						if l_left_type.is_basic and l_right_type.is_basic then
 								-- Non-compatible basic type always implies a False/true comparison.
@@ -6043,7 +6073,7 @@ feature {NONE} -- Visitor
 						l_vjrv1.set_target_name (l_as.target.access_name)
 						l_vjrv1.set_target_type (l_target_type)
 						l_vjrv1.set_location (l_as.target.end_location)
-						error_handler.insert_warning (l_vjrv1)
+						error_handler.insert_warning (l_vjrv1, context.current_class.is_warning_reported_as_error (w_vjrv))
 					end
 				elseif
 					is_void_safe_conformance and then
@@ -6074,7 +6104,7 @@ feature {NONE} -- Visitor
 							l_vjrv2.set_target_name (l_as.target.access_name)
 							l_vjrv2.set_target_type (l_target_type)
 							l_vjrv2.set_location (l_as.target.end_location)
-							error_handler.insert_warning (l_vjrv2)
+							error_handler.insert_warning (l_vjrv2, context.current_class.is_warning_reported_as_error (w_vjrv))
 						end
 					end
 				end
@@ -9400,7 +9430,7 @@ feature {NONE} -- Implementation
 						error_handler.insert_error (l_veen)
 					end
 					if not l_has_error and is_byte_node_enabled then
-						l_expressions.extend ([create {STRING_B}.make (l_name.value, False), l_expr_b])
+						l_expressions.extend ([create {STRING_B}.make (l_name.value, False, False), l_expr_b]) -- TODO: check for manifest immutable string [2019-05-28]
 					end
 					a_tuple.expressions.forth
 				end
@@ -11456,7 +11486,7 @@ feature {NONE} -- Implementation: checking locals
 				a_locals.forth
 			end
 			if l_warning /= Void then
-				error_handler.insert_warning (l_warning)
+				error_handler.insert_warning (l_warning, context.current_class.is_warning_reported_as_error (w_unused_local))
 			end
 		end
 
@@ -11676,7 +11706,7 @@ feature {NONE} -- Implementation: catcall check
 							create l_acat.make (a_location)
 							context.init_error (l_acat)
 							l_acat.set_called_feature (a_feature)
-							error_handler.insert_warning (l_acat)
+							error_handler.insert_warning (l_acat, context.current_class.lace_class.options.is_warning_as_error)
 						end
 						l_acat.add_export_status_violation (l_descendant_class, l_descendant_feature)
 					end
@@ -12126,8 +12156,8 @@ note
 		"CA011", "CA011 — too many arguments",
 		"CA032", "CA032 — too long routine",
 		"CA033", "CA033 — too long class"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-05-30 18:59:57 +0200 (Thu, 30 May 2019) $"
+	revision: "$Revision: 103231 $"
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
