@@ -54,12 +54,12 @@ feature -- Attributes
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	infix_function_name: STRING
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		do
-			Result := infix_feature_name_with_symbol (op_name.name)
-		end
+--	infix_function_name: STRING
+--			-- Internal name of the infixed feature associated to the
+--			-- binary expression
+--		do
+--			Result := infix_feature_name_with_symbol (op_name.name)
+--		end
 
 feature -- Comparison
 
@@ -79,18 +79,11 @@ feature -- Visitor
 			v.process_bin_free_as (Current)
 		end
 
-feature {BINARY_AS}
-
-	set_infix_function_name (name: ID_AS)
-		do
-			create op_name.initialize (extract_symbol_from_infix (name.name))
-		end
-
 invariant
 	op_name_not_void: op_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

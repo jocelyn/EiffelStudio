@@ -2,8 +2,8 @@ note
 	description: "Abstract node produce by yacc. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2015-12-17 14:34:17 +0100 (jeu., 17 déc. 2015) $"
+	revision: "$Revision: 98279 $"
 
 deferred class AST_EIFFEL
 
@@ -214,7 +214,10 @@ feature -- Roundtrip/Token
 			first_token_exists: first_token (a_list) /= Void
 			last_token_exists: last_token (a_list) /= Void
 		do
-			if attached first_token (a_list) as l_first and attached last_token (a_list) as l_last then
+			if
+				attached first_token (a_list) as l_first and then attached last_token (a_list) as l_last and then
+				l_first.index <= l_last.index
+			then
 				create Result.make (l_first.index, l_last.index)
 			else
 				create Result.make (1, 1)
@@ -518,7 +521,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

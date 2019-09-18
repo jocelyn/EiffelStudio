@@ -4712,7 +4712,7 @@ feature {NONE} -- Visitor
 					check has_constrained: l_last_constrained /= Void end
 						-- Check if target is not of type NONE
 					if l_last_constrained.is_none then
-						create l_vuex.make_for_none (l_as.prefix_feature_name)
+						create l_vuex.make_for_none (l_as.operator_name)
 						context.init_error (l_vuex)
 						l_vuex.set_location (l_as.expr.end_location)
 						error_handler.insert_error (l_vuex)
@@ -4773,9 +4773,9 @@ feature {NONE} -- Visitor
 					else
 						if l_is_multi_constrained then
 							l_type_set := last_type.actual_type.to_type_set.constraining_types (l_context_current_class)
-							l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.prefix_feature_name)
+							l_result_tuple := l_type_set.feature_i_state_by_alias_name (l_as.operator_name)
 							if l_result_tuple.features_found_count > 1 then
-								l_vtmc_error := new_vtmc_error (create {ID_AS}.initialize (l_as.prefix_feature_name),
+								l_vtmc_error := new_vtmc_error (create {ID_AS}.initialize (l_as.operator_name),
 										l_formal.position, l_context_current_class, True)
 								l_vtmc_error.set_location (l_as.operator_location)
 								error_handler.insert_error (l_vtmc_error)
@@ -4787,10 +4787,10 @@ feature {NONE} -- Visitor
 							end
 						elseif l_last_constrained.has_associated_class then
 							l_last_class := l_last_constrained.base_class
-							l_prefix_feature := l_last_class.feature_table.alias_item (l_as.prefix_feature_name)
+							l_prefix_feature := l_last_class.feature_table.alias_item (l_as.operator_name)
 						elseif
 							attached {LOCAL_TYPE_A} l_last_constrained as t and then
-							attached t.operator_call (names_heap.id_of (l_as.prefix_feature_name), l_context_current_class) as f
+							attached t.operator_call (names_heap.id_of (l_as.operator_name), l_context_current_class) as f
 						then
 							l_prefix_feature := f.descriptor
 							l_last_constrained := f.site
@@ -4815,7 +4815,7 @@ feature {NONE} -- Visitor
 						else
 							l_vwoe.set_other_type_set (l_type_set)
 						end
-						l_vwoe.set_op_name (l_as.prefix_feature_name)
+						l_vwoe.set_op_name (l_as.operator_name)
 						l_vwoe.set_location (l_as.operator_location)
 						error_handler.insert_error (l_vwoe)
 					else
@@ -5058,7 +5058,7 @@ feature {NONE} -- Visitor
 					check l_left_constrained_attached: l_left_constrained /= Void end
 						-- Check if target is not of type NONE
 					if l_left_constrained.is_none then
-						create l_vuex.make_for_none (l_as.infix_function_name)
+						create l_vuex.make_for_none (l_as.operator_name)
 						context.init_error (l_vuex)
 						l_vuex.set_location (l_as.operator_location)
 						error_handler.insert_error (l_vuex)
@@ -5111,7 +5111,7 @@ feature {NONE} -- Visitor
 									last_alias_feature := l_result_item.feature_i
 									l_left_constrained := l_result_item.cl_type.type
 									l_class := l_left_constrained.base_class
-									check_infix_feature (last_alias_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
+									check_infix_feature (last_alias_feature, l_class, l_as.operator_name, l_left_type, l_left_constrained, l_right_type)
 									l_error := last_alias_error
 									l_result.forth
 										-- We inherited this feature.
@@ -5148,13 +5148,13 @@ feature {NONE} -- Visitor
 							else
 								l_class := l_left_constrained.base_class
 								last_alias_feature := l_class.feature_of_rout_id (l_as.routine_ids.first)
-								check_infix_feature (last_alias_feature, l_class, l_as.infix_function_name, l_left_type, l_left_constrained, l_right_type)
+								check_infix_feature (last_alias_feature, l_class, l_as.operator_name, l_left_type, l_left_constrained, l_right_type)
 								l_error := last_alias_error
 							end
 						else
 							if
 								attached {LOCAL_TYPE_A} l_left_type as t and then
-								attached t.operator_call (names_heap.id_of (l_as.infix_function_name), l_context_current_class) as f
+								attached t.operator_call (names_heap.id_of (l_as.operator_name), l_context_current_class) as f
 							then
 								l_left_constrained := f.site
 								l_class := l_left_constrained.base_class
@@ -5162,7 +5162,7 @@ feature {NONE} -- Visitor
 								l_target_type := l_left_type
 							end
 							if l_left_type.is_known then
-								if is_infix_valid (l_left_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
+								if is_infix_valid (l_left_type, l_right_type, l_as.operator_name, l_as.operator_location) then
 									check last_calls_target_type /= Void end
 									if l_left_constrained = Void then
 										l_left_constrained := last_calls_target_type
@@ -5171,7 +5171,7 @@ feature {NONE} -- Visitor
 									l_error := last_alias_error
 									if not is_inherited and then l_left_type.convert_to (context.current_class, l_right_type.deep_actual_type) then
 										l_target_conv_info := context.last_conversion_info
-										if is_infix_valid (l_right_type, l_right_type, l_as.infix_function_name, l_as.operator_location) then
+										if is_infix_valid (l_right_type, l_right_type, l_as.operator_name, l_as.operator_location) then
 											l_right_constrained := last_calls_target_type
 											l_left_constrained := l_right_constrained
 											l_error := Void
@@ -5830,11 +5830,6 @@ feature {NONE} -- Visitor
 					last_byte_node := l_byte_code
 				end
 			end
-		end
-
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
-		do
-			-- Nothing to be done
 		end
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
@@ -9487,7 +9482,6 @@ feature {NONE} -- Implementation
 			l_context_current_class: CLASS_C
 			l_vwoe: VWOE
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
-			l_formal: FORMAL_A
 			l_is_multi_constraint_case: BOOLEAN
 			l_feature_found_count: INTEGER
 			l_vtmc_error: VTMC
@@ -9499,28 +9493,32 @@ feature {NONE} -- Implementation
 				-- No need for `a_left_type.actual_type' since it is done in callers of
 				-- `is_infix_valid'.
 			if a_left_type.is_formal  then
-				l_formal ?= a_left_type
-				if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
-					l_is_multi_constraint_case := True
-						-- this is the multi constraint case
-					l_type_set := a_left_type.to_type_set.constraining_types (l_context_current_class)
-					check l_type_set /= Void end
-					l_result_tuple := l_type_set.feature_i_state_by_alias_name_id (l_name.name_id)
-						-- We raise an error if there are multiple infix features found
-					l_feature_found_count := l_result_tuple.features_found_count
-					if	l_feature_found_count > 1 then
-						l_vtmc_error := new_vtmc_error (l_name, l_formal.position, l_context_current_class, True)
-					elseif l_feature_found_count = 1 then
-						l_infix :=  l_result_tuple.feature_item
-						l_last_constrained := l_result_tuple.class_type_of_feature
-						l_class := l_last_constrained.base_class
-						last_calls_target_type := l_last_constrained
-					else
-						-- Evereything stays void, an error will be reported.
-					end
+				if attached {FORMAL_A} a_left_type as l_formal then
+					if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
+						l_is_multi_constraint_case := True
+							-- this is the multi constraint case
+						l_type_set := a_left_type.to_type_set.constraining_types (l_context_current_class)
+						check l_type_set /= Void end
+						l_result_tuple := l_type_set.feature_i_state_by_alias_name_id (l_name.name_id)
+							-- We raise an error if there are multiple infix features found
+						l_feature_found_count := l_result_tuple.features_found_count
+						if	l_feature_found_count > 1 then
+							l_vtmc_error := new_vtmc_error (l_name, l_formal.position, l_context_current_class, True)
+						elseif l_feature_found_count = 1 then
+							l_infix :=  l_result_tuple.feature_item
+							l_last_constrained := l_result_tuple.class_type_of_feature
+							l_class := l_last_constrained.base_class
+							last_calls_target_type := l_last_constrained
+						else
+							-- Evereything stays void, an error will be reported.
+						end
 
+					else
+						l_last_constrained := l_formal.constrained_type (l_context_current_class)
+					end
 				else
-					l_last_constrained := l_formal.constrained_type (l_context_current_class)
+					check is_formal: False end
+					l_last_constrained := a_left_type
 				end
 			else
 				l_last_constrained := a_left_type

@@ -253,6 +253,16 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
+	new_alias_list (n: INTEGER): CONSTRUCT_LIST [ALIAS_TRIPLE]
+			-- New empty list of ALIAS_TRIPLE
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make (n)
+		ensure
+			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+		end
+
 	new_alias_triple (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS; c_as: detachable KEYWORD_AS): detachable ALIAS_TRIPLE
 			-- New ALIAS_TRIPLE.
 		do
@@ -558,28 +568,12 @@ feature -- Roundtrip: leaf_as
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_frozen, a_scn)
 		end
 
-	new_infix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
-			-- New KEYWORD AST node for keyword "infix'
-		require
-			a_scn_not_void: a_scn /= Void
-		do
-			Result := new_keyword_as ({EIFFEL_TOKENS}.te_infix, a_scn)
-		end
-
 	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
 			-- New KEYWORD AST node for keyword "precursor'.
 		require
 			a_scn_not_void: a_scn /= Void
 		do
 			Result := new_keyword_as ({EIFFEL_TOKENS}.te_precursor, a_scn)
-		end
-
-	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
-			-- New KEYWORD AST node for keyword "prefix'.
-		require
-			a_scn_not_void: a_scn /= Void
-		do
-			Result := new_keyword_as ({EIFFEL_TOKENS}.te_prefix, a_scn)
 		end
 
 	new_once_string_keyword_as (a_text: STRING; l, c, p, n, cc, cp, cn: INTEGER): detachable KEYWORD_AS
@@ -1463,11 +1457,11 @@ feature -- Access
 			end
 		end
 
-	new_feature_name_alias_as (feature_name: detachable ID_AS; alias_name: detachable STRING_AS; has_convert_mark: BOOLEAN; a_as, c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
+	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_TRIPLE]): detachable FEATURE_NAME_ALIAS_AS
 			-- New FEATURE_NAME_ALIAS AST node
 		do
-			if feature_name /= Void and then alias_name /= Void then
-				create Result.initialize (feature_name, alias_name, has_convert_mark, a_as, c_as)
+			if feature_name /= Void and then a_alias_list /= Void and then not a_alias_list.is_empty then
+				create Result.initialize_with_list (feature_name, a_alias_list)
 			end
 		end
 
@@ -1562,14 +1556,6 @@ feature -- Access
 		do
 			if i /= Void then
 				create Result.initialize (t, i, c_as)
-			end
-		end
-
-	new_infix_as (op: detachable STRING_AS; l: detachable KEYWORD_AS): detachable INFIX_PREFIX_AS
-			-- New INFIX AST node
-		do
-			if op /= Void then
-				create Result.initialize (op, True, l)
 			end
 		end
 
@@ -1792,14 +1778,6 @@ feature -- Access
 		do
 			if pk /= Void and (n /= Void implies n.generics = Void) then
 				create Result.initialize (pk, n, p)
-			end
-		end
-
-	new_prefix_as (op: detachable STRING_AS; l: detachable KEYWORD_AS): detachable INFIX_PREFIX_AS
-			-- New PREFIX AST node
-		do
-			if op /= Void then
-				create Result.initialize (op, False, l)
 			end
 		end
 
@@ -2151,8 +2129,8 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very long class"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-08-29 22:19:42 +0200 (Thu, 29 Aug 2019) $"
+	revision: "$Revision: 103439 $"
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

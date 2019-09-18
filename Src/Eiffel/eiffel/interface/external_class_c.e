@@ -959,25 +959,7 @@ feature {NONE} -- Initialization
 				end
 
 				l_feat.set_is_frozen (l_member.is_frozen)
-				if l_member.is_prefix then
-						-- Set feature flags
-					l_feat.set_is_prefix (True)
-					l_feat.set_is_unary (True)
-						-- Set both feature name and alias name
-					names_heap.put (Prefix_infix_names.prefix_feature_name_with_symbol (l_member.eiffel_name))
-					l_name_id := names_heap.found_item
-					l_feat.set_feature_name_id (l_name_id, l_name_id)
-				elseif l_member.is_infix then
-						-- Set feature flags
-					l_feat.set_is_infix (True)
-					l_feat.set_is_binary (True)
-						-- Set both feature name and alias name
-					names_heap.put (Prefix_infix_names.infix_feature_name_with_symbol (l_member.eiffel_name))
-					l_name_id := names_heap.found_item
-					l_feat.set_feature_name_id (l_name_id, l_name_id)
-				else
-					l_feat.set_feature_name (l_member.eiffel_name)
-				end
+				l_feat.set_feature_name (l_member.eiffel_name)
 				l_feat.set_feature_id (feature_id_counter.next)
 
 				l_written_type := internal_type_from_consumed_type (True, l_member.declared_type)
@@ -1679,7 +1661,7 @@ invariant
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

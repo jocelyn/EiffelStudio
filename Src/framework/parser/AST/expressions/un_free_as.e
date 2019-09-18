@@ -12,10 +12,8 @@ inherit
 		rename
 			initialize as initialize_unary_as
 		redefine
-			is_equivalent, prefix_feature_name
+			is_equivalent
 		end
-
-	PREFIX_INFIX_NAMES
 
 create
 	initialize
@@ -52,12 +50,6 @@ feature -- Visitor
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	prefix_feature_name: STRING
-			-- Internal name
-		do
-			Result := prefix_feature_name_with_symbol (op_name.name)
-		end
-
 	operator_name: STRING
 		do
 			Result := op_name.name
@@ -72,15 +64,8 @@ feature -- Comparison
 				equivalent (expr, other.expr)
 		end
 
-feature {UNARY_AS}	-- Replication
-
-	set_prefix_feature_name (p: like prefix_feature_name)
-		do
-			create op_name.initialize (extract_symbol_from_prefix (p))
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

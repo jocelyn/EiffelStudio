@@ -3,8 +3,8 @@
 				  % Manage the history of the parent as well."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-10-01 08:28:12 +0200 (Mon, 01 Oct 2018) $"
+	revision: "$Revision: 102241 $"
 	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	revised_by: "Alexander Kogtenkov"
 
@@ -1274,17 +1274,20 @@ feature {NONE} -- Implementation
 		local
 			feature_names: ARRAYED_LIST [STRING_32]
 			feature_pixmaps: ARRAYED_LIST [EV_PIXMAP]
+			f: E_FEATURE
 		do
 			create feature_names.make (feature_list.count)
 			create feature_pixmaps.make (feature_list.count)
-			from
-				feature_list.start
-			until
-				feature_list.after
+			across
+				feature_list as ic
 			loop
-				feature_names.extend (feature_list.item.name_32)
-				feature_pixmaps.extend (pixmap_from_e_feature (feature_list.item))
-				feature_list.forth
+				f := ic.item
+				feature_names.extend (f.name_32)
+				feature_pixmaps.extend (pixmap_from_e_feature (f))
+--				if attached f.alias_name_32 as l_alias then
+--					feature_names.extend (l_alias)
+--					feature_pixmaps.extend (pixmap_from_e_feature (f))
+--				end
 			end
 			if not feature_names.is_empty then
 				if feature_names.count = 1 then
@@ -2135,7 +2138,11 @@ feature {NONE} -- open new class
 				str := str.as_lower
 					-- Replace spaces and dashes with underscores.
 					-- For backwards compatibility: restrict to non-operator features
-				if not str.starts_with ("infix") and then not str.starts_with ("prefix") then
+				if
+					not str.starts_with ("alias") and then
+					not str.starts_with ("infix") and then
+					not str.starts_with ("prefix")
+				then
 					str.replace_substring_all (" ", "_")
 					str.replace_substring_all ("-", "_")
 				end
@@ -2772,7 +2779,7 @@ feature {NONE} -- Choice Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

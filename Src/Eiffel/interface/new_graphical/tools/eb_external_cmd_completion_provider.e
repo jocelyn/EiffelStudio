@@ -196,7 +196,7 @@ feature{NONE} -- Implementation
 		require
 			a_feat_not_void: a_feat /= Void
 		do
-			Result := not (a_feat.is_infix or a_feat.is_prefix) and (a_feat.is_once or a_feat.is_constant) and preferences.editor_data.once_and_constant_in_upper
+			Result := (a_feat.is_once or a_feat.is_constant) and preferences.editor_data.once_and_constant_in_upper
 		end
 
 	placeholder_possibilities: like completion_possibilities
@@ -363,7 +363,7 @@ invariant
 	factory_attached: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

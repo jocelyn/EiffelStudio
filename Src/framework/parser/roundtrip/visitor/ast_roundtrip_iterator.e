@@ -813,13 +813,6 @@ feature
 			safe_process (l_as.body)
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
-		do
-			safe_process (l_as.frozen_keyword)
-			safe_process (l_as.infix_prefix_keyword)
-			safe_process (l_as.alias_name)
-		end
-
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 		do
 			safe_process (l_as.frozen_keyword)
@@ -1548,7 +1541,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

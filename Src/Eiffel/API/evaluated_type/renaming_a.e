@@ -90,11 +90,7 @@ feature {NONE} -- Initialization
 						-- Add new name to the list.
 					put (l_old_name_id, l_new_name.internal_name.name_id)
 
-					if attached {INFIX_PREFIX_AS} l_new_name as l_infix_prefix_name then
-							-- Check validity of infix/prefix for that particular routine.
-						process_alias (l_rename.new_name, l_old_feature)
-							-- No need to add it, because infix have the same internal name as their alias.
-					elseif attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_alias_name then
+					if attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_alias_name then
 							-- Check validity of alias for that particular routine.
 						process_alias (l_rename.new_name, l_old_feature)
 							-- Because `l_old_name_id' is already there, we do not want to generate an error
@@ -103,7 +99,7 @@ feature {NONE} -- Initialization
 					end
 
 						-- If previously it was an alias routine, we removed the alias from the original class.
-					if l_old_feature.alias_name_id /= 0 and not l_old_feature.is_infix and not l_old_feature.is_prefix then
+					if l_old_feature.alias_name_id /= 0 then
 						if removed_alias = Void then
 							create removed_alias.make (10)
 						end
@@ -334,29 +330,12 @@ feature {NONE} -- Implementation
 				(l_argument_count = 1 and then a_name.is_valid_binary_operator (l_operator)))
 			then
 				if l_argument_count = 1 then
-					if attached {INFIX_PREFIX_AS} a_name as l_infix_prefix then
-						if l_infix_prefix.is_prefix then
-								-- Ok, the feature renamed is not capable to be a prefix, throw an error.
-								-- Invalid operator alias
-								create {VFAV1_SYNTAX} l_vfav.make (a_name)
-						end
-					else
-						a_name.set_is_binary
-					end
+					a_name.set_is_binary
 				elseif a_name.has_convert_mark then
 						-- Invalid convert mark
 					create {VFAV3_SYNTAX} l_vfav.make (a_name)
 				else
-					if attached {INFIX_PREFIX_AS} a_name as l_infix_prefix then
-						if l_infix_prefix.is_infix then
-								-- Ok, the feature renamed is not capable to be an infix, throw an error.
-								-- Invalid operator alias
-								create {VFAV1_SYNTAX} l_vfav.make (a_name)
-						end
-					else
-						a_name.set_is_unary
-					end
-
+					a_name.set_is_unary
 				end
 			else
 					-- Invalid operator alias
@@ -422,7 +401,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

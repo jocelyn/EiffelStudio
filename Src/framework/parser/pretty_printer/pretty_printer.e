@@ -52,7 +52,6 @@ inherit
 			process_undefine_clause_as,
 			process_redefine_clause_as,
 			process_select_clause_as,
-			process_infix_prefix_as,
 			process_feat_name_id_as,
 			process_feature_name_alias_as,
 
@@ -906,13 +905,6 @@ feature {CLASS_AS} -- Inheritance
 			-- Process `l_as'.
 		do
 			process_inherit_clause_as (l_as)
-		end
-
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
-		do
-			safe_process_and_print (l_as.frozen_keyword, "", " ")
-			safe_process_and_print (l_as.infix_prefix_keyword, "", " ")
-			safe_process (l_as.alias_name)
 		end
 
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
