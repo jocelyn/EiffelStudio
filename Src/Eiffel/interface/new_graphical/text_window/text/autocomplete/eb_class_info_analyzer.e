@@ -1756,7 +1756,7 @@ feature {NONE}-- Implementation
 				if cls_c /= Void and then cls_c.has_feature_table then
 					written_class := cls_c
 					l_name := string_32_to_lower_copy_optimized (a_name)
-					feat := cls_c.feature_with_name_32 (l_name)
+					feat := cls_c.feature_with_name_32 (infix_feature_name_with_symbol_32 (l_name))
 					if feat /= Void and then feat.type /= Void then
 						Result := feat.type
 						if Result.is_formal then
@@ -2393,7 +2393,7 @@ invariant
 	current_token_in_current_line: (current_line = Void and current_token = Void) or else (current_line /= Void and then current_line.has_token (current_token))
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

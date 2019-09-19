@@ -196,7 +196,7 @@ feature
 						-- in `check_inherited_name' needs to modify `renaming'.
 						-- When support for `infix/prefix' is completely dropped then
 						-- we can remove the line below for improving performance.
---FIXME: check					local_renaming := local_renaming.twin
+					local_renaming := local_renaming.twin
 					local_renaming.start
 				until
 					local_renaming.after
@@ -213,6 +213,24 @@ feature
 						vhrc1.set_parent (parent)
 						vhrc1.set_feature_name (old_name)
 						Error_handler.insert_error (vhrc1)
+					elseif is_mangled_infix (new_name) then
+						f := inherited_feature
+						if f.argument_count /= 1 or else f.type.is_void then
+							create vhrc5
+							vhrc5.set_class (System.current_class)
+							vhrc5.set_parent (parent)
+							vhrc5.set_feature_name (old_name)
+							Error_handler.insert_error (vhrc5)
+						end;
+					elseif is_mangled_prefix (new_name) then
+						f := inherited_feature
+						if f.argument_count /= 0 or else f.type.is_void then
+							create vhrc4
+							vhrc4.set_class (System.current_class)
+							vhrc4.set_parent (parent)
+							vhrc4.set_feature_name (old_name)
+							Error_handler.insert_error (vhrc4)
+						end
 					elseif alias_name_id > 0 then
 						vfav := Void
 						f := inherited_feature
@@ -233,7 +251,29 @@ feature
 								create {VFAV3_VHRC} vfav
 							end
 						else
-							-- FIXME: check if anything should be done for alias names.
+							alias_name := extract_alias_name (names_heap.item (alias_name_id))
+							if
+								not f.type.is_void and then
+								(f.argument_count = 0 and then is_valid_unary_operator (alias_name) or else
+								f.argument_count = 1 and then is_valid_binary_operator (alias_name))
+							then
+								if f.argument_count = 1 then
+										-- Ensure the alias name is in binary form.
+									names_heap.put (infix_feature_name_with_symbol (alias_name))
+									feature_renaming.set_alias_name_id (names_heap.found_item)
+								else
+										-- Ensure the alias name is in unary form.
+									names_heap.put (prefix_feature_name_with_symbol (alias_name))
+									feature_renaming.set_alias_name_id (names_heap.found_item)
+									if feature_renaming.has_convert_mark then
+											-- Unary operator cannot have convert mark
+										create {VFAV3_VHRC} vfav
+									end
+								end
+							else
+									-- Report wrong argument number or return type for operator alias.
+								create {VFAV1_VHRC} vfav
+							end
 						end
 						if vfav /= Void then
 							vfav.set_class (System.current_class)
@@ -493,7 +533,8 @@ feature {NONE} -- Implementation
 			-- Void if not found.
 
 	check_inherited_name (a_name_id: INTEGER; a_feat_tbl: FEATURE_TABLE)
-			-- Does `a_name_id' exist in `a_feat_tbl' and not present
+			-- Does `a_name_id' exist in `a_feat_tbl' taken into account
+			-- that if `a_name_id' is a prefix/infix name, and not present
 			-- in the ancestor, we check if there is an alias routine with
 			-- the same operator.
 			-- Set `has_inherited_name' to True if found, False otherwise.
@@ -508,11 +549,35 @@ feature {NONE} -- Implementation
 			has_inherited_name := inherited_feature /= Void
 			if not has_inherited_name then
 				l_name := names_heap.item (a_name_id)
+				if is_mangled_infix (l_name) or is_mangled_prefix (l_name) then
+					inherited_feature := a_feat_tbl.item_alias_id (a_name_id)
+					has_inherited_name := inherited_feature /= Void
+					if has_inherited_name then
+							-- Find out if there is already a rename clause for `a_name_id', if one is
+							-- found, we replace its content with the real inherited name (i.e. the alias
+							-- version). If not, we create a new rename entry which uses as old name
+							-- the inherited name and the infix/prefix name as new name.
+						if renaming /= Void then
+							renaming.search (a_name_id)
+						end
+						if renaming /= Void and then renaming.found then
+								-- We replace the exiting renaming `infix "op" as XXX' into
+								-- `yyy alias "op" as XXX'.
+							renaming.replace_key (inherited_feature.feature_name_id, a_name_id)
+						else
+							if renaming = Void then
+								create renaming.make (1)
+							end
+							renaming.put (create {RENAMING}.make (a_name_id, a_name_id,
+								inherited_feature.has_convert_mark), inherited_feature.feature_name_id)
+						end
+					end
+				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

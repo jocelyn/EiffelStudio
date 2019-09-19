@@ -1274,20 +1274,17 @@ feature {NONE} -- Implementation
 		local
 			feature_names: ARRAYED_LIST [STRING_32]
 			feature_pixmaps: ARRAYED_LIST [EV_PIXMAP]
-			f: E_FEATURE
 		do
 			create feature_names.make (feature_list.count)
 			create feature_pixmaps.make (feature_list.count)
-			across
-				feature_list as ic
+			from
+				feature_list.start
+			until
+				feature_list.after
 			loop
-				f := ic.item
-				feature_names.extend (f.name_32)
-				feature_pixmaps.extend (pixmap_from_e_feature (f))
---				if attached f.alias_name_32 as l_alias then
---					feature_names.extend (l_alias)
---					feature_pixmaps.extend (pixmap_from_e_feature (f))
---				end
+				feature_names.extend (feature_list.item.name_32)
+				feature_pixmaps.extend (pixmap_from_e_feature (feature_list.item))
+				feature_list.forth
 			end
 			if not feature_names.is_empty then
 				if feature_names.count = 1 then
@@ -2138,11 +2135,7 @@ feature {NONE} -- open new class
 				str := str.as_lower
 					-- Replace spaces and dashes with underscores.
 					-- For backwards compatibility: restrict to non-operator features
-				if
-					not str.starts_with ("alias") and then
-					not str.starts_with ("infix") and then
-					not str.starts_with ("prefix")
-				then
+				if not str.starts_with ("infix") and then not str.starts_with ("prefix") then
 					str.replace_substring_all (" ", "_")
 					str.replace_substring_all ("-", "_")
 				end

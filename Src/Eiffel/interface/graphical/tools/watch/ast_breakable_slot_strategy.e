@@ -1119,8 +1119,12 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not has_error_internal then
-				if l_feat.has_alias_name then
+				if l_feat.is_prefix or l_feat.has_alias_name then
 					l_as.expr.process (Current)
+				elseif l_feat.is_infix then
+					check
+						is_infix: False
+					end
 				else
 					l_as.expr.process (Current)
 				end
@@ -1240,7 +1244,7 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				if not has_error_internal then
 					check l_feat_not_void: l_feat /= Void end
-					if l_feat.has_alias_name then
+					if l_feat.is_infix or l_feat.has_alias_name then
 						check l_feat_is_not_procedure: not l_feat.is_procedure end
 						l_as.right.process (Current)
 					else
@@ -2783,7 +2787,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

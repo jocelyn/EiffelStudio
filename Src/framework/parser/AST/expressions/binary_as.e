@@ -131,21 +131,22 @@ feature -- Roundtrip/Token
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	operator_name: detachable STRING
-			-- Internal name of the feature associated to the
+	infix_function_name: detachable STRING
+			-- Internal name of the infix feature associated to the
 			-- binary expression
-		do
-			Result := "binary %"" + op_name.name +"%""
+		deferred
 		end
 
---	operator_name_32: detachable STRING_32
---			-- Internal name of the feature associated to the
---			-- binary expression
---		do
---			Result := op_name.name_32
---		end
-
 feature -- Properties
+
+	infix_function_name_32: detachable STRING_32
+			-- Internal name of the infix feature associated to the
+			-- binary expression
+		do
+			if attached infix_function_name as l_name then
+				Result := encoding_converter.utf8_to_utf32 (l_name)
+			end
+		end
 
 	op_name: ID_AS
 			-- Symbol representing the operator (without the infix).
@@ -188,7 +189,7 @@ invariant
 	right_not_void: right /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

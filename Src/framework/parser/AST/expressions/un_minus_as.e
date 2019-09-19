@@ -19,7 +19,7 @@ create
 feature -- Properties
 
 	is_minus: BOOLEAN = True
-			-- Is current prefix "-"?	
+			-- Is current prefix "-"?
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
@@ -34,7 +34,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

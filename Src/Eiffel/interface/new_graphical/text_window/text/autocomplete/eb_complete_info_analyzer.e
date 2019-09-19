@@ -206,7 +206,8 @@ feature -- Basic operations
 										feat := feat_table.item_for_iteration
 										if
 											(exploring_current_class or else feat.is_exported_to (l_current_class_c)) and then
-											(show_any_features or else not feat.written_class.is_class_any)
+											(show_any_features or else not feat.written_class.is_class_any) and then
+											(not feat.is_infix and not feat.is_prefix)
 										then
 											if l_has_renaming then
 												add_renaming_to_completion_possibilities (feat, l_constraints, cls_c)
@@ -830,8 +831,13 @@ feature {NONE} -- Implementation
 		local
 			l_feature: EB_FEATURE_FOR_COMPLETION
 		do
-			create l_feature.make (feat, Void, False, is_upper_required (feat))
-			insert_in_completion_possibilities (l_feature)
+			if not feat.is_prefix then
+				create l_feature.make (feat, Void, False, is_upper_required (feat))
+				if feat.is_infix then
+					l_feature.set_has_dot (False)
+				end
+				insert_in_completion_possibilities (l_feature)
+			end
 		end
 
 	is_upper_required (a_feat: E_FEATURE): BOOLEAN
@@ -839,7 +845,7 @@ feature {NONE} -- Implementation
 		require
 			a_feat_not_void: a_feat /= Void
 		do
-			Result := (a_feat.is_once or a_feat.is_constant) and preferences.editor_data.once_and_constant_in_upper
+			Result := not (a_feat.is_infix or a_feat.is_prefix) and (a_feat.is_once or a_feat.is_constant) and preferences.editor_data.once_and_constant_in_upper
 		end
 
 	matches (str, pat: READABLE_STRING_GENERAL): BOOLEAN

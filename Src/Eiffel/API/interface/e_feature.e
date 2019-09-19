@@ -129,6 +129,17 @@ feature -- Properties
 			end
 		end
 
+	first_alias_name: detachable STRING
+			-- Alias name of the feature (if any)
+		require
+			has_alias_name
+		do
+			if attached aliases as lst and then attached lst.first as l_first then
+				Result := l_first.alias_name
+			end
+		end
+
+
 --	alias_name_32: STRING_32
 --			-- Alias name of the feature (if any)
 --		do

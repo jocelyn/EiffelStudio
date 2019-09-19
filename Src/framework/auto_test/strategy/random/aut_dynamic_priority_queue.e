@@ -86,6 +86,7 @@ feature -- Changing Priority
 			-- Sets the static priority of `a_feature' to `a_priority'.
 		require
 			a_feature_not_void: a_feature /= Void
+			a_feature_is_not_infix_or_prefix: not a_feature.feature_.is_prefix and not a_feature.feature_.is_infix
 			a_priority_valid: a_priority >= 0
 		local
 			pair: PAIR [INTEGER, INTEGER]
@@ -142,6 +143,8 @@ feature -- Changing Priority
 			loop
 				feature_i := l_feat_table.item_for_iteration
 				if
+					not feature_i.is_prefix and then
+					not feature_i.is_infix and then
 					not feature_i.is_obsolete
 				then
 						-- Normal exported features.
@@ -401,7 +404,7 @@ invariant
 	tables_valid: are_tables_valid
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2013, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

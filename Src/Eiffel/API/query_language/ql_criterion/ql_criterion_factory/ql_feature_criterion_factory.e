@@ -51,11 +51,13 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_is_function_criterion, c_is_function)
 			agent_table.put (agent new_is_hidden_criterion, c_is_hidden)
 			agent_table.put (agent new_is_immediate_criterion, c_is_immediate)
+			agent_table.put (agent new_is_infix_criterion, c_is_infix)
 			agent_table.put (agent new_is_invariant_criterion, c_is_invariant_feature)
 			agent_table.put (agent new_is_obsolete_criterion, c_is_obsolete)
 			agent_table.put (agent new_is_once_criterion, c_is_once)
 			agent_table.put (agent new_is_class_criterion, c_is_class)
 			agent_table.put (agent new_is_origin_criterion, c_is_origin)
+			agent_table.put (agent new_is_prefix_criterion, c_is_prefix)
 			agent_table.put (agent new_is_procedure_criterion, c_is_procedure)
 			agent_table.put (agent new_is_unique_criterion, c_is_unique)
 			agent_table.put (agent new_is_query_criterion, c_is_query)
@@ -105,12 +107,14 @@ feature{NONE} -- Initialization
 			name_table.put (c_is_function, query_language_names.ql_cri_is_function)
 			name_table.put (c_is_hidden, query_language_names.ql_cri_is_hidden)
 			name_table.put (c_is_immediate, query_language_names.ql_cri_is_immediate)
+			name_table.put (c_is_infix, query_language_names.ql_cri_is_infix)
 			name_table.put (c_is_invariant_feature, query_language_names.ql_cri_is_invariant_feature)
 			name_table.put (c_is_obsolete, query_language_names.ql_cri_is_obsolete)
 			name_table.put (c_is_once, query_language_names.ql_cri_is_once)
 			name_table.put (c_is_class, query_language_names.ql_cri_is_class)
 			name_table.put (c_is_ghost, query_language_names.ql_cri_is_ghost)
 			name_table.put (c_is_origin, query_language_names.ql_cri_is_origin)
+			name_table.put (c_is_prefix, query_language_names.ql_cri_is_prefix)
 			name_table.put (c_is_procedure, query_language_names.ql_cri_is_procedure)
 			name_table.put (c_is_unique, query_language_names.ql_cri_is_unique)
 			name_table.put (c_is_query, query_language_names.ql_cri_is_query)
@@ -342,6 +346,14 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_is_infix_criterion: QL_SIMPLE_FEATURE_CRITERION
+			-- New criterion to test if a feature is infix
+		do
+			create Result.make (agent is_infix_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
 	new_is_invariant_criterion: QL_SIMPLE_FEATURE_CRITERION
 			-- New criterion to test if a feature is invariant while not a real feature
 		do
@@ -386,6 +398,14 @@ feature{NONE} -- New criterion
 			-- New criterion to test if a feature is origin
 		do
 			create Result.make (agent is_origin_agent, True)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_is_prefix_criterion: QL_SIMPLE_FEATURE_CRITERION
+			-- New criterion to test if a feature is prefix
+		do
+			create Result.make (agent is_prefix_agent, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -608,12 +628,12 @@ feature -- Criterion index
 	c_is_function: INTEGER = 20
 	c_is_hidden: INTEGER = 21
 	c_is_immediate: INTEGER = 22
-
+	c_is_infix: INTEGER = 23
 	c_is_invariant_feature: INTEGER = 24
 	c_is_obsolete: INTEGER = 25
 	c_is_once: INTEGER = 26
 	c_is_origin: INTEGER = 27
-
+	c_is_prefix: INTEGER = 28
 	c_is_procedure: INTEGER = 29
 	c_is_unique: INTEGER = 30
 	c_is_query: INTEGER = 31
@@ -948,6 +968,16 @@ feature {NONE} -- Implementation: agents
 			Result := a_item.is_immediate
 		end
 
+	is_infix_agent (a_item: QL_FEATURE): BOOLEAN
+			-- Agent to test if `a_item' is infix
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_real_feature and then a_item.e_feature.is_infix
+		end
+
 	is_invariant_agent (a_item: QL_FEATURE): BOOLEAN
 			-- Agent to test if `a_item' is invariant (while not a real feature)
 			-- Require compiled: True
@@ -1006,6 +1036,16 @@ feature {NONE} -- Implementation: agents
 			a_item_valid: a_item.is_valid_domain_item
 		do
 			Result := a_item.is_real_feature and then a_item.e_feature.is_origin
+		end
+
+	is_prefix_agent (a_item: QL_FEATURE): BOOLEAN
+			-- Agent to test if `a_item' is prefix
+			-- Require compiled: True
+		require
+			a_item_attached: a_item /= Void
+			a_item_valid: a_item.is_valid_domain_item
+		do
+			Result := a_item.is_real_feature and then a_item.e_feature.is_prefix
 		end
 
 	is_procedure_agent (a_item: QL_FEATURE): BOOLEAN

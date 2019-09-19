@@ -2,8 +2,8 @@
 	description: "Visitor to check accessors for a given feature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2017-11-24 14:58:02 +0100 (ven., 24 nov. 2017) $"
-	revision: "$Revision: 101064 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_ACCESSED_FEATURE_VISITOR
@@ -18,6 +18,7 @@ inherit
 			process_routine_creation_as,
 			process_tagged_as,
 			process_binary_as,
+			process_unary_as,
 			process_static_access_as,
 			process_bracket_as,
 			process_like_id_as,
@@ -146,7 +147,7 @@ feature{NONE} -- Implementation
 				Result := a_feature_name.is_case_insensitive_equal (a_feature.name) or else
 					   	  a_feature_name.is_case_insensitive_equal (ti_Precursor_keyword)
 				if (not Result) and then a_feature.has_alias_name then
-					Result := a_feature.has_alias_named (a_feature_name)
+					Result := a_feature_name.is_case_insensitive_equal (a_feature.first_alias_name)
 				end
 				if Result then
 					Result := flag /= 0 implies flag_stack.has (flag)
@@ -268,7 +269,18 @@ feature{NONE} -- Implementation/Process
 
 	process_binary_as (l_as: BINARY_AS)
 		do
-			check_accessor_for_operators (e_feature, l_as.class_id, l_as.operator_name, l_as.operator_ast)
+			check_accessor_for_operators (e_feature, l_as.class_id, l_as.infix_function_name, l_as.operator_ast)
+			Precursor (l_as)
+		end
+
+	process_unary_as (l_as: UNARY_AS)
+		local
+			l_feature_name: STRING
+		do
+			l_feature_name := l_as.prefix_feature_name
+			if l_feature_name /= Void then
+				check_accessor_for_operators (e_feature, l_as.class_id, l_feature_name, l_as.operator_ast)
+			end
 			Precursor (l_as)
 		end
 

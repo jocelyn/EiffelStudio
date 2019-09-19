@@ -1335,6 +1335,8 @@ end;
 			Result.set_feature_name_id (feature_name_id, feat.internal_alias_name_id)
 			Result.set_written_in (a_class.class_id)
 			Result.set_is_frozen (feat.is_frozen)
+			Result.set_is_infix (feat.is_infix)
+			Result.set_is_prefix (feat.is_prefix)
 			Result.set_is_bracket (feat.is_bracket)
 			Result.set_is_parentheses (feat.is_parentheses)
 			Result.set_is_binary (feat.is_binary)
