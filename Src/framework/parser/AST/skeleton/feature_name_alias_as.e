@@ -171,9 +171,9 @@ feature -- Access
 				create Result.initialize (alias_name.value)
 			else
 				if is_binary then
-					create Result.initialize (alias_name.value)
+					create Result.initialize (infix_feature_name_with_symbol (alias_name.value))
 				else
-					create Result.initialize (alias_name.value)
+					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value))
 				end
 			end
 		end
