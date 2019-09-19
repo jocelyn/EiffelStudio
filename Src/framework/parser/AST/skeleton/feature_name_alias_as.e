@@ -254,13 +254,18 @@ feature -- Roundtrip/Token
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+		local
+			c: CURSOR
+			l_aliases: like aliases
 		do
+			l_aliases := aliases
+			c := l_aliases.cursor
 			from
-				aliases.finish
+				l_aliases.finish
 			until
-				aliases.off or Result /= Void
+				l_aliases.off or Result /= Void
 			loop
-				if attached aliases.item as l_item then
+				if attached l_aliases.item as l_item then
 					if a_list = Void then
 						if attached l_item.alias_name as l_as then
 							Result := l_as.last_token (a_list)
@@ -275,14 +280,18 @@ feature -- Roundtrip/Token
 						end
 					end
 				end
-				aliases.back
+				l_aliases.back
 			end
+			l_aliases.go_to (c)
 		end
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object?
+		local
+			c1,c2: CURSOR
+			l_aliases, l_other_aliases: like aliases
 		do
 				-- There is no need to check whether both alias names are Bracket,
 				-- because there is a check that they have the same alias name
@@ -290,12 +299,15 @@ feature -- Comparison
 				Precursor (other) and then
 				is_binary = other.is_binary
 			then
-				if
-					attached aliases as l_aliases and then
-					attached other.aliases as l_other_aliases
-				then
+				l_aliases := aliases
+				l_other_aliases := other.aliases
+				if l_aliases = l_other_aliases then
+						-- Same alias list object.
+				elseif l_aliases /= Void and l_other_aliases /= Void then
 					if l_aliases.count = l_other_aliases.count then
 						Result := True
+						c1 := l_aliases.cursor
+						c2 := l_other_aliases.cursor
 						from
 							l_aliases.start
 							l_other_aliases.start
@@ -308,7 +320,11 @@ feature -- Comparison
 								Result := False
 							else
 							end
+							l_aliases.forth
+							l_other_aliases.forth
 						end
+						l_aliases.go_to (c1)
+						l_other_aliases.go_to (c2)
 					end
 				elseif aliases = Void then
 					Result := other.aliases = Void
