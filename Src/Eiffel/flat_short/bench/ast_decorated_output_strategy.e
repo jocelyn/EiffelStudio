@@ -2503,11 +2503,6 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-
-			if l_as.has_convert_mark then
-				l_text_formatter_decorator.put_space
-				l_text_formatter_decorator.process_keyword_text (ti_convert_keyword, Void)
-			end
 		end
 
 	process_feature_list_as (l_as: FEATURE_LIST_AS)

@@ -104,11 +104,16 @@ feature -- Access
 			feature_name_not_empty: not Result.is_empty
 		end
 
-	alias_name_32: STRING_32
+	alias_names_32: detachable ARRAYED_LIST [STRING_32]
 			-- Alias name of feature (if any).
 		do
-			if attached alias_name as l_name then
-				Result := encoding_converter.utf8_to_utf32 (l_name)
+			if attached alias_names as l_names then
+				create Result.make (l_names.count)
+				across
+					l_names as ic
+				loop
+					Result.force (encoding_converter.utf8_to_utf32 (ic.item))
+				end
 			end
 		end
 
@@ -123,8 +128,24 @@ feature -- Access
 	feature_name_id: INTEGER
 			-- Id of `feature_name' in `Names_heap' table.
 
-	alias_name_id: INTEGER
-			-- Id of `alias_name' in `Names_heap' table
+--	first_alias_name_id: INTEGER
+--			-- Id of `alias_name' in `Names_heap' table
+
+	alias_name_ids: detachable LIST [INTEGER]
+			-- Ids of `alias_names' in `Names_heap' table.
+
+	has_alias: BOOLEAN
+			-- Has alias name?
+		do
+			Result := attached alias_name_ids as lst and then not lst.is_empty
+		end
+
+	has_alias_name_id (a_alias_name_id: INTEGER): BOOLEAN
+		do
+			if attached alias_name_ids as lst then
+				Result := lst.has (a_alias_name_id)
+			end
+		end
 
 	assigner_name_id: INTEGER
 			-- Id of `assigner_name' in `Names_heap' table
@@ -501,11 +522,26 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			feature_name_not_empty: not Result.is_empty
 		end
 
-	alias_name: STRING
-			-- Alias name of feature (if any).
+	first_alias_name: detachable STRING
 		do
-			if alias_name_id > 0 then
-				Result := Names_heap.item (alias_name_id)
+			if attached alias_name_ids as lst and then not lst.is_empty then
+				Result := Names_heap.item (lst.first)
+			end
+		end
+
+	alias_names: detachable LIST [detachable STRING]
+		do
+			if attached alias_name_ids as lst then
+				create {ARRAYED_LIST [STRING]} Result.make (lst.count)
+				across
+					lst as ic
+				loop
+					if ic.item > 0 then
+						Result.force (Names_heap.item (ic.item))
+					else
+						Result.force (Void)
+					end
+				end
 			end
 		end
 
@@ -531,7 +567,7 @@ feature -- Comparison
 			other_not_void: other /= Void
 		do
 			Result :=
-				alias_name_id = other.alias_name_id and then
+				same_aliases (other) and then
 				has_convert_mark = other.has_convert_mark
 		end
 
@@ -710,26 +746,47 @@ feature -- Setting
 			-- Assign `a_id' to `feature_name_id'.
 		require
 			valid_id: Names_heap.valid_index (a_id)
-			valid_alias_id: Names_heap.valid_index (alias_id)
+			valid_alias_id: alias_id /= 0 implies Names_heap.valid_index (alias_id)
 		do
 			feature_name_id := a_id
-			alias_name_id := alias_id
+			alias_name_ids := Void
+			if alias_id /= 0then
+				add_alias_id (alias_id)
+			end
 		ensure
 			feature_name_id_set: feature_name_id = a_id
-			alias_name_id_set: alias_name_id = alias_id
+			alias_name_id_set: alias_id /= 0 implies attached alias_name_ids as lst and then lst.first = alias_id
+		end
+
+	add_alias_id (a_alias_id: INTEGER)
+			-- Add `a_alias_id` value as alias name id.
+		require
+			valid_alias_id: Names_heap.valid_index (a_alias_id)
+		local
+			lst: like alias_name_ids
+		do
+			lst := alias_name_ids
+			if lst = Void then
+				create {ARRAYED_LIST [INTEGER]} lst.make (1)
+				alias_name_ids := lst
+			end
+			lst.force (a_alias_id)
 		end
 
 	set_renamed_name_id (a_id: INTEGER; alias_id: INTEGER)
 			-- Assign `a_id' to `feature_name_id'.
 		require
 			valid_id: Names_heap.valid_index (a_id)
-			valid_alias_id: Names_heap.valid_index (alias_id)
+			valid_alias_id: alias_id /= 0 implies Names_heap.valid_index (alias_id)
 		do
 			feature_name_id := a_id
-			alias_name_id := alias_id
+			alias_name_ids := Void
+			if alias_id /= 0 then
+				add_alias_id (alias_id)
+			end
 		ensure
 			feature_name_id_set: feature_name_id = a_id
-			alias_name_id_set: alias_name_id = alias_id
+			alias_name_id_set: alias_id /= 0 implies attached alias_name_ids as lst and then lst.first = alias_id
 		end
 
 	set_written_in (a_class_id: like written_in)
@@ -1138,6 +1195,38 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
 feature -- Incrementality
 
+	same_aliases (other: FEATURE_I): BOOLEAN
+		local
+			lst1, lst2: like alias_name_ids
+			c1, c2: CURSOR
+		do
+			lst1 := alias_name_ids
+			lst2 := other.alias_name_ids
+			if lst1 = lst2 then
+				Result := True
+			elseif lst1 = Void then
+				Result := lst2 = Void -- False!
+			elseif lst1.count = lst2.count then
+				Result := True
+				c1 := lst1.cursor
+				c2 := lst2.cursor
+				from
+					lst1.start
+					lst2.start
+				until
+					not Result or lst1.off or lst2.off
+				loop
+					Result := lst1.item = lst2.item
+					lst1.forth
+					lst2.forth
+				end
+				lst1.go_to (c1)
+				lst2.go_to (c2)
+			else
+					-- not the same aliases!
+			end
+		end
+
 	equiv (other: FEATURE_I): BOOLEAN
 			-- Incrementality test on instance of FEATURE_I during
 			-- second pass.
@@ -1163,7 +1252,7 @@ feature -- Incrementality
 				and then is_constant = other.is_constant
 				and then is_stable = other.is_stable
 				and then is_transient = other.is_transient
-				and then alias_name_id = other.alias_name_id
+				and then same_aliases (other)
 				and then has_convert_mark = other.has_convert_mark
 				and then assigner_name_id = other.assigner_name_id
 				and then has_property = other.has_property
@@ -1259,7 +1348,7 @@ end
 					-- Still an attribute.
 				is_attribute = other.is_attribute and then
 					-- Same alias.
-				alias_name_id = other.alias_name_id and then
+				same_aliases (other) and then
 				has_convert_mark = other.has_convert_mark and then
 					-- Same assigner procedure.
 				assigner_name_id = other.assigner_name_id and then
@@ -3173,7 +3262,14 @@ feature -- Undefinition
 			Result.set_is_infix (is_infix)
 			Result.set_is_prefix (is_prefix)
 			Result.set_is_frozen (is_frozen)
-			Result.set_feature_name_id (feature_name_id, alias_name_id)
+			Result.set_feature_name_id (feature_name_id, 0)
+			if attached alias_name_ids as l_ids and then not l_ids.is_empty then
+				across
+					l_ids as ic
+				loop
+					Result.add_alias_id (ic.item)
+				end
+			end
 			Result.set_feature_id (feature_id)
 			Result.set_pattern_id (pattern_id)
 			Result.set_is_require_else (is_require_else)
@@ -3289,7 +3385,14 @@ feature -- Replication
 		do
 			other.set_export_status (export_status)
 			other.set_feature_id (feature_id)
-			other.set_feature_name_id (feature_name_id, alias_name_id)
+			other.set_feature_name_id (feature_name_id, 0)
+			if attached alias_name_ids as l_ids then
+				across
+					l_ids as ic
+				loop
+					other.add_alias_id (ic.item)
+				end
+			end
 			other.set_written_feature_id (written_feature_id)
 			other.set_origin_feature_id (origin_feature_id)
 			other.set_origin_class_id (origin_class_id)
@@ -3334,7 +3437,7 @@ feature -- Replication
 
 			--feature_id := other.feature_id
 			feature_name_id := other.feature_name_id
-			alias_name_id := other.alias_name_id
+			alias_name_ids := other.alias_name_ids -- FIXME: twin list of alias ids?
 			written_feature_id := other.written_feature_id
 			origin_feature_id := other.origin_feature_id
 			origin_class_id := other.origin_class_id

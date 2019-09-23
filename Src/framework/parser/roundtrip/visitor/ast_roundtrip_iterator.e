@@ -823,11 +823,15 @@ feature
 		do
 			safe_process (l_as.frozen_keyword)
 			safe_process (l_as.feature_name)
-			if l_as.alias_name /= Void then
-				safe_process (l_as.alias_keyword (match_list))
-				safe_process (l_as.alias_name)
-				if l_as.has_convert_mark then
-					safe_process (l_as.convert_keyword (match_list))
+			if attached l_as.aliases as l_aliases then
+				across
+					l_aliases as ic
+				loop
+					safe_process (l_as.keyword_at (match_list, ic.item.alias_keyword_index))
+					safe_process (ic.item.alias_name)
+					if ic.item.alias_keyword_index > 0 then
+						safe_process (l_as.keyword_at (match_list, ic.item.convert_keyword_index))
+					end
 				end
 			end
 		end

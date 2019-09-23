@@ -67,8 +67,8 @@ feature -- Assembler
 			f_name := a_name
 			new_feature_as := a_ast
 			l_frozen_keyword := f_name.frozen_keyword
-			if target_feature.alias_name /= Void then
-				create l_op.initialize (extract_alias_name (target_feature.alias_name), 0, 0, 0, 0, 0, 0, 0)
+			if target_feature.has_alias and then attached target_feature.first_alias_name as l_first_alias_name then
+				create l_op.initialize (extract_alias_name (l_first_alias_name), 0, 0, 0, 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
 				create l_id.initialize (target_feature.feature_name)
 				l_id.set_index (f_name.internal_name.index)
@@ -108,16 +108,12 @@ feature {NONE} -- Implementation
 		end
 
 	deferred_content_with_index (a_index: INTEGER): ROUT_BODY_AS
-			-- Deffered content with index of the first token set.
-		local
-			l_deferred: DEFERRED_AS
+			-- Deferred content with index of the first token set.
 		do
-			l_deferred ?= deferred_content.twin
-			check
-				l_deferred_not_void: l_deferred /= Void
+			check is_deferred_as: attached {DEFERRED_AS} deferred_content.twin as l_deferred then
+				l_deferred.set_index (a_index)
+				Result := l_deferred
 			end
-			l_deferred.set_index (a_index)
-			Result := l_deferred
 		end
 
 note

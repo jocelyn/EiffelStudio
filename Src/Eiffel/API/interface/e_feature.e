@@ -62,7 +62,27 @@ feature -- Initialization
 			feature_id := i
 		ensure
 			name_id_set: name_id = n
-			has_alias_name: a /= Void implies has_alias_named (encoding_converter.utf8_to_utf32 (a))
+			has_alias_name: a /= Void implies has_alias_named (a)
+			feature_id_set: feature_id = i
+		end
+
+	make_with_aliases (n: like name_id; a_aliases: LIST [STRING]; c: like has_convert_mark; i: INTEGER)
+			-- Initialize feature with name `n' with
+			-- identification `i'.
+		require
+			valid_n: n >= 0
+			positive_i: i >= 0
+		do
+			name_id := n
+			across
+				a_aliases as ic
+			loop
+				add_alias (ic.item, c)
+			end
+			feature_id := i
+		ensure
+			name_id_set: name_id = n
+			has_alias_name: across a_aliases as ic all has_alias_named (ic.item) end
 			feature_id_set: feature_id = i
 		end
 
