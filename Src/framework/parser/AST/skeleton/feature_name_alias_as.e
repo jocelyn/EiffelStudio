@@ -11,13 +11,13 @@ class
 inherit
 	FEAT_NAME_ID_AS
 		rename
-			initialize as initialize_id,
-			alias_name as first_alias_name
+			initialize as initialize_id
+--			alias_name as first_alias_name
 		redefine
-			first_alias_name,
+--			first_alias_name,
 			has_alias,
 			has_convert_mark,
-			internal_alias_name,
+--			internal_alias_name,
 			is_binary,
 			has_bracket_alias,
 			is_equivalent,
@@ -26,6 +26,8 @@ inherit
 			process,
 			set_is_binary,
 			set_is_unary,
+			is_valid_binary,
+			is_valid_unary,
 			first_token,
 			last_token
 		end
@@ -159,20 +161,20 @@ feature -- Access
 	first_alias_name: STRING_AS
 			-- Operator associated with the feature
 
-	internal_alias_name: ID_AS
-			-- Operator associated with the feature (if any)
-			-- augmented with information about its arity in case of operator alias
-		do
-			if has_bracket_alias or else has_parentheses_alias then
-				create Result.initialize (first_alias_name.value)
-			else
-				if is_binary then
-					create Result.initialize (infix_feature_name_with_symbol (first_alias_name.value))
-				else
-					create Result.initialize (prefix_feature_name_with_symbol (first_alias_name.value))
-				end
-			end
-		end
+--	internal_alias_name: ID_AS
+--			-- Operator associated with the feature (if any)
+--			-- augmented with information about its arity in case of operator alias
+--		do
+--			if has_bracket_alias or else has_parentheses_alias then
+--				create Result.initialize (first_alias_name.value)
+--			else
+--				if is_binary then
+--					create Result.initialize (infix_feature_name_with_symbol (first_alias_name.value))
+--				else
+--					create Result.initialize (prefix_feature_name_with_symbol (first_alias_name.value))
+--				end
+--			end
+--		end
 
 	has_convert_mark: BOOLEAN
 			-- Is operator marked with "convert"?
@@ -213,6 +215,22 @@ feature -- Status report
 			-- Is feature alias (if any) an unary operator?
 		do
 			Result := not has_bracket_alias and then not has_parentheses_alias and then not internal_is_binary
+		end
+
+	is_valid_unary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
+		do
+			if attached aliases as l_aliases then
+				Result := across l_aliases as ic all ic.item.is_valid_unary end
+			end
+		end
+
+	is_valid_binary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
+		do
+			if attached aliases as l_aliases then
+				Result := across l_aliases as ic all ic.item.is_valid_binary end
+			end
 		end
 
 feature -- Status setting

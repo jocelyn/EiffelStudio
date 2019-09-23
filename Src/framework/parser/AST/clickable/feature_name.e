@@ -102,34 +102,15 @@ feature -- Status report
 	is_feature: BOOLEAN = True
 			-- Does the Current AST represent a feature?
 
-	internal_alias_name_id: INTEGER
-			-- `internal_alias_name' ID in NAMES_HEAP
-		do
-			if attached internal_alias_name as l_alias then
-				Result := l_alias.name_id
-			end
-		ensure
-			has_alias: alias_name /= Void implies Result > 0
-			has_no_alias: alias_name = Void implies Result = 0
-		end
-
-	internal_alias_name: detachable ID_AS
-			-- Operator associated with the feature (if any)
-			-- augmented with information about its arity
-		deferred
-		ensure
-			consistent_result: (Result /= Void) = (alias_name /= Void)
-		end
-
 	has_alias: BOOLEAN
 			-- Has an alias?
 		deferred
 		end
 
-	alias_name: detachable STRING_AS
-			-- Operator name associated with the feature (if any)
-		deferred
-		end
+--	alias_name: detachable STRING_AS
+--			-- Operator name associated with the feature (if any)
+--		deferred
+--		end
 
 	has_convert_mark: BOOLEAN
 			-- Is operator marked with "convert"?
@@ -138,14 +119,12 @@ feature -- Status report
 
 	is_valid_unary: BOOLEAN
 			-- Is the value of the feature name valid unary operator?
-		do
-			Result := attached alias_name as l_name and then is_valid_unary_operator (l_name.value)
+		deferred
 		end
 
 	is_valid_binary: BOOLEAN
 			-- Is the value of the feature name valid unary operator?
-		do
-			Result := attached alias_name as l_name and then is_valid_binary_operator (l_name.value)
+		deferred
 		end
 
 feature -- Status report
@@ -175,7 +154,7 @@ feature -- Status setting
 	set_is_binary
 			-- Mark alias operator as binary.
 		require
-			has_alias: alias_name /= Void
+			has_alias: has_alias
 			not_is_bracket: not has_bracket_alias
 			not_is_parentheses: not has_parentheses_alias
 			not_is_prefix: not is_prefix
@@ -188,7 +167,7 @@ feature -- Status setting
 	set_is_unary
 			-- Mark alias operator as unary.
 		require
-			has_alias: alias_name /= Void
+			has_alias: has_alias
 			not_is_bracket: not has_bracket_alias
 			not_is_parentheses: not has_parentheses_alias
 			not_is_infix: not is_infix

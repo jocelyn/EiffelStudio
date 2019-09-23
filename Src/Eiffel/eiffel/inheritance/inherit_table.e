@@ -1332,7 +1332,17 @@ debug ("ACTIVITY")
 end;
 
 			Result := feature_i_generator.new_feature (yacc_feature, feature_name_id, a_class)
-			Result.set_feature_name_id (feature_name_id, feat.internal_alias_name_id)
+			Result.set_feature_name_id (feature_name_id, 0)
+			if
+				attached {FEATURE_NAME_ALIAS_AS} feat as l_alias_feat and then
+				attached l_alias_feat.aliases as l_aliases
+			then
+				across
+					l_aliases as ic
+				loop
+					Result.add_alias_id (ic.item.internal_alias_name_id)
+				end
+			end
 			Result.set_written_in (a_class.class_id)
 			Result.set_is_frozen (feat.is_frozen)
 			Result.set_is_infix (feat.is_infix)

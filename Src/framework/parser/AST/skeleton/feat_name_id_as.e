@@ -41,23 +41,20 @@ feature -- Access
 	feature_name: ID_AS
 			-- Feature name
 
-	internal_alias_name: detachable ID_AS
-			-- Operator associated with the feature (if any)
-			-- augmented with information about its arity
-		do
-				-- Void here
-		end
-
 	has_alias: BOOLEAN
 			-- Has an alias?
 		do
 
 		end
 
-	alias_name: detachable STRING_AS
-			-- Operator name associated with the feature (if any)
+	is_valid_unary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
 		do
-				-- Void here
+		end
+
+	is_valid_binary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
+		do
 		end
 
 feature -- Comparison

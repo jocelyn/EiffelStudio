@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {FEATURE_ALIAS_AS}."
+	description: "data for alias name in the multiple alias list : FEATURE_NAME_ALIAS_AS.aliases ."
 	date: "$Date$"
 	revision: "$Revision$"
 
