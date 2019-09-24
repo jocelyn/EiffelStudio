@@ -133,6 +133,8 @@ feature {NONE} -- Implementation
 								loop
 									l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, ic.item.internal_alias_name_id, ic.item.has_convert_mark), old_name_id)
 								end
+							else
+								l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, 0, False), old_name_id)
 							end
 						end
 

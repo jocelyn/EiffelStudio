@@ -123,11 +123,13 @@ feature -- Element change
 	set_is_unary
 		do
 			is_unary := True
+			is_binary := False
 		end
 
 	set_is_binary
 		do
 			is_binary := True
+			is_unary := False
 		end
 
 invariant

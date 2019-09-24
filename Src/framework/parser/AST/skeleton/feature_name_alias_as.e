@@ -195,12 +195,26 @@ feature -- Status setting
 			-- Mark operator as binary.
 		do
 			internal_is_binary := True
+			if attached aliases as l_aliases then
+				across
+					l_aliases as ic
+				loop
+					ic.item.set_is_binary
+				end
+			end
 		end
 
 	set_is_unary
 			-- Mark operator as unary.
 		do
 			internal_is_binary := False
+			if attached aliases as l_aliases then
+				across
+					l_aliases as ic
+				loop
+					ic.item.set_is_unary
+				end
+			end
 		end
 
 feature -- Roundtrip/Token

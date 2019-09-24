@@ -101,6 +101,8 @@ feature {NONE} -- Initialization
 							loop
 								internal_put (l_old_name_id, ic.item.internal_alias_name_id)
 							end
+--						else
+--							internal_put (l_old_name_id, 0) -- FIXME: jfiat check if needed.
 						end
 					end
 
