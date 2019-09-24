@@ -147,7 +147,7 @@ feature{NONE} -- Implementation
 				Result := a_feature_name.is_case_insensitive_equal (a_feature.name) or else
 					   	  a_feature_name.is_case_insensitive_equal (ti_Precursor_keyword)
 				if (not Result) and then a_feature.has_alias_name then
-					Result := a_feature_name.is_case_insensitive_equal (a_feature.first_alias_name)
+					Result := a_feature.has_alias_named (a_feature_name)
 				end
 				if Result then
 					Result := flag /= 0 implies flag_stack.has (flag)

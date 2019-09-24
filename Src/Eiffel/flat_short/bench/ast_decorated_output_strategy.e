@@ -1867,7 +1867,7 @@ feature {NONE} -- Implementation
 			if not has_error_internal then
 				if l_feat.has_alias_name then
 					if not expr_type_visiting then
-						l_name := l_feat.first_alias_symbol_32
+						l_name := l_as.operator_name_32
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
 						elseif (l_name @ 1).is_character_8 and then (l_name @ 1).to_character_8.is_alpha then
@@ -2016,8 +2016,7 @@ feature {NONE} -- Implementation
 				if not has_error_internal then
 					check l_feat_not_void: l_feat /= Void end
 					if l_feat.has_alias_name then
-							-- FIXME: check if choosing first alias is ok [2019-09-18]
-						l_name := l_feat.first_alias_symbol_32
+						l_name := l_as.operator_name_32
 						l_text_formatter_decorator.put_space
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
@@ -2495,9 +2494,10 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.put_space
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 						if not has_error_internal then
-							l_text_formatter_decorator.process_operator_text (ic.item.alias_name_32, l_feat)
+
+							l_text_formatter_decorator.process_operator_text (l_as.extract_alias_name_32 (ic.item.alias_name_32), l_feat)
 						else
-							l_text_formatter_decorator.process_basic_text (ic.item.alias_name_32)
+							l_text_formatter_decorator.process_basic_text (l_as.extract_alias_name_32 (ic.item.alias_name_32))
 						end
 						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
 					end

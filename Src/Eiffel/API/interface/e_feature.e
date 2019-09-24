@@ -141,35 +141,6 @@ feature -- Properties
 
 	aliases: detachable ARRAYED_LIST [TUPLE [alias_name: STRING; alias_name_32: STRING_32; has_convert: BOOLEAN]]
 
-	first_alias_name_32: detachable STRING_32
-			-- Alias name of the feature (if any)
-		require
-			has_alias_name
-		do
-			if attached aliases as lst and then attached lst.first as l_first then
-				Result := l_first.alias_name_32
-			end
-		end
-
-	first_alias_name: detachable STRING
-			-- Alias name of the feature (if any)
-		require
-			has_alias_name
-		do
-			if attached aliases as lst and then attached lst.first as l_first then
-				Result := l_first.alias_name
-			end
-		end
-
-
---	alias_name_32: STRING_32
---			-- Alias name of the feature (if any)
---		do
---			if alias_name /= Void then
---				Result := encoding_converter.utf8_to_utf32 (alias_name)
---			end
---		end
-
 	has_convert_mark: BOOLEAN
 			-- Is convert mark specified for an operator alias?
 
@@ -1086,26 +1057,6 @@ feature -- Output
 				end
 			end
 		end
-
-	first_alias_symbol_32: STRING_32
-		require
-			is_alias: has_alias_name
-		do
-			Result := extract_alias_name_32 (first_alias_name_32)
-		ensure
-			alias_symbol_not_void: Result /= Void
-		end
-
---feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output: operators
-
---	first_alias_symbol: STRING
---		require
---			is_alias: has_alias_name
---		do
---			Result := extract_alias_name (first_alias_name_32)
---		ensure
---			alias_symbol_not_void: Result /= Void
---		end
 
 feature -- Output: signature
 

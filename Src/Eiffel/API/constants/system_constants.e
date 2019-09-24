@@ -209,12 +209,12 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- We use `0000' because it is replaced by the actual svn revision number
 			-- when doing a delivery.
 		do
-			Result := 0000
+			Result := 0000 -- Script was unable to set this value
 		end
 
 	Version_tag: INTEGER = 0x026
 
-	Version_info: STRING = "";
+	Version_info: STRING = "Revision: 0000 -- Script was unable to set this value , Compilation: 2019-09-24 12:52:29 , Builder: jfiat";
 			-- Information on the version
 			-- Default: ""
 			-- This can be used by developper to add specific information
