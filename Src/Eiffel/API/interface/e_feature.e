@@ -74,15 +74,17 @@ feature -- Initialization
 			positive_i: i >= 0
 		do
 			name_id := n
-			across
-				a_aliases as ic
-			loop
-				add_alias (ic.item, c)
+			if a_aliases /= Void then
+				across
+					a_aliases as ic
+				loop
+					add_alias (ic.item, c)
+				end
 			end
 			feature_id := i
 		ensure
 			name_id_set: name_id = n
-			has_alias_name: across a_aliases as ic all has_alias_named (ic.item) end
+			has_alias_name: a_aliases /= Void implies across a_aliases as ic all has_alias_named (ic.item) end
 			feature_id_set: feature_id = i
 		end
 

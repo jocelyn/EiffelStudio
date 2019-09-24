@@ -12,12 +12,8 @@ inherit
 	FEAT_NAME_ID_AS
 		rename
 			initialize as initialize_id
---			alias_name as first_alias_name
 		redefine
---			first_alias_name,
 			has_alias,
-			has_convert_mark,
---			internal_alias_name,
 			is_binary,
 			has_bracket_alias,
 			is_equivalent,
@@ -60,12 +56,12 @@ feature {NONE} -- Creation
 					if l_alias_name /= Void then
 						create l_alias.make (l_alias_name, ic.item.alias_keyword, ic.item.convert_keyword)
 						has_convert_mark := l_alias.has_convert_mark
+						aliases.force (l_alias)
 						if l_alias.is_unary then
 							set_is_unary
 						elseif l_alias.is_binary then
 							set_is_binary
 						end
-						aliases.force (l_alias)
 					end
 				end
 			end
@@ -97,13 +93,10 @@ feature {NONE} -- Creation
 			elseif l_alias.is_binary then
 				set_is_binary
 			end
-			aliases.force (l_alias)
 		ensure
 			feature_name_set: feature_name = feature_id
 			alias_name_set: first_alias_name = alias_id
 			has_convert_mark_set: has_convert_mark = convert_status
---			alias_keyword_set: a_as /= Void implies alias_keyword_index = a_as.index
---			convert_keyword_set: c_as /= Void implies convert_keyword_index = c_as.index
 		end
 
 feature -- Visitor
@@ -125,28 +118,6 @@ feature -- Access: aliases
 
 feature -- Roundtrip
 
---	alias_keyword_index: INTEGER
---		-- Index of keyword "alias" associated with this structure.
-
---	convert_keyword_index: INTEGER
---		-- Index of keyword "convert" associated with this structure.
-
---	alias_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
---		-- Keyword "alias" associated with this structure.
---		require
---			a_list_not_void: a_list /= Void
---		do
---			Result := keyword_at (a_list, alias_keyword_index)
---		end
-
---	convert_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
---		-- Keyword "convert" associated with this structure.
---		require
---			a_list_not_void: a_list /= Void
---		do
---			Result := keyword_at (a_list, convert_keyword_index)
---		end
-
 	keyword_at (a_list: LEAF_AS_LIST; i: INTEGER): detachable KEYWORD_AS
 		require
 			a_list_not_void: a_list /= Void
@@ -160,21 +131,6 @@ feature -- Access
 
 	first_alias_name: STRING_AS
 			-- Operator associated with the feature
-
---	internal_alias_name: ID_AS
---			-- Operator associated with the feature (if any)
---			-- augmented with information about its arity in case of operator alias
---		do
---			if has_bracket_alias or else has_parentheses_alias then
---				create Result.initialize (first_alias_name.value)
---			else
---				if is_binary then
---					create Result.initialize (infix_feature_name_with_symbol (first_alias_name.value))
---				else
---					create Result.initialize (prefix_feature_name_with_symbol (first_alias_name.value))
---				end
---			end
---		end
 
 	has_convert_mark: BOOLEAN
 			-- Is operator marked with "convert"?
@@ -345,8 +301,11 @@ feature {NONE} -- Status
 
 invariant
 
-	first_alias_name_not_void: first_alias_name /= Void
-	first_alias_name_not_empty: not first_alias_name.value.is_empty
+	has_alias: has_alias
+	first_alias_name_not_empty: attached aliases as lst and then
+		not lst.is_empty and then
+		attached lst.first.alias_name as inv_alias_name and then
+		not inv_alias_name.value.is_empty
 
 note
 	copyright:	"Copyright (c) 1984-2019, Eiffel Software"

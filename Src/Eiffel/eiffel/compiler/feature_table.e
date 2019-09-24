@@ -285,6 +285,9 @@ feature -- HASH_TABLE like feature
 					alias_name_id := ic.item
 					if alias_name_id > 0 then
 						alias_table.put (new.id, alias_name_id)
+						if alias_table.conflict then
+							conflicting_alias := alias_name_id
+						end
 					end
 				end
 			end
@@ -533,8 +536,7 @@ feature -- Status report
 	conflicting_alias: INTEGER
 		require
 			is_alias_conflict: is_alias_conflict
-		do
-			Result := alias_table.found_item
+		attribute
 		end
 
 	is_computed: BOOLEAN

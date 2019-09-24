@@ -1333,15 +1333,15 @@ end;
 
 			Result := feature_i_generator.new_feature (yacc_feature, feature_name_id, a_class)
 			Result.set_feature_name_id (feature_name_id, 0)
-			if
-				attached {FEATURE_NAME_ALIAS_AS} feat as l_alias_feat and then
-				attached l_alias_feat.aliases as l_aliases
-			then
-				across
-					l_aliases as ic
-				loop
-					Result.add_alias_id (ic.item.internal_alias_name_id)
+			if attached {FEATURE_NAME_ALIAS_AS} feat as l_alias_feat then
+				if attached l_alias_feat.aliases as l_aliases then
+					across
+						l_aliases as ic
+					loop
+						Result.add_alias_id (ic.item.internal_alias_name_id)
+					end
 				end
+				Result.set_has_convert_mark (l_alias_feat.has_convert_mark)
 			end
 			Result.set_written_in (a_class.class_id)
 			Result.set_is_frozen (feat.is_frozen)
@@ -1351,7 +1351,6 @@ end;
 			Result.set_is_parentheses (feat.has_parentheses_alias)
 			Result.set_is_binary (feat.is_binary)
 			Result.set_is_unary (feat.is_unary)
-			Result.set_has_convert_mark (feat.has_convert_mark)
 
 			if Result.is_unique and attached {UNIQUE_I} Result as l_unique_i then
 				unique_feature := l_unique_i

@@ -107,16 +107,6 @@ feature -- Status report
 		deferred
 		end
 
---	alias_name: detachable STRING_AS
---			-- Operator name associated with the feature (if any)
---		deferred
---		end
-
-	has_convert_mark: BOOLEAN
-			-- Is operator marked with "convert"?
-		do
-		end
-
 	is_valid_unary: BOOLEAN
 			-- Is the value of the feature name valid unary operator?
 		deferred
