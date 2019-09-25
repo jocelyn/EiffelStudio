@@ -177,7 +177,7 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_alias_triple (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS; c_as: detachable KEYWORD_AS): detachable ALIAS_TRIPLE
+	new_alias_triple (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS): detachable ALIAS_TRIPLE
 			-- New ALIST_TRIPLE.
 		do
 		end
@@ -772,7 +772,7 @@ feature -- Access
 		do
 		end
 
-	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_TRIPLE]): detachable FEATURE_NAME_ALIAS_AS
+	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_TRIPLE]; c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
 			-- New FEATURE_NAME_ALIAS AST node
 		do
 		end

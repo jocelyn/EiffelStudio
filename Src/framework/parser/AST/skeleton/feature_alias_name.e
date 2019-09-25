@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_alias_name: STRING_AS; a_alias_keyword: KEYWORD_AS; a_convert_keyword: detachable KEYWORD_AS)
+	make (a_alias_name: STRING_AS; a_alias_keyword: KEYWORD_AS)
 		require
 			a_alias_name_not_void: a_alias_name /= Void
 			a_alias_name_not_empty: not a_alias_name.value.is_empty
@@ -33,9 +33,6 @@ feature {NONE} -- Initialize
 			alias_name := a_alias_name
 			if a_alias_keyword /= Void then
 				alias_keyword_index := a_alias_keyword.index
-			end
-			if a_convert_keyword /= Void then
-				convert_keyword_index := a_convert_keyword.index
 			end
 
 			if
@@ -55,7 +52,6 @@ feature -- Access
 
 	alias_name: STRING_AS
 	alias_keyword_index: INTEGER
-	convert_keyword_index: INTEGER
 
 	internal_alias_name_id: INTEGER
 			-- `internal_alias_name' ID in NAMES_HEAP
@@ -111,11 +107,6 @@ feature -- status
 	is_parentheses_alias: BOOLEAN
 		do
 			Result := alias_name.value.item (1) = '('
-		end
-
-	has_convert_mark: BOOLEAN
-		do
-			Result := convert_keyword_index /= 0
 		end
 
 feature -- Element change

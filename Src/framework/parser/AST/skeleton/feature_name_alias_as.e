@@ -34,7 +34,7 @@ create
 
 feature {NONE} -- Creation
 
-	initialize_with_list (feature_id: like feature_name; a_alias_list: LIST [ALIAS_TRIPLE])
+	initialize_with_list (feature_id: like feature_name; a_alias_list: LIST [ALIAS_TRIPLE]; a_convert_keyword: detachable KEYWORD_AS)
 		require
 			feature_id_not_void: feature_id /= Void
 			alias_list_not_empty: not a_alias_list.is_empty
@@ -44,18 +44,20 @@ feature {NONE} -- Creation
 			l_alias_name: STRING_AS
 		do
 			initialize_id (feature_id)
+			if a_convert_keyword /= Void then
+				convert_keyword_index := a_convert_keyword.index
+				has_convert_mark := True
+			end
 			if attached a_alias_list.first as l_alias_item and then attached l_alias_item.alias_name as l_first_alias_name then
 				first_alias_name := l_first_alias_name
 				create aliases.make (a_alias_list.count)
 
-				has_convert_mark := False
 				across
 					a_alias_list as ic
 				loop
 					l_alias_name := ic.item.alias_name
 					if l_alias_name /= Void then
-						create l_alias.make (l_alias_name, ic.item.alias_keyword, ic.item.convert_keyword)
-						has_convert_mark := l_alias.has_convert_mark
+						create l_alias.make (l_alias_name, ic.item.alias_keyword)
 						aliases.force (l_alias)
 						if l_alias.is_unary then
 							set_is_unary
@@ -82,12 +84,16 @@ feature {NONE} -- Creation
 			l_alias: FEATURE_ALIAS_NAME
 		do
 			initialize_id (feature_id)
+			if c_as /= Void then
+				convert_keyword_index := c_as.index
+			end
+			has_convert_mark := convert_status
+
 			create aliases.make (1)
-			create l_alias.make (alias_id, a_as, c_as)
+			create l_alias.make (alias_id, a_as)
 			aliases.force (l_alias)
 
 			first_alias_name := l_alias.alias_name
-			has_convert_mark := l_alias.has_convert_mark
 			if l_alias.is_unary then
 				set_is_unary
 			elseif l_alias.is_binary then
@@ -134,6 +140,9 @@ feature -- Access
 
 	has_convert_mark: BOOLEAN
 			-- Is operator marked with "convert"?
+
+	convert_keyword_index: INTEGER
+			-- Index of convert keyword, if any.
 
 feature -- Status report
 
@@ -232,31 +241,33 @@ feature -- Roundtrip/Token
 			c: CURSOR
 			l_aliases: like aliases
 		do
-			l_aliases := aliases
-			c := l_aliases.cursor
-			from
-				l_aliases.finish
-			until
-				l_aliases.off or Result /= Void
-			loop
-				if attached l_aliases.item as l_item then
-					if a_list = Void then
-						if attached l_item.alias_name as l_as then
-							Result := l_as.last_token (a_list)
-						end
-					else
-						if l_item.convert_keyword_index /= 0 then
-							Result := keyword_at (a_list, l_item.convert_keyword_index)
-						elseif l_item.alias_keyword_index /= 0 then
-							Result := keyword_at (a_list, l_item.alias_keyword_index)
-						elseif attached l_item.alias_name as l_as then
-							Result := l_as.last_token (a_list)
+			if convert_keyword_index > 0 then
+				Result := keyword_at (a_list, convert_keyword_index)
+			else
+				l_aliases := aliases
+				c := l_aliases.cursor
+				from
+					l_aliases.finish
+				until
+					l_aliases.off or Result /= Void
+				loop
+					if attached l_aliases.item as l_item then
+						if a_list = Void then
+							if attached l_item.alias_name as l_as then
+								Result := l_as.last_token (a_list)
+							end
+						else
+							if attached l_item.alias_name as l_as then
+								Result := l_as.last_token (a_list)
+							elseif l_item.alias_keyword_index /= 0 then
+								Result := keyword_at (a_list, l_item.alias_keyword_index)
+							end
 						end
 					end
+					l_aliases.back
 				end
-				l_aliases.back
+				l_aliases.go_to (c)
 			end
-			l_aliases.go_to (c)
 		end
 
 feature -- Comparison
@@ -271,7 +282,9 @@ feature -- Comparison
 				-- because there is a check that they have the same alias name
 			if
 				Precursor (other) and then
-				is_binary = other.is_binary
+				is_binary = other.is_binary and then
+				has_convert_mark = other.has_convert_mark and then
+				convert_keyword_index = other.convert_keyword_index
 			then
 				l_aliases := aliases
 				l_other_aliases := other.aliases
@@ -290,9 +303,6 @@ feature -- Comparison
 						loop
 							if not equivalent (l_aliases.item.alias_name, l_other_aliases.item.alias_name) then
 								Result := False
-							elseif l_aliases.item.convert_keyword_index /= l_other_aliases.item.convert_keyword_index then
-								Result := False
-							else
 							end
 							l_aliases.forth
 							l_other_aliases.forth

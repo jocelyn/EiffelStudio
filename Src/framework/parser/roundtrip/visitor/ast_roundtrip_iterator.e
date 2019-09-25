@@ -829,11 +829,12 @@ feature
 				loop
 					safe_process (l_as.keyword_at (match_list, ic.item.alias_keyword_index))
 					safe_process (ic.item.alias_name)
-					if ic.item.alias_keyword_index > 0 then
-						safe_process (l_as.keyword_at (match_list, ic.item.convert_keyword_index))
-					end
 				end
 			end
+			if l_as.convert_keyword_index > 0 then
+				safe_process (l_as.keyword_at (match_list, l_as.convert_keyword_index))
+			end
+
 		end
 
 	process_feature_list_as (l_as: FEATURE_LIST_AS)

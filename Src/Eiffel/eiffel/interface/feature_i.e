@@ -522,13 +522,6 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			feature_name_not_empty: not Result.is_empty
 		end
 
-	first_alias_name: detachable STRING
-		do
-			if attached alias_name_ids as lst and then not lst.is_empty then
-				Result := Names_heap.item (lst.first)
-			end
-		end
-
 	alias_names: detachable LIST [detachable STRING]
 		do
 			if attached alias_name_ids as lst then

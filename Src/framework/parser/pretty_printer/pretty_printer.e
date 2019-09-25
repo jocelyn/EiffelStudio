@@ -923,11 +923,12 @@ feature {CLASS_AS} -- Inheritance
 				loop
 					safe_process_and_print (l_as.keyword_at (match_list, ic.item.alias_keyword_index), " ", " ")
 					safe_process (ic.item.alias_name)
-					if ic.item.convert_keyword_index > 0 then
-						safe_process_and_print (l_as.keyword_at (match_list, ic.item.convert_keyword_index), " ", "")
-					end
 				end
 			end
+			if l_as.convert_keyword_index > 0 then
+				safe_process_and_print (l_as.keyword_at (match_list, l_as.convert_keyword_index), " ", "")
+			end
+
 		end
 
 feature {CLASS_AS} -- Generics

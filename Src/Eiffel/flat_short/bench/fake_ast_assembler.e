@@ -67,7 +67,12 @@ feature -- Assembler
 			f_name := a_name
 			new_feature_as := a_ast
 			l_frozen_keyword := f_name.frozen_keyword
-			if target_feature.has_alias and then attached target_feature.first_alias_name as l_first_alias_name then
+			if 
+				target_feature.has_alias and then 
+				attached target_feature.alias_names as l_alias_names and then
+				not l_alias_names.is_empty and then
+				attached l_alias_names.first as l_first_alias_name
+			then
 				create l_op.initialize (extract_alias_name (l_first_alias_name), 0, 0, 0, 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
 				create l_id.initialize (target_feature.feature_name)

@@ -263,10 +263,10 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
-	new_alias_triple (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS; c_as: detachable KEYWORD_AS): detachable ALIAS_TRIPLE
+	new_alias_triple (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS): detachable ALIAS_TRIPLE
 			-- New ALIAS_TRIPLE.
 		do
-			create Result.make (k_as, n_as, c_as)
+			create Result.make (k_as, n_as, Void)
 		end
 
 	new_agent_target_triple (l_as, r_as: detachable SYMBOL_AS; o_as: detachable OPERAND_AS): detachable AGENT_TARGET_TRIPLE
@@ -1458,11 +1458,11 @@ feature -- Access
 			end
 		end
 
-	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_TRIPLE]): detachable FEATURE_NAME_ALIAS_AS
+	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_TRIPLE]; c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
 			-- New FEATURE_NAME_ALIAS AST node
 		do
 			if feature_name /= Void and then a_alias_list /= Void and then not a_alias_list.is_empty then
-				create Result.initialize_with_list (feature_name, a_alias_list)
+				create Result.initialize_with_list (feature_name, a_alias_list, c_as)
 			end
 		end
 

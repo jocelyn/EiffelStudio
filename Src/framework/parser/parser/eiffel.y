@@ -816,10 +816,10 @@ New_feature: Extended_feature_name
 
 Extended_feature_name: Feature_name
 			{ $$ := $1 }
-	|	Identifier_as_lower Add_counter Alias_list Remove_counter
+	|	Identifier_as_lower Add_counter Alias_list Remove_counter Alias_mark
 			{
 				if attached $3 as l_aliases and then not l_aliases.is_empty then
-					$$ := ast_factory.new_feature_name_alias_as ($1, l_aliases)
+					$$ := ast_factory.new_feature_name_alias_as ($1, l_aliases, $5)
 				end
 			}
 	;
@@ -844,9 +844,9 @@ Alias_list: Alias
 			}
 	;
 
-Alias: TE_ALIAS Alias_name Alias_mark
+Alias: TE_ALIAS Alias_name
 			{
-				$$ := ast_factory.new_alias_triple ($1, $2, $3)
+				$$ := ast_factory.new_alias_triple ($1, $2)
 			}
 	;
 

@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 								(l_argument_count = 0 and then ic.item.is_valid_unary) or else
 								(l_argument_count = 1 and then ic.item.is_valid_binary)
 							then
-								if l_argument_count = 0 and then ic.item.has_convert_mark then
+								if l_argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
 										-- Invalid convert mark
 									create {VFAV3_SYNTAX} l_vfav.make_with_alias (l_feat_name_alias_as, ic.item.alias_name)
 								end
