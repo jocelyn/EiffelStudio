@@ -29,7 +29,7 @@ feature -- Access
 
 	status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 
-	delay_ms: INTEGER = 30_000
+	delay_ms: INTEGER = 10_000
 
 feature -- Actions
 

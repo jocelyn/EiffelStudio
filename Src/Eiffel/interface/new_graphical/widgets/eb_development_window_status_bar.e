@@ -90,13 +90,13 @@ feature {NONE} -- Initialization
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
 
+			compiling_icon_index := 1
+			running_icon_index := 1
+
 			if attached notification_s.service as l_notif_service then
 				create notification_manager.make (Current)
 				l_notif_service.register_observer (notification_manager)
 			end
-
-			compiling_icon_index := 1
-			running_icon_index := 1
 		end
 
 	build_interface
@@ -188,7 +188,7 @@ feature {NONE} -- Initialization
 			widget.extend (f)
 			widget.disable_item_expand (f)
 
-			if attached notification_manager as l_notif_manager then
+			if attached notification_s.service as l_notif_service then
 				create f
 				f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 				create cel
@@ -197,10 +197,11 @@ feature {NONE} -- Initialization
 				f.extend (cel)
 				widget.extend (f)
 				widget.disable_item_expand (f)
-				notifications_icon.pointer_double_press_actions.extend (agent (i_notif_manager: attached like notification_manager; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
-					do
-						i_notif_manager.show_notification_messages
-					end(l_notif_manager,?,?,?,?,?,?,?,?))
+				notifications_icon.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							on_notification_messages_selected
+						end
+					)
 			end
 
 				-- Initialize timers.
@@ -555,6 +556,13 @@ feature {NONE} -- Implementation: event handling
 
 	compile_stop_agent: PROCEDURE [BOOLEAN]
 			-- Agent called when the project's compilation is over.
+
+	on_notification_messages_selected
+		do
+			if attached notification_manager as m then
+				m.show_notification_messages
+			end
+		end
 
 feature {NONE} -- Implementation
 
